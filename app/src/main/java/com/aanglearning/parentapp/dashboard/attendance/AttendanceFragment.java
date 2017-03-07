@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 
 import com.aanglearning.parentapp.R;
 
-import butterknife.ButterKnife;
-
 /**
  * Created by Vinay on 22-02-2017.
  */
@@ -31,7 +29,6 @@ public class AttendanceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.attendance_fragment, container, false);
-        ButterKnife.bind(this, view);
 
         return view;
     }

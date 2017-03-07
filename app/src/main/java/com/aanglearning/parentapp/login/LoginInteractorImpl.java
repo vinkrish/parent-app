@@ -7,8 +7,6 @@ import com.aanglearning.parentapp.api.ErrorUtils;
 import com.aanglearning.parentapp.model.CommonResponse;
 import com.aanglearning.parentapp.model.Credentials;
 
-import java.util.HashMap;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -17,7 +15,7 @@ import retrofit2.Response;
  * Created by Vinay on 16-02-2017.
  */
 
-public class LoginInteractorImpl implements LoginInteractor {
+class LoginInteractorImpl implements LoginInteractor {
     @Override
     public void login(Credentials credentials, final OnLoginFinishedListener listener) {
 
@@ -43,7 +41,7 @@ public class LoginInteractorImpl implements LoginInteractor {
 
     @Override
     public void recoverPwd(String newPassword, final OnLoginFinishedListener listener) {
-        AuthApi authApi = ApiClient.getClient().create(AuthApi.class);
+        AuthApi authApi = ApiClient.getAuthorizedClient().create(AuthApi.class);
 
         Call<CommonResponse> sendNewPwd = authApi.newPassword(newPassword);
         sendNewPwd.enqueue(new Callback<CommonResponse>() {

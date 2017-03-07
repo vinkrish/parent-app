@@ -1,45 +1,24 @@
 package com.aanglearning.parentapp.dashboard.homework;
 
-import com.bignerdranch.expandablerecyclerview.model.Parent;
+import com.aanglearning.parentapp.model.Homework;
 
 import java.util.List;
 
 /**
- * Created by Vinay on 23-02-2017.
+ * Created by Vinay on 03-03-2017.
  */
 
-public class HomeworkView implements Parent<String> {
-    private String subjectName;
-    private List<String> homeworks;
+public interface HomeworkView {
 
-    public HomeworkView(String subjectName, List<String> homeworks) {
-        this.subjectName = subjectName;
-        this.homeworks = homeworks;
-    }
+    void showHomework(List<Homework> homeworkList);
 
-    public String getSubjectName() {
-        return subjectName;
-    }
+    void showProgress();
 
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
-    }
+    void hideProgess();
 
-    public List<String> getHomeworks() {
-        return homeworks;
-    }
+    void showError();
 
-    public void setHomeworks(List<String> homeworks) {
-        this.homeworks = homeworks;
-    }
+    void showAPIError(String message);
 
-    @Override
-    public List<String> getChildList() {
-        return homeworks;
-    }
-
-    @Override
-    public boolean isInitiallyExpanded() {
-        return true;
-    }
+    void syncHomework();
 }

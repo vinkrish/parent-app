@@ -27,7 +27,9 @@
         </activity>
         <activity android:name=".dashboard.DashboardActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar"></activity>
+            android:theme="@style/NoActionBar"/>
+        <service android:name=".dashboard.service.SyncHomeworkIntentService" />
+        <service android:name=".dashboard.service.SyncAttendanceIntentService" />
     </application>
 
 </manifest>

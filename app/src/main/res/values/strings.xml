@@ -17,6 +17,10 @@
     <string name="no_user">Mobile number doesn\'t exist</string>
     <string name="ok">ok</string>
 
+    <!--HomeworkFragment.java-->
+    <string name="change">Change</string>
+    <string name="future_date">Selected date can\'t be future to present day</string>
+
     <string name="dashboard">Dashboard</string>
     <string name="logout">Logout</string>
 </resources>

@@ -39,7 +39,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         ButterKnife.bind(this);
 
         AppGlobal.setSqlDbHelper(getApplicationContext());
@@ -102,6 +101,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     @Override
     public void navigateToDashboard() {
         startActivity(new Intent(this, DashboardActivity.class));
+        finish();
     }
 
     public void login(View view) {

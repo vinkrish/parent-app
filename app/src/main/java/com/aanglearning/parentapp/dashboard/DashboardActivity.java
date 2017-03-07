@@ -20,7 +20,9 @@ import android.widget.TextView;
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.dao.ChildInfoDao;
 import com.aanglearning.parentapp.login.LoginActivity;
+import com.aanglearning.parentapp.model.Attendance;
 import com.aanglearning.parentapp.model.ChildInfo;
+import com.aanglearning.parentapp.model.Homework;
 import com.aanglearning.parentapp.util.AppGlobal;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 import com.squareup.picasso.Picasso;
@@ -30,7 +32,9 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DashboardActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class DashboardActivity extends AppCompatActivity
+        implements DashboardView {
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.navigation_view)
@@ -44,18 +48,17 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
     @BindView(R.id.sliding_tabs)
     TabLayout tabLayout;
 
-    private DashboardPagerAdapter adapter;
+    //private DashboardPagerAdapter adapter;
 
     private ArrayList<ChildInfo> childInfos;
+    private boolean check;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
+        check = false;
         ButterKnife.bind(this);
-
-        spinner.setOnItemSelectedListener(this);
 
         AppGlobal.setActivity(this);
         AppGlobal.setSqlDbHelper(getApplicationContext());
@@ -63,29 +66,26 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-
-                menuItem.setChecked(true);
-                drawerLayout.closeDrawers();
-
-                switch (menuItem.getItemId()) {
-                    case R.id.dashboard_item:
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.dashboard_item:
+                                break;
+                            case R.id.logout_item:
+                                SharedPreferenceUtil.logout(DashboardActivity.this);
+                                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+                                finish();
+                                break;
+                            default:
+                                break;
+                        }
+                        menuItem.setChecked(true);
+                        drawerLayout.closeDrawers();
                         return true;
-
-                    case R.id.logout_item:
-                        SharedPreferenceUtil.logout(DashboardActivity.this);
-                        startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
-                        finish();
-                        return true;
-
-                    default:
-                        return true;
-
-                }
-            }
-        });
+                    }
+                });
 
         ActionBarDrawerToggle actionBarDrawerToggle = new
                 ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name) {
@@ -128,21 +128,62 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
         }
 
         setViewPager();
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                if(check) {
+                    SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfos.get(pos));
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                } else {
+                    check = true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private void setViewPager() {
-        adapter = new DashboardPagerAdapter(getSupportFragmentManager());
+        DashboardPagerAdapter adapter = new DashboardPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
+
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-        SharedPreferenceUtil.saveProfile(this, childInfos.get(pos));
+    public void onResume() {
+        super.onResume();
+        check = false;
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgess() {
+
+    }
+
+    @Override
+    public void showError() {
+
+    }
+
+    @Override
+    public void showAPIError(String message) {
 
     }
 }

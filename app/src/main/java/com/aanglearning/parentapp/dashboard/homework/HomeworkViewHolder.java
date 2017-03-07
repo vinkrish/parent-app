@@ -15,7 +15,7 @@ import com.bignerdranch.expandablerecyclerview.ParentViewHolder;
  * Created by Vinay on 23-02-2017.
  */
 
-public class HomeworkViewHolder extends ParentViewHolder {
+class HomeworkViewHolder extends ParentViewHolder {
     private static final float INITIAL_POSITION = 0.0f;
     private static final float ROTATED_POSITION = 180f;
 
@@ -23,14 +23,14 @@ public class HomeworkViewHolder extends ParentViewHolder {
     private final ImageView mArrowExpandImageView;
     private TextView mSubjectTextView;
 
-    public HomeworkViewHolder(@NonNull View itemView) {
+    HomeworkViewHolder(@NonNull View itemView) {
         super(itemView);
         mSubjectTextView = (TextView) itemView.findViewById(R.id.subject_textview);
         mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.arrow_expand_imageview);
     }
 
-    public void bind(@NonNull HomeworkView homeworkView) {
-        mSubjectTextView.setText(homeworkView.getSubjectName());
+    void bind(@NonNull HomeworkViewObj homeworkViewObj) {
+        mSubjectTextView.setText(homeworkViewObj.getSubjectName());
     }
 
     @SuppressLint("NewApi")

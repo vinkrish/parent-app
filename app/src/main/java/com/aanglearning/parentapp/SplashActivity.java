@@ -8,11 +8,17 @@ import com.aanglearning.parentapp.dashboard.DashboardActivity;
 import com.aanglearning.parentapp.login.LoginActivity;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
+import org.joda.time.LocalDate;
+
 public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        LocalDate localDate = new LocalDate();
+        SharedPreferenceUtil.saveAttendanceDate(this, localDate.toString());
+        SharedPreferenceUtil.saveHomeworkDate(this, localDate.toString());
 
         if (SharedPreferenceUtil.getUser(this).getAuthToken() != "") {
             startActivity(new Intent(this, DashboardActivity.class));

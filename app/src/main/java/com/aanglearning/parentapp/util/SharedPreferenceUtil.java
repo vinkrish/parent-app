@@ -11,16 +11,16 @@ public class SharedPreferenceUtil {
     public static void saveUser(Context context, Credentials credentials) {
         SharedPreferences sharedPref = context.getSharedPreferences("credentials", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("mobileNo", credentials.getMobileNo());
         editor.putString("authToken", credentials.getAuthToken());
+        editor.putString("mobileNo", credentials.getMobileNo());
         editor.apply();
     }
 
     public static Credentials getUser(Context context){
         SharedPreferences sharedPref = context.getSharedPreferences("credentials", Context.MODE_PRIVATE);
         Credentials response = new Credentials();
-        response.setMobileNo(sharedPref.getString("mobileNo", ""));
         response.setAuthToken(sharedPref.getString("authToken", ""));
+        response.setMobileNo(sharedPref.getString("mobileNo", ""));
         return response;
     }
 
@@ -53,9 +53,32 @@ public class SharedPreferenceUtil {
         childInfo.setClassId(sharedPref.getLong("classId", 0));
         childInfo.setClassName(sharedPref.getString("className", ""));
         childInfo.setSectionId(sharedPref.getLong("sectionId", 0));
-        childInfo.setSectionName(sharedPref.getString("sesctionName", ""));
+        childInfo.setSectionName(sharedPref.getString("sectionName", ""));
         childInfo.setName(sharedPref.getString("name", ""));
         return childInfo;
+    }
+
+    public static void saveAttendanceDate(Context context, String date) {
+        SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("attendanceDate", date);
+        editor.apply();
+    }
+
+    public static String getAttendanceDate(Context context){
+        SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
+        return sharedPref.getString("attendanceDate", "");
+    }
+    public static void saveHomeworkDate(Context context, String date) {
+        SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("homeworkDate", date);
+        editor.apply();
+    }
+
+    public static String getHomeworkDate(Context context){
+        SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
+        return sharedPref.getString("homeworkDate", "");
     }
 
 }
