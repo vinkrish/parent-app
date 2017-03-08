@@ -22,5 +22,5 @@ public interface LoginInteractor {
 
     void login(Credentials credentials, OnLoginFinishedListener listener);
 
-    void recoverPwd(String newPassword, OnLoginFinishedListener listener);
+    void recoverPwd(String authToken, String newPassword, OnLoginFinishedListener listener);
 }

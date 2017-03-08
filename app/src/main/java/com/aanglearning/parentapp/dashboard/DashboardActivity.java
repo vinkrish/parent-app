@@ -59,8 +59,7 @@ public class DashboardActivity extends AppCompatActivity
         setContentView(R.layout.activity_dashboard);
         check = false;
         ButterKnife.bind(this);
-
-        AppGlobal.setActivity(this);
+        
         AppGlobal.setSqlDbHelper(getApplicationContext());
 
         setSupportActionBar(toolbar);

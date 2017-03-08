@@ -1,5 +1,6 @@
 package com.aanglearning.parentapp.dashboard.attendance;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,12 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aanglearning.parentapp.R;
+import com.aanglearning.parentapp.dao.HomeworkDao;
+import com.aanglearning.parentapp.dashboard.service.SyncAttendanceIntentService;
+import com.aanglearning.parentapp.dashboard.service.SyncHomeworkIntentService;
+import com.aanglearning.parentapp.model.Attendance;
+
+import java.util.List;
 
 /**
  * Created by Vinay on 22-02-2017.
  */
 
-public class AttendanceFragment extends Fragment {
+public class AttendanceFragment extends Fragment implements AttendanceView {
 
     public static AttendanceFragment newInstance() {
         AttendanceFragment fragment = new AttendanceFragment();
@@ -33,4 +40,33 @@ public class AttendanceFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void showAttendance(List<Attendance> attendanceList) {
+
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgess() {
+
+    }
+
+    @Override
+    public void showError() {
+
+    }
+
+    @Override
+    public void showAPIError(String message) {
+
+    }
+
+    @Override
+    public void syncAttendance() {
+        getActivity().startService(new Intent(getContext(), SyncAttendanceIntentService.class));
+    }
 }

@@ -13,7 +13,7 @@ import retrofit2.Response;
 
 public class ErrorUtils {
     public static APIError parseError(Response<?> response){
-        Converter<ResponseBody, APIError> converter = ApiClient.getAuthorizedClient()
+        Converter<ResponseBody, APIError> converter = ApiClient.getClient()
                 .responseBodyConverter(APIError.class, new Annotation[0]);
         APIError error;
         try{

@@ -9,7 +9,7 @@ import com.aanglearning.parentapp.model.Credentials;
 public interface LoginPresenter {
     void validateCredentials(Credentials credentials);
 
-    void pwdRecovery(String newPassword);
+    void pwdRecovery(String authToken, String newPassword);
 
     void onDestroy();
 }

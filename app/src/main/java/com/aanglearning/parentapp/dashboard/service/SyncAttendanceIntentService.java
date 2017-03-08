@@ -7,6 +7,8 @@ import com.aanglearning.parentapp.api.ApiClient;
 import com.aanglearning.parentapp.api.ParentApi;
 import com.aanglearning.parentapp.dao.AttendanceDao;
 import com.aanglearning.parentapp.model.Attendance;
+import com.aanglearning.parentapp.model.ChildInfo;
+import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
 import java.util.List;
 
@@ -25,13 +27,21 @@ public class SyncAttendanceIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        long sectionId = intent.getLongExtra("sectionId", 0);
-        long studentId = intent.getLongExtra("studentId", 0);
-        String lastDate = intent.getStringExtra("lastDate");
+        ChildInfo childInfo = SharedPreferenceUtil.getProfile(getApplicationContext());
 
-        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
+        ParentApi api = ApiClient
+                .getAuthorizedClient(SharedPreferenceUtil.getUser(getApplicationContext()).getAuthToken())
+                .create(ParentApi.class);
 
-        Call<List<Attendance>> subscribedCourses = api.syncAttendance(sectionId, studentId, lastDate);
+        Call<List<Attendance>> subscribedCourses;
+        String date = AttendanceDao.getLastAttendanceDate(childInfo.getSectionId());
+
+        if (date.equals("")) {
+            subscribedCourses = api.syncAttendance(childInfo.getSectionId(), childInfo.getStudentId());
+        } else {
+            subscribedCourses = api.syncAttendance(childInfo.getSectionId(), childInfo.getStudentId(), date);
+        }
+
         subscribedCourses.enqueue(new Callback<List<Attendance>>() {
             @Override
             public void onResponse(Call<List<Attendance>> call, Response<List<Attendance>> response) {

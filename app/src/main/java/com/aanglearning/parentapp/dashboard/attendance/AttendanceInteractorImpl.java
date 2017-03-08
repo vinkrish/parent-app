@@ -18,9 +18,9 @@ import retrofit2.Response;
 
 public class AttendanceInteractorImpl implements AttendanceInteractor {
     @Override
-    public void getAttendance(long sectionId, long studentId, String lastDate,
+    public void getAttendance(String authToken, long sectionId, long studentId, String lastDate,
                               final OnFinishedListener listener) {
-        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
+        ParentApi api = ApiClient.getAuthorizedClient(authToken).create(ParentApi.class);
 
         Call<List<Attendance>> subscribedCourses = api.getAttendance(sectionId, studentId, lastDate);
         subscribedCourses.enqueue(new Callback<List<Attendance>>() {
@@ -29,8 +29,9 @@ public class AttendanceInteractorImpl implements AttendanceInteractor {
                 if(response.isSuccessful()) {
                     listener.onAttendanceReceived(response.body());
                 } else {
-                    APIError error = ErrorUtils.parseError(response);
-                    listener.onAPIError(error.getMessage());
+                    //APIError error = ErrorUtils.parseError(response);
+                    //listener.onAPIError(error.getMessage());
+                    listener.onError();
                 }
             }
 

@@ -40,8 +40,8 @@ class LoginInteractorImpl implements LoginInteractor {
     }
 
     @Override
-    public void recoverPwd(String newPassword, final OnLoginFinishedListener listener) {
-        AuthApi authApi = ApiClient.getAuthorizedClient().create(AuthApi.class);
+    public void recoverPwd(String authToken, String newPassword, final OnLoginFinishedListener listener) {
+        AuthApi authApi = ApiClient.getAuthorizedClient(authToken).create(AuthApi.class);
 
         Call<CommonResponse> sendNewPwd = authApi.newPassword(newPassword);
         sendNewPwd.enqueue(new Callback<CommonResponse>() {

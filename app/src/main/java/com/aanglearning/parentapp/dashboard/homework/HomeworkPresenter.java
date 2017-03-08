@@ -7,7 +7,7 @@ import com.aanglearning.parentapp.model.Credentials;
  */
 
 public interface HomeworkPresenter {
-    void getHomeworks(long sectionId, String lastDate);
+    void getHomeworks(String authToken, long sectionId, String lastDate);
 
     void onDestroy();
 }

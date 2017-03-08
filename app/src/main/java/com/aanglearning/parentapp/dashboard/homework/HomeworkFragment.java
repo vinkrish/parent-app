@@ -63,7 +63,6 @@ public class HomeworkFragment extends Fragment implements HomeworkView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        childInfo = SharedPreferenceUtil.getProfile(getContext());
         adapter = new HomeworkAdapter(getActivity(), new ArrayList<HomeworkViewObj>());
     }
 
@@ -92,11 +91,13 @@ public class HomeworkFragment extends Fragment implements HomeworkView {
     @Override
     public void onResume() {
         super.onResume();
+        childInfo = SharedPreferenceUtil.getProfile(getContext());
         getHomework();
     }
 
     private void getHomework() {
-        presenter.getHomeworks(childInfo.getSectionId(),
+        presenter.getHomeworks(SharedPreferenceUtil.getUser(getContext()).getAuthToken(),
+                childInfo.getSectionId(),
                 SharedPreferenceUtil.getHomeworkDate(getContext()));
     }
 
@@ -201,9 +202,6 @@ public class HomeworkFragment extends Fragment implements HomeworkView {
 
     @Override
     public void syncHomework() {
-        Intent intent = new Intent(getContext(), SyncHomeworkIntentService.class);
-        intent.putExtra("sectionId", childInfo.getSectionId());
-        intent.putExtra("lastDate", HomeworkDao.getLastHomeworkDate(childInfo.getSectionId()));
-        getActivity().startService(intent);
+        getActivity().startService(new Intent(getContext(), SyncHomeworkIntentService.class));
     }
 }

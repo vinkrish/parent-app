@@ -18,6 +18,6 @@ public interface HomeworkInteractor {
         void onHomeworkReceived(List<Homework> homeworks);
     }
 
-    void getHomeworks(long sectionId, String lastDate,
+    void getHomeworks(String authToken, long sectionId, String lastDate,
                       HomeworkInteractor.OnFinishedListener listener);
 }

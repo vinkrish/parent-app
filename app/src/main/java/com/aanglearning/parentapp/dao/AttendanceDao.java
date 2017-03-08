@@ -48,7 +48,7 @@ public class AttendanceDao {
     public static Attendance getAttendance(String date) {
         Attendance attendance = new Attendance();
         SQLiteDatabase sqliteDatabase = AppGlobal.getSqlDbHelper().getReadableDatabase();
-        Cursor c = sqliteDatabase.rawQuery("select * from homework where HomeworkDate = '" + date + "'" , null);
+        Cursor c = sqliteDatabase.rawQuery("select * from attendance where HomeworkDate = '" + date + "'" , null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
             attendance.setId(c.getLong(c.getColumnIndex("Id")));
@@ -64,5 +64,19 @@ public class AttendanceDao {
         }
         c.close();
         return attendance;
+    }
+
+    public static String getLastAttendanceDate(long sectionId) {
+        String date = "";
+        SQLiteDatabase sqliteDatabase = AppGlobal.getSqlDbHelper().getReadableDatabase();
+        Cursor c = sqliteDatabase.rawQuery("SELECT DateAttendance FROM attendance WHERE SectionId = " +
+                sectionId + " ORDER BY DateAttendance DESC LIMIT 1", null);
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            date = c.getString(c.getColumnIndex("DateAttendance"));
+            c.moveToNext();
+        }
+        c.close();
+        return date;
     }
 }

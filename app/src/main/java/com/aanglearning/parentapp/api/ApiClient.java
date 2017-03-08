@@ -21,34 +21,36 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
     private static final String BASE_URL = "http://192.168.1.4:8080/guldu/webapi/";
+    private static Retrofit authRetrofit = null;
     private static Retrofit retrofit = null;
 
-    public static Retrofit getAuthorizedClient() {
+    public static Retrofit getAuthorizedClient(final String authToken) {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
                 .addInterceptor(new Interceptor() {
                     @Override
                     public Response intercept(Interceptor.Chain chain) throws IOException {
                         Request original = chain.request();
                         Request.Builder requestBuilder = original.newBuilder()
                                 .header("Authorization",
-                                        "Bearer " + SharedPreferenceUtil.getUser(AppGlobal.getActivity()).getAuthToken());
+                                        "Bearer " + authToken)
+                                .header("Content-Type", "application/json");
                         Request request = requestBuilder.build();
                         return chain.proceed(request);
                     }
                 })
+                .addInterceptor(logging)
                 .build();
 
-        if (retrofit == null) {
-            retrofit = new Retrofit.Builder()
+        if (authRetrofit == null) {
+            authRetrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
-        return retrofit;
+        return authRetrofit;
     }
 
     public static Retrofit getClient() {

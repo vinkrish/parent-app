@@ -122,7 +122,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         if(mobile.getText().toString().length() != 10) {
             mobileLayout.setError(getString(R.string.valid_mobile));
         } else {
-            presenter.pwdRecovery(mobile.getText().toString());
+            presenter.pwdRecovery(
+                    SharedPreferenceUtil.getUser(this).getAuthToken(),
+                    mobile.getText().toString());
         }
     }
 

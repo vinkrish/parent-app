@@ -7,7 +7,9 @@ import android.util.Log;
 import com.aanglearning.parentapp.api.ApiClient;
 import com.aanglearning.parentapp.api.ParentApi;
 import com.aanglearning.parentapp.dao.HomeworkDao;
+import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Homework;
+import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
 import java.util.List;
 
@@ -26,16 +28,18 @@ public class SyncHomeworkIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        long sectionId = intent.getLongExtra("sectionId", 0);
-        String lastDate = intent.getStringExtra("lastDate");
+        ChildInfo childInfo = SharedPreferenceUtil.getProfile(getApplicationContext());
 
-        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
+        ParentApi api = ApiClient
+                .getAuthorizedClient(SharedPreferenceUtil.getUser(getApplicationContext()).getAuthToken())
+                .create(ParentApi.class);
 
+        String date = HomeworkDao.getLastHomeworkDate(childInfo.getSectionId());
         Call<List<Homework>> subscribedCourses;
-        if(lastDate.equals("")) {
-            subscribedCourses = api.syncHomework(sectionId);
+        if (date.equals("")) {
+            subscribedCourses = api.syncHomework(childInfo.getSectionId());
         } else {
-            subscribedCourses = api.syncHomework(sectionId, lastDate);
+            subscribedCourses = api.syncHomework(childInfo.getSectionId(), date);
         }
 
         subscribedCourses.enqueue(new Callback<List<Homework>>() {
