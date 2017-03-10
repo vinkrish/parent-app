@@ -19,12 +19,12 @@ class HomeworkPresenterImpl implements HomeworkPresenter, HomeworkInteractor.OnF
     }
 
     @Override
-    public void getHomeworks(String authToken, long sectionId, String lastDate) {
+    public void getHomeworks(long sectionId, String lastDate) {
         if(mView != null) {
             mView.showProgress();
             List<Homework> homeworkList = HomeworkDao.getHomework(sectionId, lastDate);
             if(homeworkList.size() == 0) {
-                mInteractor.getHomeworks(authToken, sectionId, lastDate, this);
+                mInteractor.getHomeworks(sectionId, lastDate, this);
             } else {
                 mView.showHomework(homeworkList);
                 mView.hideProgess();

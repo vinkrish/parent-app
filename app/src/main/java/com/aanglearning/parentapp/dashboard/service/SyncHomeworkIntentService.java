@@ -31,7 +31,7 @@ public class SyncHomeworkIntentService extends IntentService {
         ChildInfo childInfo = SharedPreferenceUtil.getProfile(getApplicationContext());
 
         ParentApi api = ApiClient
-                .getAuthorizedClient(SharedPreferenceUtil.getUser(getApplicationContext()).getAuthToken())
+                .getAuthorizedClient()
                 .create(ParentApi.class);
 
         String date = HomeworkDao.getLastHomeworkDate(childInfo.getSectionId());

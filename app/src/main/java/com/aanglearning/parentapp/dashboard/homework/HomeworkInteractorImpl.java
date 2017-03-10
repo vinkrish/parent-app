@@ -18,9 +18,9 @@ import retrofit2.Response;
 
 public class HomeworkInteractorImpl implements HomeworkInteractor {
     @Override
-    public void getHomeworks(String authToken, long sectionId, String lastDate,
+    public void getHomeworks(long sectionId, String lastDate,
                              final OnFinishedListener listener) {
-        ParentApi api = ApiClient.getAuthorizedClient(authToken).create(ParentApi.class);
+        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
         Call<List<Homework>> subscribedCourses = api.getHomework(sectionId, lastDate);
         subscribedCourses.enqueue(new Callback<List<Homework>>() {

@@ -2,6 +2,7 @@ package com.aanglearning.parentapp.api;
 
 import android.util.Log;
 
+import com.aanglearning.parentapp.App;
 import com.aanglearning.parentapp.util.AppGlobal;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
@@ -24,7 +25,7 @@ public class ApiClient {
     private static Retrofit authRetrofit = null;
     private static Retrofit retrofit = null;
 
-    public static Retrofit getAuthorizedClient(final String authToken) {
+    public static Retrofit getAuthorizedClient() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
@@ -34,7 +35,7 @@ public class ApiClient {
                         Request original = chain.request();
                         Request.Builder requestBuilder = original.newBuilder()
                                 .header("Authorization",
-                                        "Bearer " + authToken)
+                                        "Bearer " + SharedPreferenceUtil.getUser(App.getInstance()).getAuthToken())
                                 .header("Content-Type", "application/json");
                         Request request = requestBuilder.build();
                         return chain.proceed(request);

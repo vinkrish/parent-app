@@ -8,9 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aanglearning.parentapp.R;
-import com.aanglearning.parentapp.dao.HomeworkDao;
 import com.aanglearning.parentapp.dashboard.service.SyncAttendanceIntentService;
-import com.aanglearning.parentapp.dashboard.service.SyncHomeworkIntentService;
 import com.aanglearning.parentapp.model.Attendance;
 
 import java.util.List;

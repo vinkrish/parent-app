@@ -96,8 +96,7 @@ public class HomeworkFragment extends Fragment implements HomeworkView {
     }
 
     private void getHomework() {
-        presenter.getHomeworks(SharedPreferenceUtil.getUser(getContext()).getAuthToken(),
-                childInfo.getSectionId(),
+        presenter.getHomeworks(childInfo.getSectionId(),
                 SharedPreferenceUtil.getHomeworkDate(getContext()));
     }
 

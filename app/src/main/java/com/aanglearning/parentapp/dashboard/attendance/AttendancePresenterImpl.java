@@ -12,7 +12,7 @@ public class AttendancePresenterImpl implements AttendancePresenter,
         AttendanceInteractor.OnFinishedListener {
 
     @Override
-    public void getAttendance(String authTOken, long sectionId, long studentId, String lastDate) {
+    public void getAttendance(long sectionId, long studentId, String lastDate) {
 
     }
 

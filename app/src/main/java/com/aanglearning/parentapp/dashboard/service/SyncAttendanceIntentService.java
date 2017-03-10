@@ -30,7 +30,7 @@ public class SyncAttendanceIntentService extends IntentService {
         ChildInfo childInfo = SharedPreferenceUtil.getProfile(getApplicationContext());
 
         ParentApi api = ApiClient
-                .getAuthorizedClient(SharedPreferenceUtil.getUser(getApplicationContext()).getAuthToken())
+                .getAuthorizedClient()
                 .create(ParentApi.class);
 
         Call<List<Attendance>> subscribedCourses;
