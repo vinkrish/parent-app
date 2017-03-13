@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/attendance_session"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone">
+
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_normal">
+
+        <TextView
+            android:id="@+id/reference"
+            app:layout_widthPercent="50%"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:text="@string/morning"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="@dimen/text_large" />
+
+        <TextView
+            app:layout_widthPercent="50%"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/reference"
+            android:gravity="center"
+            android:text="@string/afternoon"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="@dimen/text_large" />
+
+        <TextView
+            android:id="@+id/attendance_session1_tv"
+            app:layout_widthPercent="50%"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/reference"
+            android:gravity="center"
+            android:paddingTop="@dimen/spacing_normal"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="@dimen/text_xlarge" />
+
+        <TextView
+            android:id="@+id/attendance_session2_tv"
+            app:layout_widthPercent="50%"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/reference"
+            android:gravity="center"
+            android:paddingTop="@dimen/spacing_normal"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="@dimen/text_xlarge" />
+
+    </android.support.percent.PercentRelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/spacing_normal"
+        android:gravity="end"
+        android:text="@string/attendance_twice"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="@dimen/text_small" />
+
+</RelativeLayout>

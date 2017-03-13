@@ -2,7 +2,6 @@ package com.aanglearning.parentapp.dashboard.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 import com.aanglearning.parentapp.api.ApiClient;
 import com.aanglearning.parentapp.api.ParentApi;
@@ -30,9 +29,7 @@ public class SyncHomeworkIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         ChildInfo childInfo = SharedPreferenceUtil.getProfile(getApplicationContext());
 
-        ParentApi api = ApiClient
-                .getAuthorizedClient()
-                .create(ParentApi.class);
+        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
         String date = HomeworkDao.getLastHomeworkDate(childInfo.getSectionId());
         Call<List<Homework>> subscribedCourses;

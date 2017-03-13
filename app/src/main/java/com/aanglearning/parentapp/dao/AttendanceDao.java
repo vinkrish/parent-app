@@ -8,6 +8,7 @@ import com.aanglearning.parentapp.model.Attendance;
 import com.aanglearning.parentapp.model.Homework;
 import com.aanglearning.parentapp.util.AppGlobal;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +18,8 @@ import java.util.List;
 public class AttendanceDao {
 
     public static int insert(List<Attendance> attendances) {
-        String sql = "insert into attendance(Id, SectionId, StudentId, StudentName, SubjectId, Type, Session, DateAttendance, TypeOfLeave) " +
+        String sql = "insert into attendance" +
+                "(Id, SectionId, StudentId, StudentName, SubjectId, Type, Session, DateAttendance, TypeOfLeave) " +
                 "values(?,?,?,?,?,?,?,?,?)";
         SQLiteDatabase db = AppGlobal.getSqlDbHelper().getWritableDatabase();
         db.beginTransactionNonExclusive();
@@ -45,12 +47,15 @@ public class AttendanceDao {
         return 1;
     }
 
-    public static Attendance getAttendance(String date) {
-        Attendance attendance = new Attendance();
+    public static List<Attendance> getAttendance(long sectionId, String date) {
+        List<Attendance> attendanceList = new ArrayList<>();
         SQLiteDatabase sqliteDatabase = AppGlobal.getSqlDbHelper().getReadableDatabase();
-        Cursor c = sqliteDatabase.rawQuery("select * from attendance where HomeworkDate = '" + date + "'" , null);
+        Cursor c = sqliteDatabase.rawQuery("select * from attendance" +
+                " where DateAttendance = '" + date +
+                "' and SectionId = " + sectionId + " order by Session ASC", null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
+            Attendance attendance = new Attendance();
             attendance.setId(c.getLong(c.getColumnIndex("Id")));
             attendance.setSectionId(c.getLong(c.getColumnIndex("SectionId")));
             attendance.setStudentId(c.getLong(c.getColumnIndex("StudentId")));
@@ -60,10 +65,11 @@ public class AttendanceDao {
             attendance.setSession(c.getInt(c.getColumnIndex("Session")));
             attendance.setDateAttendance(c.getString(c.getColumnIndex("DateAttendance")));
             attendance.setTypeOfLeave(c.getString(c.getColumnIndex("TypeOfLeave")));
+            attendanceList.add(attendance);
             c.moveToNext();
         }
         c.close();
-        return attendance;
+        return attendanceList;
     }
 
     public static String getLastAttendanceDate(long sectionId) {

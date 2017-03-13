@@ -9,8 +9,6 @@ import java.util.List;
  */
 
 public interface AttendanceView {
-    void showAttendance(List<Attendance> attendanceList);
-
     void showProgress();
 
     void hideProgess();
@@ -18,6 +16,8 @@ public interface AttendanceView {
     void showError();
 
     void showAPIError(String message);
+
+    void showAttendance(List<Attendance> attendanceList);
 
     void syncAttendance();
 }

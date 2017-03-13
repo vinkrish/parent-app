@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +15,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.aanglearning.parentapp.R;
-import com.aanglearning.parentapp.dao.HomeworkDao;
 import com.aanglearning.parentapp.dashboard.service.SyncHomeworkIntentService;
 import com.aanglearning.parentapp.model.ChildInfo;
-import com.aanglearning.parentapp.model.Credentials;
 import com.aanglearning.parentapp.model.Homework;
 import com.aanglearning.parentapp.util.DatePickerFragment;
 import com.aanglearning.parentapp.util.DateUtil;
-import com.aanglearning.parentapp.util.DividerItemDecoration;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -55,14 +50,12 @@ public class HomeworkFragment extends Fragment implements HomeworkView {
     private ChildInfo childInfo;
 
     public static HomeworkFragment newInstance() {
-        HomeworkFragment fragment = new HomeworkFragment();
-        return fragment;
+        return new HomeworkFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
         adapter = new HomeworkAdapter(getActivity(), new ArrayList<HomeworkViewObj>());
     }
 

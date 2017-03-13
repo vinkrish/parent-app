@@ -364,6 +364,7 @@ public interface SqlConstant {
             "  ClassName TEXT," +
             "  SectionId INTEGER," +
             "  SectionName TEXT," +
+            "  StudentId INTEGER," +
             "  Name TEXT" +
             ")";
 

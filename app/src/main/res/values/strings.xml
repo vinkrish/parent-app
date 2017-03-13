@@ -23,4 +23,19 @@
 
     <string name="dashboard">Dashboard</string>
     <string name="logout">Logout</string>
+
+    <string name="attendance_once">*Attendance is taken daily once</string>
+    <string name="attendance_twice">*Attendance is taken twice a day</string>
+    <string name="attendance_period">*Attendance is taken for each period</string>
+    <string name="morning"><u>Morning</u></string>
+    <string name="afternoon"><u>Afternoon</u></string>
+    <string name="period">Period</string>
+    <string name="p">P = Present</string>
+    <string name="a">A = Absent</string>
+
+    <string name="m">M</string>
+    <string name="t">T</string>
+    <string name="w">W</string>
+    <string name="f">F</string>
+    <string name="s">S</string>
 </resources>

@@ -26,18 +26,15 @@ public interface ParentApi {
     Call<List<Homework>> getHomework(@Path("sectionId") long sectionId,
                                       @Path("homeworkDate") String homeworkDate);
 
-    @GET("app/attendance/section/{sectionId}/student/{studentId}")
-    Call<List<Attendance>> syncAttendance(@Path("sectionId") long sectionId,
-                                          @Path("studentId") long studentId);
+    @GET("app/attendance/section/{sectionId}")
+    Call<List<Attendance>> syncAttendance(@Path("sectionId") long sectionId);
 
-    @GET("app/attendance/section/{sectionId}/student/{studentId}/date/{lastDate}")
+    @GET("app/attendance/section/{sectionId}/date/{lastDate}")
     Call<List<Attendance>> syncAttendance(@Path("sectionId") long sectionId,
-                                          @Path("studentId") long studentId,
                                           @Path("lastDate") String lastDate);
 
-    @GET("app/attendance/section/{sectionId}/student/{studentId}/date/{attendanceDate}")
+    @GET("app/attendance/section/{sectionId}/currentDate/{attendanceDate}")
     Call<List<Attendance>> getAttendance(@Path("sectionId") long sectionId,
-                                          @Path("studentId") long studentId,
                                           @Path("attendanceDate") String attendanceDate);
 
 }

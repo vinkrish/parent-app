@@ -1,7 +1,5 @@
 package com.aanglearning.parentapp.dashboard.attendance;
 
-import com.aanglearning.parentapp.model.Credentials;
-
 /**
  * Created by Vinay on 03-03-2017.
  */

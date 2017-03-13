@@ -18,6 +18,6 @@ public interface AttendanceInteractor {
        void onAttendanceReceived(List<Attendance> attendanceList);
     }
 
-    void getAttendance(long sectionId, long studentId, String lastDate,
+    void getAttendance(long sectionId, String lastDate,
                        AttendanceInteractor.OnFinishedListener listener);
 }

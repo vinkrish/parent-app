@@ -1,9 +1,6 @@
 package com.aanglearning.parentapp.api;
 
-import android.util.Log;
-
 import com.aanglearning.parentapp.App;
-import com.aanglearning.parentapp.util.AppGlobal;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
 import java.io.IOException;
@@ -21,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class ApiClient {
-    private static final String BASE_URL = "http://192.168.1.4:8080/guldu/webapi/";
+    private static final String BASE_URL = "http://192.168.1.3:8080/guldu/webapi/";
     private static Retrofit authRetrofit = null;
     private static Retrofit retrofit = null;
 

@@ -2,6 +2,7 @@ package com.aanglearning.parentapp.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Credentials;

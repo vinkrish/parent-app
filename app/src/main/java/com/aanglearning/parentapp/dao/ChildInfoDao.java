@@ -16,8 +16,8 @@ import java.util.ArrayList;
 public class ChildInfoDao {
 
     public static int insert(ArrayList<ChildInfo> childInfos) {
-        String sql = "insert into child_info(SchoolId, SchoolName, ClassId, ClassName, SectionId, SectionName, Name) " +
-                "values(?,?,?,?,?,?,?)";
+        String sql = "insert into child_info(SchoolId, SchoolName, ClassId, ClassName, SectionId, SectionName, StudentId, Name) " +
+                "values(?,?,?,?,?,?,?,?)";
         SQLiteDatabase db = AppGlobal.getSqlDbHelper().getWritableDatabase();
         db.beginTransactionNonExclusive();
         SQLiteStatement stmt = db.compileStatement(sql);
@@ -29,7 +29,8 @@ public class ChildInfoDao {
                 stmt.bindString(4, info.getClassName());
                 stmt.bindLong(5, info.getSectionId());
                 stmt.bindString(6, info.getSectionName());
-                stmt.bindString(7, info.getName());
+                stmt.bindLong(7, info.getStudentId());
+                stmt.bindString(8, info.getName());
                 stmt.execute();
                 stmt.clearBindings();
             }
@@ -55,6 +56,7 @@ public class ChildInfoDao {
             childInfo.setClassName(c.getString(c.getColumnIndex("ClassName")));
             childInfo.setSectionId(c.getLong(c.getColumnIndex("SectionId")));
             childInfo.setSectionName(c.getString(c.getColumnIndex("SectionName")));
+            childInfo.setStudentId(c.getLong(c.getColumnIndex("StudentId")));
             childInfo.setName(c.getString(c.getColumnIndex("Name")));
             childInfos.add(childInfo);
             c.moveToNext();

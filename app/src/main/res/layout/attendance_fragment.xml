@@ -13,16 +13,16 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="5dp"
+            android:layout_margin="@dimen/spacing_normal"
             android:orientation="horizontal">
 
             <ImageView
@@ -36,8 +36,8 @@
                 android:id="@+id/date_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="@dimen/spacing_small"
+                android:layout_marginRight="@dimen/spacing_tiny"
                 android:layout_weight="1"
                 android:lineSpacingExtra="3dp"
                 android:textColor="@color/primaryTextColor"
@@ -59,11 +59,23 @@
             android:id="@+id/penultimate_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="@dimen/spacing_small"
+            android:layout_marginRight="@dimen/spacing_normal"
             android:gravity="end"
             android:textColor="@android:color/holo_red_light"
             android:textSize="@dimen/text_small"
+            android:visibility="gone" />
+
+        <include
+            layout="@layout/attendance_daily"
+            android:visibility="gone" />
+
+        <include
+            layout="@layout/attendance_session"
+            android:visibility="gone" />
+
+        <include
+            layout="@layout/attendance_period"
             android:visibility="gone" />
 
     </LinearLayout>

@@ -29,17 +29,15 @@ public class SyncAttendanceIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         ChildInfo childInfo = SharedPreferenceUtil.getProfile(getApplicationContext());
 
-        ParentApi api = ApiClient
-                .getAuthorizedClient()
-                .create(ParentApi.class);
+        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
         Call<List<Attendance>> subscribedCourses;
         String date = AttendanceDao.getLastAttendanceDate(childInfo.getSectionId());
 
         if (date.equals("")) {
-            subscribedCourses = api.syncAttendance(childInfo.getSectionId(), childInfo.getStudentId());
+            subscribedCourses = api.syncAttendance(childInfo.getSectionId());
         } else {
-            subscribedCourses = api.syncAttendance(childInfo.getSectionId(), childInfo.getStudentId(), date);
+            subscribedCourses = api.syncAttendance(childInfo.getSectionId(), date);
         }
 
         subscribedCourses.enqueue(new Callback<List<Attendance>>() {
