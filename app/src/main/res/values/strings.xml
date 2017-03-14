@@ -32,6 +32,7 @@
     <string name="period">Period</string>
     <string name="p">P = Present</string>
     <string name="a">A = Absent</string>
+    <string name="periods"><u>Periods</u></string>
 
     <string name="m">M</string>
     <string name="t">T</string>

@@ -4,8 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/periods"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_normal"
+        android:text="@string/periods"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="@dimen/text_xsmall" />
+
+    <View
+        android:id="@+id/topBorder"
+        android:layout_below="@id/periods"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/dividerColor"/>
+
     <RelativeLayout
         android:id="@+id/tableLayout"
+        android:layout_below="@+id/topBorder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

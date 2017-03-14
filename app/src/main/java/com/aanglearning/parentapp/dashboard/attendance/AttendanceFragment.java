@@ -4,13 +4,20 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.aanglearning.parentapp.R;
@@ -27,6 +34,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,20 +45,32 @@ import butterknife.ButterKnife;
  */
 
 public class AttendanceFragment extends Fragment implements AttendanceView {
-    @BindView(R.id.progress) ProgressBar progressBar;
-    @BindView(R.id.date_tv) TextView dateView;
-    @BindView(R.id.change_btn) Button changeDateBtn;
-    @BindView(R.id.penultimate_date) TextView validDateView;
-    @BindView(R.id.attendance_daily) RelativeLayout dailyLayout;
-    @BindView(R.id.attendance_session) RelativeLayout sessionLayout;
-    @BindView(R.id.attendance_period) RelativeLayout periodLayout;
-    @BindView(R.id.attendance_daily_tv) TextView attDailyTv;
-    @BindView(R.id.attendance_session1_tv) TextView attSession1Tv;
-    @BindView(R.id.attendance_session2_tv) TextView attSession2Tv;
-    @BindView(R.id.tableLayout) RelativeLayout tableLayout;
+    @BindView(R.id.progress)
+    ProgressBar progressBar;
+    @BindView(R.id.date_tv)
+    TextView dateView;
+    @BindView(R.id.change_btn)
+    Button changeDateBtn;
+    @BindView(R.id.penultimate_date)
+    TextView validDateView;
+    @BindView(R.id.attendance_daily)
+    RelativeLayout dailyLayout;
+    @BindView(R.id.attendance_session)
+    RelativeLayout sessionLayout;
+    @BindView(R.id.attendance_period)
+    RelativeLayout periodLayout;
+    @BindView(R.id.attendance_daily_tv)
+    TextView attDailyTv;
+    @BindView(R.id.attendance_session1_tv)
+    TextView attSession1Tv;
+    @BindView(R.id.attendance_session2_tv)
+    TextView attSession2Tv;
+    @BindView(R.id.tableLayout)
+    RelativeLayout tableLayout;
 
     private AttendancePresenter presenter;
     private ChildInfo childInfo;
+    private TableLayout table;
 
     public static AttendanceFragment newInstance() {
         return new AttendanceFragment();
@@ -83,6 +104,8 @@ public class AttendanceFragment extends Fragment implements AttendanceView {
         });
 
         setDefaultDate();
+
+        table = new TableLayout(getActivity());
 
         return view;
     }
@@ -157,37 +180,61 @@ public class AttendanceFragment extends Fragment implements AttendanceView {
 
     private void checkAttendance(List<Attendance> attendanceList) {
         String attendanceType = "";
-        String session1 = "";
-        String session2 = "";
+        String session0 = "-";
+        String session1 = "-";
+        TreeMap<Integer, String> map = new TreeMap<>();
         for (Attendance att : attendanceList) {
-            if (att.getType().equals("Daily")
-                    && att.getStudentId() != childInfo.getStudentId()) {
-                showDailyAttendance("Present");
-                break;
-            } else if (att.getType().equals("Daily")
-                    && att.getTypeOfLeave().equals("Absent")) {
-                showDailyAttendance("Absent");
-                break;
-            } else if (att.getType().equals("Session")) {
-                attendanceType = "Session";
-                if (att.getSession() == 0 && att.getStudentId() != childInfo.getStudentId()) {
-                    session1 = "Present";
-                } else if (att.getSession() == 1 && att.getStudentId() != childInfo.getStudentId()) {
-                    session2 = "Present";
-                } else if (att.getSession() == 0 && att.getTypeOfLeave().equals("Absent")) {
-                    session1 = "Absent";
-                } else if (att.getSession() == 1 && att.getTypeOfLeave().equals("Absent")) {
-                    session2 = "Absent";
-                }
-            } else if (att.getType().equals("Period")) {
-                attendanceType = "Period";
-                break;
+            switch (att.getType()) {
+                case "Daily":
+                    attendanceType = "Daily";
+                    if (att.getStudentId() != childInfo.getStudentId()
+                            && !session0.equals("Absent")) {
+                        session0 = "Present";
+                    } else if (att.getStudentId() == childInfo.getStudentId()
+                            && att.getTypeOfLeave().equals("Absent")) {
+                        session0 = "Absent";
+                    }
+                    break;
+                case "Session":
+                    attendanceType = "Session";
+                    if (att.getSession() == 0
+                            && att.getStudentId() != childInfo.getStudentId()
+                            && !session0.equals("Absent")) {
+                        session0 = "Present";
+                    } else if (att.getSession() == 1
+                            && att.getStudentId() != childInfo.getStudentId()
+                            && !session1.equals("Absent")) {
+                        session1 = "Present";
+                    } else if (att.getSession() == 0
+                            && att.getStudentId() == childInfo.getStudentId()
+                            && att.getTypeOfLeave().equals("Absent")) {
+                        session0 = "Absent";
+                    } else if (att.getSession() == 1
+                            && att.getStudentId() == childInfo.getStudentId()
+                            && att.getTypeOfLeave().equals("Absent")) {
+                        session1 = "Absent";
+                    }
+                    break;
+                case "Period":
+                    attendanceType = "Period";
+                    if (att.getStudentId() != childInfo.getStudentId()
+                            && !session0.equals("Absent")) {
+                        map.put(att.getSession(), "Present");
+                    } else if (att.getStudentId() == childInfo.getStudentId()
+                            && att.getTypeOfLeave().equals("Absent")) {
+                        map.put(att.getSession(), "Absent");
+                    }
+                    break;
+                default:
+                    break;
             }
         }
-        if (attendanceType.equals("Session")) {
-            showSessionAttendance(session1, session2);
+        if (attendanceType.equals("Daily")) {
+            showDailyAttendance(session0);
+        } else if (attendanceType.equals("Session")) {
+            showSessionAttendance(session0, session1);
         } else if (attendanceType.equals("Period")) {
-            showPeriodAttendance(attendanceList);
+            showPeriodAttendance(map);
         }
     }
 
@@ -228,8 +275,116 @@ public class AttendanceFragment extends Fragment implements AttendanceView {
         attSession2Tv.setText(session2);
     }
 
-    private void showPeriodAttendance(List<Attendance> attendanceList) {
+    private void showPeriodAttendance(final TreeMap<Integer, String> map) {
+        periodLayout.setVisibility(View.VISIBLE);
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        table.removeAllViews();
+                        tableLayout.removeAllViews();
+                        TableRow tableHeaderRow = generateHeaderRow(map);
+                        table.addView(tableHeaderRow);
+                        TableRow tableRow = generateRow(map);
+                        table.addView(tableRow);
+                        tableLayout.addView(table);
+                    }
+                });
+            }
+        }).start();
+
+    }
+
+    private TableRow generateHeaderRow(TreeMap<Integer, String> map) {
+        int id = 1234567;
+        TableRow tableRowForTable = new TableRow(getContext());
+        TableRow.LayoutParams param = new TableRow.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+        LinearLayout verticalLayout = new LinearLayout(getActivity());
+        verticalLayout.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout horizontalLayout = new LinearLayout(getActivity());
+        horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        int width =  getActivity().getResources().getDisplayMetrics().widthPixels / map.size();
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        for (Map.Entry<Integer, String> att : map.entrySet()) {
+            TextView tv = new TextView(getActivity());
+            tv.setId(id++);
+            tv.setLayoutParams(params);
+            tv.setText(att.getKey().toString());
+            tv.setGravity(Gravity.CENTER);
+            tv.setPadding(0, 10, 0, 10);
+            tv.setTextSize(18);
+            tv.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryTextColor));
+            horizontalLayout.addView(tv);
+            View verticalBorder = new View(getActivity());
+            verticalBorder.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dividerColor));
+            LinearLayout.LayoutParams vlp = new LinearLayout.LayoutParams(2, LinearLayout.LayoutParams.MATCH_PARENT);
+            verticalBorder.setLayoutParams(vlp);
+            verticalBorder.setId(id++);
+            horizontalLayout.addView(verticalBorder);
+        }
+
+        verticalLayout.addView(horizontalLayout);
+        View horizontalBorder = new View(getActivity());
+        horizontalBorder.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dividerColor));
+        LinearLayout.LayoutParams hlp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
+        horizontalBorder.setLayoutParams(hlp);
+        verticalLayout.addView(horizontalBorder);
+
+        tableRowForTable.addView(verticalLayout, param);
+
+        return tableRowForTable;
+    }
+
+    private TableRow generateRow(TreeMap<Integer, String> map) {
+        int id = 123456;
+
+        TableRow tableRowForTable = new TableRow(getContext());
+        TableRow.LayoutParams param = new TableRow.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+        LinearLayout verticalLayout = new LinearLayout(getActivity());
+        verticalLayout.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout horizontalLayout = new LinearLayout(getActivity());
+        horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        int width =  getActivity().getResources().getDisplayMetrics().widthPixels / map.size();
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        for (Map.Entry<Integer, String> att : map.entrySet()) {
+            TextView tv = new TextView(getActivity());
+            tv.setId(id++);
+            tv.setLayoutParams(params);
+            tv.setText(att.getValue());
+            tv.setGravity(Gravity.CENTER);
+            tv.setTextSize(18);
+            tv.setPadding(0, 10, 0, 10);
+            tv.setTextColor(ContextCompat.getColor(getContext(), R.color.primaryTextColor));
+            horizontalLayout.addView(tv);
+            View verticalBorder = new View(getActivity());
+            verticalBorder.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dividerColor));
+            LinearLayout.LayoutParams vlp = new LinearLayout.LayoutParams(2, LinearLayout.LayoutParams.MATCH_PARENT);
+            verticalBorder.setLayoutParams(vlp);
+            verticalBorder.setId(id++);
+            horizontalLayout.addView(verticalBorder);
+        }
+
+        verticalLayout.addView(horizontalLayout);
+        View horizontalBorder = new View(getActivity());
+        horizontalBorder.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dividerColor));
+        LinearLayout.LayoutParams hlp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1);
+        horizontalBorder.setLayoutParams(hlp);
+        verticalLayout.addView(horizontalBorder);
+
+        tableRowForTable.addView(verticalLayout, param);
+
+        return tableRowForTable;
     }
 
     @Override
