@@ -1,11 +1,5 @@
 package com.aanglearning.parentapp.dashboard;
 
-import com.aanglearning.parentapp.model.Attendance;
-import com.aanglearning.parentapp.model.Credentials;
-import com.aanglearning.parentapp.model.Homework;
-
-import java.util.List;
-
 /**
  * Created by Vinay on 24-02-2017.
  */
@@ -20,12 +14,7 @@ public class DashboardPresenterImpl implements DashboardPresenter, DashboardInte
     }
 
     @Override
-    public void onError() {
-
-    }
-
-    @Override
-    public void onAPIError(String message) {
+    public void onError(String message) {
 
     }
 

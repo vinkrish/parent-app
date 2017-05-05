@@ -18,11 +18,11 @@ import retrofit2.http.POST;
 public interface AuthApi {
 
     @Headers("content-type: application/json")
-    @POST("user/login")
+    @POST("parent/login")
     Call<Credentials> login(@Body Credentials credentials);
 
     @Headers("content-type: application/json")
-    @POST("user/newPassword")
+    @POST("parent/newPassword")
     Call<CommonResponse> newPassword(@Body String updatedPassword);
 
 }

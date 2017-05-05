@@ -1,0 +1,183 @@
+package com.aanglearning.parentapp.homework;
+
+import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.aanglearning.parentapp.R;
+import com.aanglearning.parentapp.service.SyncHomeworkIntentService;
+import com.aanglearning.parentapp.model.ChildInfo;
+import com.aanglearning.parentapp.model.Homework;
+import com.aanglearning.parentapp.util.DatePickerFragment;
+import com.aanglearning.parentapp.util.DateUtil;
+import com.aanglearning.parentapp.util.SharedPreferenceUtil;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class HomeworkActivity extends AppCompatActivity implements HomeworkView {
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.progress) ProgressBar progressBar;
+    @BindView(R.id.date_tv) TextView dateView;
+    @BindView(R.id.change_btn) Button changeDateBtn;
+    @BindView(R.id.penultimate_date) TextView validDateView;
+    @BindView(R.id.recyclerview) RecyclerView recyclerView;
+
+    private HomeworkAdapter adapter;
+    private HomeworkPresenter presenter;
+    private ChildInfo childInfo;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_homework);
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        presenter = new HomeworkPresenterImpl(this, new HomeworkInteractorImpl());
+        adapter = new HomeworkAdapter(this, new ArrayList<HomeworkViewObj>());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        changeDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeDate();
+            }
+        });
+
+        setDefaultDate();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        childInfo = SharedPreferenceUtil.getProfile(this);
+        getHomework();
+    }
+
+    private void getHomework() {
+        presenter.getHomeworks(childInfo.getSectionId(),
+                SharedPreferenceUtil.getHomeworkDate(this));
+    }
+
+    private void setDefaultDate() {
+        dateView.setText(DateUtil.getDisplayFormattedDate(SharedPreferenceUtil.getHomeworkDate(this)));
+    }
+
+    private void changeDate() {
+        SimpleDateFormat defaultFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date date = new Date();
+        try {
+            date = defaultFormat.parse(SharedPreferenceUtil.getHomeworkDate(this));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerFragment newFragment = new DatePickerFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("year",year);
+        bundle.putInt("month",month);
+        bundle.putInt("day", day);
+        newFragment.setCallBack(ondate);
+        newFragment.setArguments(bundle);
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    DatePickerDialog.OnDateSetListener ondate = new DatePickerDialog.OnDateSetListener() {
+
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+            SimpleDateFormat displayFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(year, monthOfYear, dayOfMonth);
+            Date date = cal.getTime();
+
+            Calendar tomorrowCal = Calendar.getInstance();
+            //tomorrowCal.add(Calendar.DATE, 1);
+            Date tomorrowDate = tomorrowCal.getTime();
+
+            if(date.after(tomorrowDate)) {
+                isValidTargetDate(true, "");
+            } else {
+                dateView.setText(DateUtil.getDisplayFormattedDate(dateFormat.format(date)));
+                isValidTargetDate(false, dateFormat.format(date));
+            }
+        }
+    };
+
+    private void isValidTargetDate(boolean visibile, String date){
+        if(visibile){
+            validDateView.setVisibility(View.VISIBLE);
+            validDateView.setText(getResources().getText(R.string.future_date));
+        } else {
+            if (validDateView != null && validDateView.getVisibility() == View.VISIBLE) {
+                validDateView.setVisibility(View.GONE);
+            }
+            SharedPreferenceUtil.saveHomeworkDate(this, date);
+            getHomework();
+        }
+    }
+
+    @Override
+    public void showHomework(List<Homework> homeworkList) {
+        List<HomeworkViewObj> objects = new ArrayList<>();
+        for(Homework homework: homeworkList) {
+            HomeworkViewObj obj = new HomeworkViewObj(homework.getSubjectName(),
+                    Collections.singletonList("- " + homework.getHomeworkMessage()));
+            objects.add(obj);
+        }
+        adapter = new HomeworkAdapter(this, objects);
+        recyclerView.setAdapter(adapter);
+        //adapter.replaceData(objects);
+    }
+
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgess() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showError(String message) {
+
+    }
+
+    @Override
+    public void syncHomework() {
+        startService(new Intent(this, SyncHomeworkIntentService.class));
+    }
+}

@@ -1,14 +1,14 @@
 package com.aanglearning.parentapp.dashboard;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,14 +18,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.aanglearning.parentapp.R;
+import com.aanglearning.parentapp.attendance.AttendanceActivity;
 import com.aanglearning.parentapp.dao.ChildInfoDao;
+import com.aanglearning.parentapp.dao.ServiceDao;
+import com.aanglearning.parentapp.homework.HomeworkActivity;
 import com.aanglearning.parentapp.login.LoginActivity;
-import com.aanglearning.parentapp.model.Attendance;
 import com.aanglearning.parentapp.model.ChildInfo;
-import com.aanglearning.parentapp.model.Homework;
+import com.aanglearning.parentapp.model.Service;
 import com.aanglearning.parentapp.util.AppGlobal;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -43,14 +44,9 @@ public class DashboardActivity extends AppCompatActivity
     Spinner spinner;
     @BindView(R.id.drawer)
     DrawerLayout drawerLayout;
-    @BindView(R.id.viewpager)
-    ViewPager viewPager;
-    @BindView(R.id.sliding_tabs)
-    TabLayout tabLayout;
-
-    //private DashboardPagerAdapter adapter;
 
     private ArrayList<ChildInfo> childInfos;
+    private long schoolId;
     private boolean check;
 
     @Override
@@ -71,6 +67,16 @@ public class DashboardActivity extends AppCompatActivity
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.dashboard_item:
+                                startActivity(new Intent(DashboardActivity.this, DashboardActivity.class));
+                                break;
+                            case R.id.attendance_item:
+                                startActivity(new Intent(DashboardActivity.this, AttendanceActivity.class));
+                                break;
+                            case R.id.homework_item:
+                                startActivity(new Intent(DashboardActivity.this, HomeworkActivity.class));
+                                break;
+                            case R.id.chat_item:
+                                startActivity(new Intent(DashboardActivity.this, DashboardActivity.class));
                                 break;
                             case R.id.logout_item:
                                 SharedPreferenceUtil.logout(DashboardActivity.this);
@@ -102,12 +108,6 @@ public class DashboardActivity extends AppCompatActivity
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
-        View hView = navigationView.inflateHeaderView(R.layout.header);
-        ImageView imageView = (ImageView) hView.findViewById(R.id.user_image);
-        TextView tv = (TextView) hView.findViewById(R.id.name);
-        imageView.setImageResource(R.drawable.child);
-        tv.setText("Vinay Krishna");
-
         childInfos = ChildInfoDao.getChildInfos();
         ArrayList<String> names = new ArrayList<>();
         for (ChildInfo childInfo : childInfos) {
@@ -126,7 +126,14 @@ public class DashboardActivity extends AppCompatActivity
             spinner.setSelection(((ArrayAdapter<String>) spinner.getAdapter()).getPosition(childInfo.getName()));
         }
 
-        setViewPager();
+        View hView = navigationView.inflateHeaderView(R.layout.header);
+        ImageView imageView = (ImageView) hView.findViewById(R.id.user_image);
+        TextView tv = (TextView) hView.findViewById(R.id.name);
+        imageView.setImageResource(R.drawable.child);
+        tv.setText(childInfo.getName());
+        schoolId = childInfo.getSchoolId();
+
+        hideDrawerItem();
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -148,13 +155,6 @@ public class DashboardActivity extends AppCompatActivity
         });
     }
 
-    private void setViewPager() {
-        DashboardPagerAdapter adapter = new DashboardPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(viewPager);
-
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -164,6 +164,33 @@ public class DashboardActivity extends AppCompatActivity
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isNavDrawerOpen()) {
+            closeNavDrawer();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    protected boolean isNavDrawerOpen() {
+        return drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START);
+    }
+
+    protected void closeNavDrawer() {
+        if (drawerLayout != null) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+    }
+
+    private void hideDrawerItem() {
+        Menu menu = navigationView.getMenu();
+        Service service = ServiceDao.getServices(schoolId);
+        if(!service.getIsAttendance()) menu.findItem(R.id.attendance_item).setVisible(false);
+        if(!service.getIsHomework()) menu.findItem(R.id.homework_item).setVisible(false);
+        if(!service.getIsChat()) menu.findItem(R.id.chat_item).setVisible(false);
     }
 
     @Override
@@ -177,12 +204,7 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     @Override
-    public void showError() {
-
-    }
-
-    @Override
-    public void showAPIError(String message) {
+    public void showError(String message) {
 
     }
 }

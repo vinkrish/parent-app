@@ -14,7 +14,5 @@ public interface DashboardView {
 
     void hideProgess();
 
-    void showError();
-
-    void showAPIError(String message);
+    void showError(String message);
 }

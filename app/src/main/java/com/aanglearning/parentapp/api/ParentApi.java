@@ -22,7 +22,7 @@ public interface ParentApi {
     Call<List<Homework>> syncHomework(@Path("sectionId") long sectionId,
                                     @Path("lastDate") String lastDate);
 
-    @GET("app/homework/section/{sectionId}/currentDate/{homeworkDate}")
+    @GET("app/homework/section/{sectionId}/homeworkDate/{homeworkDate}")
     Call<List<Homework>> getHomework(@Path("sectionId") long sectionId,
                                       @Path("homeworkDate") String homeworkDate);
 

@@ -4,6 +4,7 @@ public class Student {
     private long id;
     private String studentName;
     private long schoolId;
+    private long classId;
     private long sectionId;
     private String admissionNo;
     private int rollNo;
@@ -45,6 +46,14 @@ public class Student {
 
     public void setSchoolId(long schoolId) {
         this.schoolId = schoolId;
+    }
+
+    public long getClassId() {
+        return classId;
+    }
+
+    public void setClassId(long classId) {
+        this.classId = classId;
     }
 
     public long getSectionId() {

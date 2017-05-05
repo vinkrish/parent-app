@@ -40,8 +40,6 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true">
 
-            <include layout="@layout/tabs_dashboard" />
-
         </android.support.design.widget.CoordinatorLayout>
     </LinearLayout>
 

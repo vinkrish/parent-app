@@ -19,5 +19,6 @@
     <!-- expandable recyclerview item corner radius -->
     <dimen name="list_item_child_background_corner_radius">4dp</dimen>
     <dimen name="list_item_parent_background_corner_radius">2dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

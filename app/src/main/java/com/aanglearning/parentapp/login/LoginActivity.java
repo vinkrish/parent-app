@@ -3,12 +3,12 @@ package com.aanglearning.parentapp.login;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -16,7 +16,9 @@ import android.widget.ProgressBar;
 
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.dao.ChildInfoDao;
+import com.aanglearning.parentapp.dao.ServiceDao;
 import com.aanglearning.parentapp.dashboard.DashboardActivity;
+import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Credentials;
 import com.aanglearning.parentapp.util.AppGlobal;
 import com.aanglearning.parentapp.util.EditTextWatcher;
@@ -49,7 +51,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     private void showSnackbar(String message) {
-        Snackbar.make(coordinatorLayout, message, 3000).show();
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -95,6 +97,9 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     public void saveUser(Credentials credentials) {
         ChildInfoDao.clear();
         ChildInfoDao.insert(credentials.getInfo());
+        for(ChildInfo info: credentials.getInfo()) {
+            ServiceDao.insert(info.getService());
+        }
         SharedPreferenceUtil.saveUser(this, credentials);
     }
 
