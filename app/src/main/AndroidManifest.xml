@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -30,19 +32,23 @@
         <activity
             android:name=".dashboard.DashboardActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             android:theme="@style/NoActionBar" />
 
         <service android:name=".service.SyncHomeworkIntentService" />
         <service android:name=".service.SyncAttendanceIntentService" />
+        <service
+            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true" />
 
         <activity
             android:name=".homework.HomeworkActivity"
             android:label="@string/title_activity_homework"
-            android:theme="@style/NoActionBar" >
+            android:theme="@style/NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".dashboard.DashboardActivity" />
-            </activity>
+        </activity>
         <activity
             android:name=".attendance.AttendanceActivity"
             android:label="@string/title_activity_attendance"
@@ -50,6 +56,24 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".dashboard.DashboardActivity" />
+        </activity>
+        <activity
+            android:name=".chat.ChatActivity"
+            android:label="@string/title_activity_chat"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".chathome.ChatsActivity"
+            android:label="@string/title_activity_chats"
+            android:theme="@style/NoActionBar" />
+        <activity
+            android:name=".messagegroup.MessageActivity"
+            android:label="@string/title_activity_message"
+            android:theme="@style/NoActionBar" />
+        <activity android:name=".util.ImageUploadActivity"
+            android:label="@string/upload_image">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".messagegroup.MessageActivity" />
         </activity>
     </application>
 

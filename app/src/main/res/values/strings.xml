@@ -48,6 +48,7 @@
     <string name="s">S</string>
 
     <!--Message-->
+    <string name="existing_groups">Existing Groups</string>
     <string name="chat">Chat</string>
     <string name="type_your_message">Enter msg</string>
     <string name="msg_if_any">Message if any..</string>
@@ -57,4 +58,7 @@
 
     <string name="title_activity_homework">Homework</string>
     <string name="title_activity_attendance">Attendance</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_chats">ChatsActivity</string>
+    <string name="title_activity_message">MessageActivity</string>
 </resources>
