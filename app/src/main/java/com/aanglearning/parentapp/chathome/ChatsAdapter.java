@@ -1,5 +1,6 @@
 package com.aanglearning.parentapp.chathome;
 
+import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,7 @@ import butterknife.ButterKnife;
  */
 
 class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder>{
-    private final List<Chat> items;
+    private List<Chat> items;
     private final ChatsAdapter.OnItemClickListener listener;
 
     ColorGenerator generator = ColorGenerator.MATERIAL;
@@ -39,6 +40,16 @@ class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder>{
     ChatsAdapter(List<Chat> items, ChatsAdapter.OnItemClickListener listener) {
         this.items = items;
         this.listener = listener;
+    }
+
+    List<Chat> getDataSet() {
+        return items;
+    }
+
+    @UiThread
+    void setDataSet(List<Chat> items) {
+        this.items = items;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -69,10 +80,10 @@ class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ViewHolder>{
         }
 
         void bind(final Chat chat, final ChatsAdapter.OnItemClickListener listener) {
-            int color = generator.getColor(chat.getStudentName());
-            TextDrawable drawable = builder.build(chat.getStudentName().substring(0,1), color);
+            int color = generator.getColor(chat.getTeacherName());
+            TextDrawable drawable = builder.build(chat.getTeacherName().substring(0,1), color);
             studentImage.setImageDrawable(drawable);
-            studentName.setText(chat.getStudentName());
+            studentName.setText(chat.getTeacherName());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

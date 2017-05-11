@@ -1,8 +1,6 @@
 package com.aanglearning.parentapp.chat;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -23,7 +21,6 @@ import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Message;
 import com.aanglearning.parentapp.util.EndlessRecyclerViewScrollListener;
-import com.aanglearning.parentapp.util.ImageUploadActivity;
 import com.aanglearning.parentapp.util.NetworkUtil;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
@@ -34,7 +31,7 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ChatActivity extends AppCompatActivity implements ChatView, View.OnClickListener {
+public class ChatActivity extends AppCompatActivity implements ChatView {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
@@ -43,13 +40,10 @@ public class ChatActivity extends AppCompatActivity implements ChatView, View.On
     @BindView(R.id.progress_bar) ProgressBar progressBar;
 
     private long recipientId;
+    private String recipientName;
     private ChildInfo childInfo;
     private ChatPresenter presenter;
-    private ArrayList<Message> messages = new ArrayList<>();
     private ChatAdapter adapter;
-    private EndlessRecyclerViewScrollListener scrollListener;
-
-    final static int REQ_CODE = 999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +59,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView, View.On
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             recipientId = getIntent().getLongExtra("recipientId", 0);
+            recipientName = extras.getString("recipientName", "");
         }
+        getSupportActionBar().setTitle(recipientName);
 
         presenter = new ChatPresenterImpl(this, new ChatInteractorImpl());
 
@@ -93,13 +89,14 @@ public class ChatActivity extends AppCompatActivity implements ChatView, View.On
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        adapter = new ChatAdapter(this, messages);
+        adapter = new ChatAdapter(new ArrayList<Message>(0));
         recyclerView.setAdapter(adapter);
 
-        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                presenter.getFollowupMessages("student", childInfo.getStudentId(), "teacher", recipientId, messages.get(messages.size()-1).getId());
+                presenter.getFollowupMessages("student", childInfo.getStudentId(), "teacher", recipientId,
+                        adapter.getDataSet().get(adapter.getDataSet().size()-1).getId());
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
@@ -137,9 +134,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView, View.On
 
     @Override
     public void showError(String message) {
-        Snackbar errorSnackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
-        errorSnackbar.setAction(R.string.retry, this);
-        errorSnackbar.show();
+        showSnackbar(message);
     }
 
     @Override
@@ -150,38 +145,12 @@ public class ChatActivity extends AppCompatActivity implements ChatView, View.On
 
     @Override
     public void showMessages(ArrayList<Message> messages) {
-        this.messages = messages;
         adapter.setDataSet(messages);
     }
 
     @Override
     public void showFollowupMessages(ArrayList<Message> msgs) {
         adapter.updateDataSet(msgs);
-        this.messages = adapter.getDataSet();
-    }
-
-    public void uploadImage (View view) {
-        Intent intent = new Intent(ChatActivity.this, ImageUploadActivity.class);
-        startActivityForResult(intent, REQ_CODE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case (REQ_CODE) : {
-                if (resultCode == Activity.RESULT_OK) {
-                    String msg = data.getStringExtra("text");
-                    newMsg.setText(msg);
-                    String imgName = data.getStringExtra("imgName");
-                    sendMessage("image", imgName);
-                } else {
-                    hideProgress();
-                    //showSnackbar("Error in sending message");
-                }
-                break;
-            }
-        }
     }
 
     public void newMsgSendListener (View view) {
@@ -202,9 +171,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView, View.On
                 Message message = new Message();
                 message.setSenderId(childInfo.getStudentId());
                 message.setSenderName(childInfo.getName());
-                message.setSenderRole("teacher");
+                message.setSenderRole("student");
                 message.setRecipientId(recipientId);
-                message.setRecipientRole("student");
+                message.setRecipientRole("teacher");
                 message.setGroupId(0);
                 message.setMessageType(messageType);
                 message.setImageUrl(imgUrl);
@@ -215,11 +184,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView, View.On
                 showSnackbar("You are offline,check your internet.");
             }
         }
-    }
-
-    @Override
-    public void onClick(View view) {
-
     }
 
     private final TextWatcher newMsgWatcher = new TextWatcher() {

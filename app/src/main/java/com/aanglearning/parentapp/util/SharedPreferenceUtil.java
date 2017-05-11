@@ -33,6 +33,13 @@ public class SharedPreferenceUtil {
         editor.apply();
     }
 
+    public static void clearProfile(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("name", "");
+        editor.apply();
+    }
+
     public static void saveProfile(Context context, ChildInfo childInfo) {
         SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

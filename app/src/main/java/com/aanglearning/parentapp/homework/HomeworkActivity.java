@@ -3,6 +3,10 @@ package com.aanglearning.parentapp.homework;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.aanglearning.parentapp.R;
+import com.aanglearning.parentapp.model.Message;
 import com.aanglearning.parentapp.service.SyncHomeworkIntentService;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Homework;
@@ -35,10 +40,13 @@ import butterknife.ButterKnife;
 
 public class HomeworkActivity extends AppCompatActivity implements HomeworkView {
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
     @BindView(R.id.progress) ProgressBar progressBar;
     @BindView(R.id.date_tv) TextView dateView;
     @BindView(R.id.change_btn) Button changeDateBtn;
     @BindView(R.id.penultimate_date) TextView validDateView;
+    @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
     @BindView(R.id.recyclerview) RecyclerView recyclerView;
 
     private HomeworkAdapter adapter;
@@ -55,9 +63,23 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         presenter = new HomeworkPresenterImpl(this, new HomeworkInteractorImpl());
-        adapter = new HomeworkAdapter(this, new ArrayList<HomeworkViewObj>());
-        recyclerView.setAdapter(adapter);
+
+        adapter = new HomeworkAdapter(this, new ArrayList<HomeworkViewObj>(0));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
+        refreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(this, R.color.colorPrimary),
+                ContextCompat.getColor(this, R.color.colorAccent),
+                ContextCompat.getColor(this, R.color.colorPrimaryDark)
+        );
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getHomework();
+            }
+        });
 
         changeDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +97,10 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
         super.onResume();
         childInfo = SharedPreferenceUtil.getProfile(this);
         getHomework();
+    }
+
+    private void showSnackbar(String message) {
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
     private void getHomework() {
@@ -150,6 +176,8 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
 
     @Override
     public void showHomework(List<Homework> homeworkList) {
+        refreshLayout.setRefreshing(false);
+        //adapter.setDataSet(homeworkList);
         List<HomeworkViewObj> objects = new ArrayList<>();
         for(Homework homework: homeworkList) {
             HomeworkViewObj obj = new HomeworkViewObj(homework.getSubjectName(),
@@ -173,7 +201,8 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
 
     @Override
     public void showError(String message) {
-
+        refreshLayout.setRefreshing(false);
+        showSnackbar(message);
     }
 
     @Override

@@ -60,15 +60,27 @@
         <activity
             android:name=".chat.ChatActivity"
             android:label="@string/title_activity_chat"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".chathome.ChatsActivity" />
+        </activity>
         <activity
             android:name=".chathome.ChatsActivity"
             android:label="@string/title_activity_chats"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".dashboard.DashboardActivity" />
+        </activity>
         <activity
             android:name=".messagegroup.MessageActivity"
             android:label="@string/title_activity_message"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".dashboard.DashboardActivity" />
+        </activity>
         <activity android:name=".util.ImageUploadActivity"
             android:label="@string/upload_image">
             <meta-data

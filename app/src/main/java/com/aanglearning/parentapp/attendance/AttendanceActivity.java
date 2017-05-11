@@ -3,6 +3,8 @@ package com.aanglearning.parentapp.attendance;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -39,6 +41,8 @@ import butterknife.ButterKnife;
 
 public class AttendanceActivity extends AppCompatActivity implements AttendanceView{
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
     @BindView(R.id.progress) ProgressBar progressBar;
     @BindView(R.id.date_tv) TextView dateView;
     @BindView(R.id.change_btn) Button changeDateBtn;
@@ -211,6 +215,10 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceV
         } else if (attendanceType.equals("Period")) {
             showPeriodAttendance(map);
         }
+    }
+
+    private void showSnackbar(String message) {
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

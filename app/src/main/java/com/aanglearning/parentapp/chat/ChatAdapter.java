@@ -20,15 +20,13 @@ import butterknife.ButterKnife;
  * Created by Vinay on 28-04-2017.
  */
 
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
-    private Context mContext;
+class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private ArrayList<Message> messages;
 
     private static final int ITEM_TYPE_SENDER = 0;
     private static final int ITEM_TYPE_RECEIVER = 1;
 
-    ChatAdapter(Context context, ArrayList<Message> messages) {
-        this.mContext = context;
+    ChatAdapter(ArrayList<Message> messages) {
         this.messages = messages;
     }
 
@@ -84,7 +82,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (messages.get(position).getSenderRole().equals("teacher")) {
+        if (messages.get(position).getSenderRole().equals("student")) {
             return ITEM_TYPE_SENDER;
         } else {
             return ITEM_TYPE_RECEIVER;

@@ -42,6 +42,7 @@ class AttendancePresenterImpl implements AttendancePresenter,
     public void onError(String message) {
         if(mView != null) {
             mView.hideProgess();
+            mView.showError(message);
         }
     }
 

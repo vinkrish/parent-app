@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,23 +19,22 @@ import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.chat.ChatActivity;
 import com.aanglearning.parentapp.model.Chat;
 import com.aanglearning.parentapp.model.ChildInfo;
+import com.aanglearning.parentapp.model.Message;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ChatsActivity extends AppCompatActivity implements ChatsView, View.OnClickListener {
+public class ChatsActivity extends AppCompatActivity implements ChatsView {
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.coordinatorLayout)
-    CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.fab) FloatingActionButton fab;
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
+    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
     private ChildInfo childInfo;
     private ChatsPresenter presenter;
@@ -58,6 +59,21 @@ public class ChatsActivity extends AppCompatActivity implements ChatsView, View.
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(this));
 
+        adapter = new ChatsAdapter(new ArrayList<Chat>(0), mItemListener);
+        recyclerView.setAdapter(adapter);
+
+        refreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(this, R.color.colorPrimary),
+                ContextCompat.getColor(this, R.color.colorAccent),
+                ContextCompat.getColor(this, R.color.colorPrimaryDark)
+        );
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.getChats(childInfo.getStudentId());
+            }
+        });
     }
 
     @Override
@@ -88,31 +104,24 @@ public class ChatsActivity extends AppCompatActivity implements ChatsView, View.
 
     @Override
     public void showError(String message) {
-        Snackbar errorSnackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
-        errorSnackbar.setAction(R.string.retry, this);
-        errorSnackbar.show();
+        refreshLayout.setRefreshing(false);
+        showSnackbar(message);
     }
 
     @Override
     public void setGroups(List<Chat> chats) {
-        adapter = new ChatsAdapter(chats, new ChatsAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Chat chat) {
-                Intent intent = new Intent(ChatsActivity.this, ChatActivity.class);
-                intent.putExtra("recipientId", chat.getTeacherId());
-                startActivity(intent);
-            }
-        });
-        recyclerView.setAdapter(adapter);
+        refreshLayout.setRefreshing(false);
+        adapter.setDataSet(chats);
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            default:
-                presenter.getChats(childInfo.getStudentId());
-                break;
+    ChatsAdapter.OnItemClickListener mItemListener = new ChatsAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(Chat chat) {
+            Intent intent = new Intent(ChatsActivity.this, ChatActivity.class);
+            intent.putExtra("recipientId", chat.getTeacherId());
+            intent.putExtra("recipientName", chat.getTeacherName());
+            startActivity(intent);
         }
-    }
+    };
 
 }

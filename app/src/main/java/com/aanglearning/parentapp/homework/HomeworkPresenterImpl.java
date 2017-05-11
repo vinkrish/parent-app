@@ -41,6 +41,7 @@ class HomeworkPresenterImpl implements HomeworkPresenter, HomeworkInteractor.OnF
     public void onError(String message) {
         if(mView != null) {
             mView.hideProgess();
+            mView.showError(message);
         }
     }
 
