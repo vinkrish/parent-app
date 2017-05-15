@@ -29,7 +29,6 @@ public class MessageActivity extends AppCompatActivity implements MessageView {
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.progress) ProgressBar progressBar;
 
     private MessagePresenter presenter;
     private Groups group;
@@ -47,6 +46,19 @@ public class MessageActivity extends AppCompatActivity implements MessageView {
         presenter = new MessagePresenterImpl(this, new MessageInteractorImpl());
 
         setupRecyclerView();
+
+        refreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(this, R.color.colorPrimary),
+                ContextCompat.getColor(this, R.color.colorAccent),
+                ContextCompat.getColor(this, R.color.colorPrimaryDark)
+        );
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.getMessages(group.getId());
+            }
+        });
     }
 
     private void setupRecyclerView() {
@@ -64,19 +76,6 @@ public class MessageActivity extends AppCompatActivity implements MessageView {
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
-
-        refreshLayout.setColorSchemeColors(
-                ContextCompat.getColor(this, R.color.colorPrimary),
-                ContextCompat.getColor(this, R.color.colorAccent),
-                ContextCompat.getColor(this, R.color.colorPrimaryDark)
-        );
-
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                presenter.getMessages(group.getId());
-            }
-        });
     }
 
     @Override
@@ -99,12 +98,12 @@ public class MessageActivity extends AppCompatActivity implements MessageView {
 
     @Override
     public void showProgress() {
-        progressBar.setVisibility(View.VISIBLE);
+        refreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideProgress() {
-        progressBar.setVisibility(View.GONE);
+        refreshLayout.setRefreshing(false);
     }
 
     @Override

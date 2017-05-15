@@ -55,7 +55,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     @BindView(R.id.drawer) DrawerLayout drawerLayout;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
 
     private ArrayList<ChildInfo> childInfos;
     private ChildInfo childInfo;
@@ -170,12 +169,12 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
 
     @Override
     public void showProgress() {
-        progressBar.setVisibility(View.VISIBLE);
+        refreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideProgess() {
-        progressBar.setVisibility(View.GONE);
+        refreshLayout.setRefreshing(false);
     }
 
     @Override

@@ -33,7 +33,6 @@ public class ChatsActivity extends AppCompatActivity implements ChatsView {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
 
     private ChildInfo childInfo;
@@ -94,12 +93,12 @@ public class ChatsActivity extends AppCompatActivity implements ChatsView {
 
     @Override
     public void showProgress() {
-        progressBar.setVisibility(View.VISIBLE);
+        refreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideProgess() {
-        progressBar.setVisibility(View.GONE);
+        refreshLayout.setRefreshing(false);
     }
 
     @Override

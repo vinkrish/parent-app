@@ -42,7 +42,6 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.progress) ProgressBar progressBar;
     @BindView(R.id.date_tv) TextView dateView;
     @BindView(R.id.change_btn) Button changeDateBtn;
     @BindView(R.id.penultimate_date) TextView validDateView;
@@ -191,12 +190,12 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
 
     @Override
     public void showProgress() {
-        progressBar.setVisibility(View.VISIBLE);
+        refreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideProgess() {
-        progressBar.setVisibility(View.GONE);
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
