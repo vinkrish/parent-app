@@ -143,6 +143,20 @@ package com.aanglearning.parentapp.sqlite;
             " CreatorRole TEXT" +
             ")";
 
+     String CREATE_MESSAGE = "CREATE TABLE message (" +
+             " Id INTEGER, " +
+             " SenderId INTEGER, " +
+             " SenderRole TEXT, " +
+             " SenderName TEXT, " +
+             " RecipientId INTEGER, " +
+             " RecipientRole TEXT, " +
+             " GroupId INTEGER, " +
+             " MessageType TEXT, " +
+             " MessageBody TEXT, " +
+             " ImageUrl TEXT, " +
+             " CreatedAt TEXT" +
+             ")";
+
     String CREATE_CHILD_INFO = "CREATE TABLE child_info (" +
             "  SchoolId INTEGER," +
             "  SchoolName TEXT," +
