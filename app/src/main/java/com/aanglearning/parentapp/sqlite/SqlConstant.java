@@ -2,7 +2,7 @@ package com.aanglearning.parentapp.sqlite;
 
  interface SqlConstant {
 
-    String DATABASE_NAME = "project.db";
+    String DATABASE_NAME = "parent.db";
     int DATABASE_VERSION = 1;
 
     String CREATE_ATTENDANCE = "CREATE TABLE attendance (" +
@@ -129,6 +129,18 @@ package com.aanglearning.parentapp.sqlite;
             " CreatedBy INEGER, " +
             " CreatedDate TEXT, " +
             " IsActive INTEGER" +
+            ")";
+
+    String CREATE_CHAT = "CREATE TABLE chat (" +
+            " Id INTEGER, " +
+            " StudentId INTEGER, " +
+            " StudentName TEXT, " +
+            " ClassName TEXT, " +
+            " SectionName TEXT, " +
+            " TeacherId INTEGER, " +
+            " TeacherName TEXT, " +
+            " CreatedBy INTEGER, " +
+            " CreatorRole TEXT" +
             ")";
 
     String CREATE_CHILD_INFO = "CREATE TABLE child_info (" +

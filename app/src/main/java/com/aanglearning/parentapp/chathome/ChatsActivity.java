@@ -3,7 +3,6 @@ package com.aanglearning.parentapp.chathome;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,14 +13,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.chat.ChatActivity;
+import com.aanglearning.parentapp.dao.ChatDao;
 import com.aanglearning.parentapp.model.Chat;
 import com.aanglearning.parentapp.model.ChildInfo;
-import com.aanglearning.parentapp.model.Message;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
+import com.aanglearning.parentapp.util.NetworkUtil;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
 import java.util.ArrayList;
@@ -75,12 +74,18 @@ public class ChatsActivity extends AppCompatActivity implements ChatsView {
                 presenter.getChats(childInfo.getStudentId());
             }
         });
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.getChats(childInfo.getStudentId());
+        if(NetworkUtil.isNetworkAvailable(this)) {
+            presenter.getChats(childInfo.getStudentId());
+        } else {
+            List<Chat> chats = ChatDao.getChats();
+            if(chats.size() == 0) {
+                noChats.setVisibility(View.VISIBLE);
+            } else {
+                noChats.setVisibility(View.INVISIBLE);
+                adapter.setDataSet(chats);
+            }
+        }
     }
 
     @Override
@@ -116,8 +121,19 @@ public class ChatsActivity extends AppCompatActivity implements ChatsView {
         } else {
             noChats.setVisibility(View.INVISIBLE);
             adapter.setDataSet(chats);
+            backupChats(chats);
         }
         refreshLayout.setRefreshing(false);
+    }
+
+    private void backupChats(final List<Chat> chats) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ChatDao.clear();
+                ChatDao.insertMany(chats);
+            }
+        }).start();
     }
 
     ChatsAdapter.OnItemClickListener mItemListener = new ChatsAdapter.OnItemClickListener() {
