@@ -43,6 +43,13 @@ public class MessageActivity extends AppCompatActivity implements MessageView {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            group = new Groups();
+            group.setId(extras.getLong("groupId"));
+            group.setName(extras.getString("groupName"));
+        }
+
         presenter = new MessagePresenterImpl(this, new MessageInteractorImpl());
 
         setupRecyclerView();
@@ -81,7 +88,6 @@ public class MessageActivity extends AppCompatActivity implements MessageView {
     @Override
     public void onResume() {
         super.onResume();
-        group = GroupDao.getGroup();
         getSupportActionBar().setTitle(group.getName());
         presenter.getMessages(group.getId());
     }
