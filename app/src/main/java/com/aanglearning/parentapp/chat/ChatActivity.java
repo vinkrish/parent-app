@@ -15,9 +15,11 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.aanglearning.parentapp.R;
+import com.aanglearning.parentapp.dao.MessageDao;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Message;
 import com.aanglearning.parentapp.util.EndlessRecyclerViewScrollListener;
@@ -27,6 +29,7 @@ import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +38,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.no_chats) LinearLayout noChats;
     @BindView(R.id.new_msg) EditText newMsg;
     @BindView(R.id.enter_msg) ImageView enterMsg;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
@@ -68,12 +72,18 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         setupRecyclerView();
 
         newMsg.addTextChangedListener(newMsgWatcher);
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.getMessages("student", childInfo.getStudentId(), "teacher", recipientId);
+        if(NetworkUtil.isNetworkAvailable(this)) {
+            presenter.getMessages("student", childInfo.getStudentId(), "teacher", recipientId);
+        } else {
+            List<Message> messages = MessageDao.getMessages(childInfo.getStudentId(), "student", recipientId, "teacher");
+            if(messages.size() == 0) {
+                noChats.setVisibility(View.VISIBLE);
+            } else {
+                noChats.setVisibility(View.INVISIBLE);
+                adapter.setDataSet(messages);
+            }
+        }
     }
 
     @Override
@@ -95,8 +105,10 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                presenter.getFollowupMessages("student", childInfo.getStudentId(), "teacher", recipientId,
-                        adapter.getDataSet().get(adapter.getDataSet().size()-1).getId());
+                if(NetworkUtil.isNetworkAvailable(ChatActivity.this)) {
+                    presenter.getFollowupMessages("student", childInfo.getStudentId(), "teacher", recipientId,
+                            adapter.getDataSet().get(adapter.getDataSet().size()-1).getId());
+                }
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
@@ -139,17 +151,34 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     @Override
     public void onMessageSaved(Message message) {
+        noChats.setVisibility(View.INVISIBLE);
         adapter.insertDataSet(message);
         recyclerView.smoothScrollToPosition(0);
     }
 
     @Override
-    public void showMessages(ArrayList<Message> messages) {
-        adapter.setDataSet(messages);
+    public void showMessages(List<Message> messages) {
+        if(messages.size() == 0) {
+            noChats.setVisibility(View.VISIBLE);
+        } else {
+            noChats.setVisibility(View.INVISIBLE);
+            adapter.setDataSet(messages);
+            backupChats(messages);
+        }
+    }
+
+    private void backupChats(final List<Message> messages) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MessageDao.clearChatMessages(childInfo.getStudentId(), "student", recipientId, "teacher");
+                MessageDao.insertChatMessages(messages);
+            }
+        }).start();
     }
 
     @Override
-    public void showFollowupMessages(ArrayList<Message> msgs) {
+    public void showFollowupMessages(List<Message> msgs) {
         adapter.updateDataSet(msgs);
     }
 

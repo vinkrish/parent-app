@@ -25,6 +25,31 @@
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/no_chats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_storage" />
+
+        <TextView
+            android:id="@+id/noTasksMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/no_chats"
+            android:textColor="@color/default_tv_color" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/new_msg_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,11 +66,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/spacing_small"
             android:layout_weight="1"
             android:hint="@string/type_your_message"
             android:inputType="textCapSentences|textMultiLine"
             android:lineSpacingExtra="3dp"
-            android:layout_marginLeft="@dimen/spacing_small"
             android:textSize="@dimen/text_medium" />
 
         <ImageView

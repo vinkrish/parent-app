@@ -138,7 +138,7 @@ public class MessageActivity extends AppCompatActivity implements MessageView {
             @Override
             public void run() {
                 MessageDao.clearGroupMessages(group.getId());
-                MessageDao.insertMany(messages);
+                MessageDao.insertGroupMessages(messages);
             }
         }).start();
     }

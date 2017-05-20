@@ -2,13 +2,13 @@ package com.aanglearning.parentapp.chat;
 
 import com.aanglearning.parentapp.model.Message;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Vinay on 28-04-2017.
  */
 
-public interface ChatView {
+interface ChatView {
     void showProgress();
 
     void hideProgress();
@@ -17,7 +17,7 @@ public interface ChatView {
 
     void onMessageSaved(Message message);
 
-    void showMessages(ArrayList<Message> messages);
+    void showMessages(List<Message> messages);
 
-    void showFollowupMessages(ArrayList<Message> messages);
+    void showFollowupMessages(List<Message> messages);
 }

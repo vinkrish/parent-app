@@ -16,7 +16,7 @@ import retrofit2.Response;
  * Created by Vinay on 28-04-2017.
  */
 
-public class ChatInteractorImpl implements ChatInteractor {
+class ChatInteractorImpl implements ChatInteractor {
     @Override
     public void saveMessage(Message message, final OnFinishedListener listener) {
         ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);

@@ -12,6 +12,7 @@ import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.model.Message;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,27 +22,27 @@ import butterknife.ButterKnife;
  */
 
 class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
-    private ArrayList<Message> messages;
+    private List<Message> messages;
 
     private static final int ITEM_TYPE_SENDER = 0;
     private static final int ITEM_TYPE_RECEIVER = 1;
 
-    ChatAdapter(ArrayList<Message> messages) {
+    ChatAdapter(List<Message> messages) {
         this.messages = messages;
     }
 
-    ArrayList<Message> getDataSet() {
+    List<Message> getDataSet() {
         return messages;
     }
 
     @UiThread
-    void setDataSet(ArrayList<Message> messages) {
+    void setDataSet(List<Message> messages) {
         this.messages = messages;
         notifyDataSetChanged();
     }
 
     @UiThread
-    void updateDataSet(ArrayList<Message> msgs) {
+    void updateDataSet(List<Message> msgs) {
         int pos = messages.size();
         this.messages.addAll(msgs);
         notifyItemRangeInserted(pos, messages.size() - 1);
