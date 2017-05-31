@@ -31,6 +31,9 @@
 
     <!--attendanceFragment.java-->
     <string name="attendance">Attendance</string>
+    <string name="absent">Absent</string>
+    <string name="absent_dates">Absent dates</string>
+    <string name="absent_session">Absent dates - Morning / Afternoon</string>
     <string name="attendance_once">*Attendance is taken daily once</string>
     <string name="attendance_twice">*Attendance is taken twice a day</string>
     <string name="attendance_period">*Attendance is taken for each period</string>
@@ -63,4 +66,5 @@
     <string name="title_activity_chat">Chat</string>
     <string name="title_activity_chats">Chat</string>
     <string name="title_activity_message">Group Message</string>
+    <string name="title_activity_absent_view">Attendance</string>
 </resources>

@@ -8,13 +8,15 @@ import java.util.List;
  * Created by Vinay on 03-03-2017.
  */
 
-public interface AttendanceInteractor {
+interface AttendanceInteractor {
     interface OnFinishedListener {
         void onError(String message);
 
        void onAttendanceReceived(List<Attendance> attendanceList);
     }
 
-    void getAttendance(long sectionId, String lastDate,
+    void getStudentAbsentDays(long studentId, AttendanceInteractor.OnFinishedListener listener);
+
+    void getAttendance(long sectionId, String attendanceDate,
                        AttendanceInteractor.OnFinishedListener listener);
 }

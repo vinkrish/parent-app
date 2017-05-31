@@ -39,6 +39,9 @@ public interface ParentApi {
     Call<List<Attendance>> syncAttendance(@Path("sectionId") long sectionId,
                                           @Path("lastDate") String lastDate);
 
+    @GET("app/attendance/student/{studentId}")
+    Call<List<Attendance>> getStudentAbsentDays(@Path("studentId") long studentId);
+
     @GET("app/attendance/section/{sectionId}/currentDate/{attendanceDate}")
     Call<List<Attendance>> getAttendance(@Path("sectionId") long sectionId,
                                           @Path("attendanceDate") String attendanceDate);

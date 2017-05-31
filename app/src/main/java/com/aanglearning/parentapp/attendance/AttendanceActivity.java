@@ -279,7 +279,8 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceV
     private TableRow generateHeaderRow(TreeMap<Integer, String> map) {
         int id = 1234567;
         TableRow tableRowForTable = new TableRow(this);
-        TableRow.LayoutParams param = new TableRow.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        TableRow.LayoutParams param = new TableRow.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
 
         LinearLayout verticalLayout = new LinearLayout(this);
         verticalLayout.setOrientation(LinearLayout.VERTICAL);
@@ -324,7 +325,8 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceV
         int id = 123456;
 
         TableRow tableRowForTable = new TableRow(this);
-        TableRow.LayoutParams param = new TableRow.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        TableRow.LayoutParams param = new TableRow.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
 
         LinearLayout verticalLayout = new LinearLayout(this);
         verticalLayout.setOrientation(LinearLayout.VERTICAL);
@@ -371,7 +373,6 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceV
         checkAttendance(attendanceList);
     }
 
-    @Override
     public void syncAttendance() {
         startService(new Intent(this, SyncAttendanceIntentService.class));
     }

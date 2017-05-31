@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.aanglearning.parentapp.R;
+import com.aanglearning.parentapp.attendance.AbsentViewActivity;
 import com.aanglearning.parentapp.attendance.AttendanceActivity;
 import com.aanglearning.parentapp.chathome.ChatsActivity;
 import com.aanglearning.parentapp.dao.ChildInfoDao;
@@ -138,12 +139,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        check = false;
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         presenter.onDestroy();
@@ -228,7 +223,7 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
                                 startActivity(new Intent(DashboardActivity.this, DashboardActivity.class));
                                 break;
                             case R.id.attendance_item:
-                                startActivity(new Intent(DashboardActivity.this, AttendanceActivity.class));
+                                startActivity(new Intent(DashboardActivity.this, AbsentViewActivity.class));
                                 break;
                             case R.id.homework_item:
                                 startActivity(new Intent(DashboardActivity.this, HomeworkActivity.class));

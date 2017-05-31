@@ -20,12 +20,20 @@ class AttendancePresenterImpl implements AttendancePresenter,
     }
 
     @Override
-    public void getAttendance(long sectionId, long studentId, String lastDate) {
+    public void getStudentAbsentDays(long studentId) {
         if(mView != null) {
             mView.showProgress();
-            List<Attendance> attendanceList = AttendanceDao.getAttendance(sectionId, lastDate);
+            mInteractor.getStudentAbsentDays(studentId, this);
+        }
+    }
+
+    @Override
+    public void getAttendance(long sectionId, long studentId, String attendanceDate) {
+        if(mView != null) {
+            mView.showProgress();
+            List<Attendance> attendanceList = AttendanceDao.getAttendance(sectionId, attendanceDate);
             if(attendanceList.size() == 0) {
-                mInteractor.getAttendance(sectionId, lastDate, this);
+                mInteractor.getAttendance(sectionId, attendanceDate, this);
             } else {
                 mView.showAttendance(attendanceList);
                 mView.hideProgess();
@@ -51,7 +59,6 @@ class AttendancePresenterImpl implements AttendancePresenter,
         if(mView != null) {
             mView.showAttendance(attendanceList);
             mView.hideProgess();
-            mView.syncAttendance();
         }
     }
 }

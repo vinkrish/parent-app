@@ -4,9 +4,10 @@ package com.aanglearning.parentapp.attendance;
  * Created by Vinay on 03-03-2017.
  */
 
-public interface AttendancePresenter {
+interface AttendancePresenter {
+    void getStudentAbsentDays(long studentId);
 
-    void getAttendance(long sectionId, long studentId, String lastDate);
+    void getAttendance(long sectionId, long studentId, String attendanceDate);
 
     void onDestroy();
 }

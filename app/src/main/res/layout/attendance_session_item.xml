@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:orientation="horizontal"
+    android:padding="@dimen/spacing_normal">
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:lineSpacingExtra="2dp"
+        android:maxLines="2"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="@dimen/text_xsmall" />
+
+    <TextView
+        android:id="@+id/morning_attendance_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="@string/absent"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="@dimen/text_small"
+        android:visibility="invisible" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="@dimen/text_tiny"
+        android:paddingRight="@dimen/text_tiny"
+        android:text="/"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="@dimen/text_small" />
+
+    <TextView
+        android:id="@+id/afternoon_attendance_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="@string/absent"
+        android:textColor="@color/primaryTextColor"
+        android:textSize="@dimen/text_small"
+        android:visibility="invisible" />
+
+</LinearLayout>
