@@ -14,16 +14,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.aanglearning.parentapp.R;
+import com.aanglearning.parentapp.dao.GroupDao;
+import com.aanglearning.parentapp.dao.HomeworkDao;
+import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Message;
 import com.aanglearning.parentapp.service.SyncHomeworkIntentService;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Homework;
 import com.aanglearning.parentapp.util.DatePickerFragment;
 import com.aanglearning.parentapp.util.DateUtil;
+import com.aanglearning.parentapp.util.NetworkUtil;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
 import java.text.ParseException;
@@ -47,6 +52,7 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
     @BindView(R.id.penultimate_date) TextView validDateView;
     @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
     @BindView(R.id.recyclerview) RecyclerView recyclerView;
+    @BindView(R.id.noHomework) LinearLayout noHomework;
 
     private HomeworkAdapter adapter;
     private HomeworkPresenter presenter;
@@ -60,6 +66,8 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        childInfo = SharedPreferenceUtil.getProfile(this);
 
         presenter = new HomeworkPresenterImpl(this, new HomeworkInteractorImpl());
 
@@ -89,12 +97,19 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
 
         setDefaultDate();
 
-    }
+        if(NetworkUtil.isNetworkAvailable(this)) {
+            getHomework();
+        } else {
+            List<Homework> homeworks = HomeworkDao.getHomework(childInfo.getSectionId(),
+                    SharedPreferenceUtil.getHomeworkDate(this));
+            if(homeworks.size() == 0) {
+                noHomework.setVisibility(View.VISIBLE);
+            } else {
+                noHomework.setVisibility(View.INVISIBLE);
+                showHomework(homeworks);
+            }
+        }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        childInfo = SharedPreferenceUtil.getProfile(this);
         getHomework();
     }
 
@@ -175,17 +190,33 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
 
     @Override
     public void showHomework(List<Homework> homeworkList) {
-        refreshLayout.setRefreshing(false);
-        //adapter.setDataSet(homeworkList);
-        List<HomeworkViewObj> objects = new ArrayList<>();
-        for(Homework homework: homeworkList) {
-            HomeworkViewObj obj = new HomeworkViewObj(homework.getSubjectName(),
-                    Collections.singletonList("- " + homework.getHomeworkMessage()));
-            objects.add(obj);
+
+        if(homeworkList.size() == 0) {
+            noHomework.setVisibility(View.VISIBLE);
+        } else {
+            noHomework.setVisibility(View.INVISIBLE);
+            List<HomeworkViewObj> objects = new ArrayList<>();
+            for(Homework homework: homeworkList) {
+                HomeworkViewObj obj = new HomeworkViewObj(homework.getSubjectName(),
+                        Collections.singletonList("- " + homework.getHomeworkMessage()));
+                objects.add(obj);
+            }
+            adapter = new HomeworkAdapter(this, objects);
+            recyclerView.setAdapter(adapter);
+            backupHomework(homeworkList);
         }
-        adapter = new HomeworkAdapter(this, objects);
-        recyclerView.setAdapter(adapter);
-        //adapter.replaceData(objects);
+
+        refreshLayout.setRefreshing(false);
+    }
+
+    private void backupHomework(final List<Homework> homeworks) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HomeworkDao.delete(SharedPreferenceUtil.getHomeworkDate(getApplicationContext()));
+                HomeworkDao.insert(homeworks);
+            }
+        }).start();
     }
 
     @Override
@@ -202,10 +233,5 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
     public void showError(String message) {
         refreshLayout.setRefreshing(false);
         showSnackbar(message);
-    }
-
-    @Override
-    public void syncHomework() {
-        startService(new Intent(this, SyncHomeworkIntentService.class));
     }
 }

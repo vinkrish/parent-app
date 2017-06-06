@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Vinay on 03-03-2017.
  */
 
-public interface HomeworkView {
+interface HomeworkView {
 
     void showHomework(List<Homework> homeworkList);
 
@@ -17,6 +17,4 @@ public interface HomeworkView {
     void hideProgess();
 
     void showError(String message);
-
-    void syncHomework();
 }

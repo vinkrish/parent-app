@@ -50,7 +50,6 @@ class HomeworkPresenterImpl implements HomeworkPresenter, HomeworkInteractor.OnF
         if(mView != null) {
             mView.showHomework(homeworks);
             mView.hideProgess();
-            mView.syncHomework();
         }
     }
 }

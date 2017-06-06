@@ -23,6 +23,7 @@
 
     <!--HomeworkFragment.java-->
     <string name="homework">Homework</string>
+    <string name="no_homework">No homework!</string>
     <string name="change">Change</string>
     <string name="future_date">Selected date can\'t be future to present day</string>
 

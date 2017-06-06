@@ -1,6 +1,7 @@
 package com.aanglearning.parentapp.dao;
 
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
@@ -76,6 +77,16 @@ public class HomeworkDao {
         }
         c.close();
         return date;
+    }
+
+    public static int delete(String homeworkDate) {
+        SQLiteDatabase sqliteDb = AppGlobal.getSqlDbHelper().getWritableDatabase();
+        try {
+            sqliteDb.execSQL("delete from homework where HomeworkDate = '" + homeworkDate + "'");
+        } catch(SQLException e) {
+            return 0;
+        }
+        return 1;
     }
 
 }

@@ -373,8 +373,4 @@ public class AttendanceActivity extends AppCompatActivity implements AttendanceV
         checkAttendance(attendanceList);
     }
 
-    public void syncAttendance() {
-        startService(new Intent(this, SyncAttendanceIntentService.class));
-    }
-
 }
