@@ -27,7 +27,6 @@ import android.widget.TextView;
 
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.attendance.AbsentViewActivity;
-import com.aanglearning.parentapp.attendance.AttendanceActivity;
 import com.aanglearning.parentapp.chathome.ChatsActivity;
 import com.aanglearning.parentapp.dao.ChildInfoDao;
 import com.aanglearning.parentapp.dao.GroupDao;
