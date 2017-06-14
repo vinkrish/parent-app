@@ -6,6 +6,7 @@
     <string name="retry">Retry</string>
 
     <string name="login">Login</string>
+    <string name="refresh">Refresh</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="enter_mobile_no">Enter your mobile number</string>
     <string name="enter_password">Enter password</string>
@@ -50,6 +51,8 @@
     <string name="w">W</string>
     <string name="f">F</string>
     <string name="s">S</string>
+
+    <string name="no_timetable">No Timetable</string>
 
     <!--Message-->
     <string name="no_groups">You are not part of any group</string>

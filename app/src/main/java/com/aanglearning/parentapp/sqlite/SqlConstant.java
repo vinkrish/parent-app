@@ -1,6 +1,6 @@
 package com.aanglearning.parentapp.sqlite;
 
- interface SqlConstant {
+interface SqlConstant {
 
     String DATABASE_NAME = "parent.db";
     int DATABASE_VERSION = 1;
@@ -115,6 +115,8 @@ package com.aanglearning.parentapp.sqlite;
             "  DayOfWeek TEXT," +
             "  PeriodNo INTEGER," +
             "  SubjectId INTEGER," +
+            "  SubjectName TEXT," +
+            "  TeacherName TEXT," +
             "  TimingFrom time," +
             "  TimingTo time" +
             ")";
@@ -143,19 +145,19 @@ package com.aanglearning.parentapp.sqlite;
             " CreatorRole TEXT" +
             ")";
 
-     String CREATE_MESSAGE = "CREATE TABLE message (" +
-             " Id INTEGER, " +
-             " SenderId INTEGER, " +
-             " SenderRole TEXT, " +
-             " SenderName TEXT, " +
-             " RecipientId INTEGER, " +
-             " RecipientRole TEXT, " +
-             " GroupId INTEGER, " +
-             " MessageType TEXT, " +
-             " MessageBody TEXT, " +
-             " ImageUrl TEXT, " +
-             " CreatedAt TEXT" +
-             ")";
+    String CREATE_MESSAGE = "CREATE TABLE message (" +
+            " Id INTEGER, " +
+            " SenderId INTEGER, " +
+            " SenderRole TEXT, " +
+            " SenderName TEXT, " +
+            " RecipientId INTEGER, " +
+            " RecipientRole TEXT, " +
+            " GroupId INTEGER, " +
+            " MessageType TEXT, " +
+            " MessageBody TEXT, " +
+            " ImageUrl TEXT, " +
+            " CreatedAt TEXT" +
+            ")";
 
     String CREATE_CHILD_INFO = "CREATE TABLE child_info (" +
             "  SchoolId INTEGER," +
