@@ -37,6 +37,7 @@ import com.aanglearning.parentapp.messagegroup.MessageActivity;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Service;
+import com.aanglearning.parentapp.timetable.TimetableActivity;
 import com.aanglearning.parentapp.util.AppGlobal;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
 import com.aanglearning.parentapp.util.NetworkUtil;
@@ -226,6 +227,9 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
                                 break;
                             case R.id.homework_item:
                                 startActivity(new Intent(DashboardActivity.this, HomeworkActivity.class));
+                                break;
+                            case R.id.timetable_item:
+                                startActivity(new Intent(DashboardActivity.this, TimetableActivity.class));
                                 break;
                             case R.id.chat_item:
                                 startActivity(new Intent(DashboardActivity.this, ChatsActivity.class));

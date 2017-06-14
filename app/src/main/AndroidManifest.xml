@@ -106,6 +106,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".dashboard.DashboardActivity" />
         </activity>
+        <activity
+            android:name=".timetable.TimetableActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".dashboard.DashboardActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -48,7 +48,7 @@ public class SharedPreferenceUtil {
         editor.putLong("classId", childInfo.getClassId());
         editor.putString("className", childInfo.getClassName());
         editor.putLong("sectionId", childInfo.getSectionId());
-        editor.putString("sectionName", childInfo.getSchoolName());
+        editor.putString("sectionName", childInfo.getSectionName());
         editor.putLong("studentId", childInfo.getStudentId());
         editor.putString("name", childInfo.getName());
         editor.apply();

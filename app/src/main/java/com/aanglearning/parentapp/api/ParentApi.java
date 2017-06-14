@@ -5,6 +5,7 @@ import com.aanglearning.parentapp.model.Chat;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Homework;
 import com.aanglearning.parentapp.model.Message;
+import com.aanglearning.parentapp.model.Timetable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,11 @@ public interface ParentApi {
     @GET("app/attendance/section/{sectionId}/currentDate/{attendanceDate}")
     Call<List<Attendance>> getAttendance(@Path("sectionId") long sectionId,
                                           @Path("attendanceDate") String attendanceDate);
+
+    //Timetable API
+
+    @GET("app/timetable/section/{sectionId}")
+    Call<List<Timetable>> getTimetable(@Path("sectionId") long sectionId);
 
     //Group Message API
     @GET("groups/student/{id}")

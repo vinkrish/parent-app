@@ -68,4 +68,5 @@
     <string name="title_activity_chats">Chat</string>
     <string name="title_activity_message">Group Message</string>
     <string name="title_activity_absent_view">Attendance</string>
+    <string name="title_activity_timetable">Timetable</string>
 </resources>
