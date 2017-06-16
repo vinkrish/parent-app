@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
@@ -25,10 +26,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.aanglearning.parentapp.R;
+import com.aanglearning.parentapp.dao.AttendanceDao;
+import com.aanglearning.parentapp.dao.TimetableDao;
 import com.aanglearning.parentapp.model.Attendance;
 import com.aanglearning.parentapp.model.ChildInfo;
+import com.aanglearning.parentapp.model.Timetable;
 import com.aanglearning.parentapp.util.DateUtil;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
+import com.aanglearning.parentapp.util.NetworkUtil;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
 import java.util.ArrayList;
@@ -44,8 +49,8 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.refreshLayout)
-    SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
     @BindView(R.id.daily_attendance_layout)
     LinearLayout dailyAttendanceLayout;
     @BindView(R.id.session_attendance_layout)
@@ -56,6 +61,8 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
     RecyclerView dailyAttendanceView;
     @BindView(R.id.session_attendance_view)
     RecyclerView sessionAttendanceView;
+    @BindView(R.id.no_attendance)
+    LinearLayout noAttendance;
 
     private AttendancePresenter presenter;
     private ChildInfo childInfo;
@@ -95,20 +102,17 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
         sessionAttendanceAdapter = new SessionAttendanceAdapter(new LinkedHashMap<String, List<Attendance>>(0));
         sessionAttendanceView.setAdapter(sessionAttendanceAdapter);
 
-        presenter.getStudentAbsentDays(childInfo.getStudentId());
-
-        refreshLayout.setColorSchemeColors(
-                ContextCompat.getColor(this, R.color.colorPrimary),
-                ContextCompat.getColor(this, R.color.colorAccent),
-                ContextCompat.getColor(this, R.color.colorPrimaryDark)
-        );
-
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                presenter.getStudentAbsentDays(childInfo.getStudentId());
+        if(NetworkUtil.isNetworkAvailable(this)) {
+            presenter.getStudentAbsentDays(childInfo.getStudentId());
+        } else {
+            List<Attendance> attendanceList = AttendanceDao.getAttendance(childInfo.getStudentId());
+            if(attendanceList.size() == 0) {
+                noAttendance.setVisibility(View.VISIBLE);
+            } else {
+                noAttendance.setVisibility(View.INVISIBLE);
+                showAbsentAttendance(attendanceList);
             }
-        });
+        }
 
     }
 
@@ -118,22 +122,32 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
 
     @Override
     public void showProgress() {
-        refreshLayout.setRefreshing(true);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgess() {
-        refreshLayout.setRefreshing(false);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void showError(String message) {
-        refreshLayout.setRefreshing(false);
+        progressBar.setVisibility(View.INVISIBLE);
         showSnackbar(message);
     }
 
     @Override
     public void showAttendance(List<Attendance> attendanceList) {
+        if(attendanceList.size() == 0) {
+            noAttendance.setVisibility(View.VISIBLE);
+        } else {
+            noAttendance.setVisibility(View.INVISIBLE);
+            showAbsentAttendance(attendanceList);
+            backupAttendance(attendanceList);
+        }
+    }
+
+    private void showAbsentAttendance(List<Attendance> attendanceList) {
         String attendanceType = "";
         for(Attendance att: attendanceList) {
             switch (att.getType()) {
@@ -179,6 +193,16 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
             periodAttendanceLayout.removeAllViews();
             periodAttendanceLayout.addView(new TableMainLayout(this));
         }
+    }
+
+    private void backupAttendance(final List<Attendance> attendanceList) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AttendanceDao.delete(childInfo.getSectionId());
+                AttendanceDao.insert(attendanceList);
+            }
+        }).start();
     }
 
     public class TableMainLayout extends RelativeLayout {

@@ -7,7 +7,5 @@ package com.aanglearning.parentapp.attendance;
 interface AttendancePresenter {
     void getStudentAbsentDays(long studentId);
 
-    void getAttendance(long sectionId, long studentId, String attendanceDate);
-
     void onDestroy();
 }

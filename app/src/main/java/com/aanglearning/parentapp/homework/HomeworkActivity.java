@@ -109,8 +109,6 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
                 showHomework(homeworks);
             }
         }
-
-        getHomework();
     }
 
     private void showSnackbar(String message) {
@@ -190,7 +188,6 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
 
     @Override
     public void showHomework(List<Homework> homeworkList) {
-
         if(homeworkList.size() == 0) {
             noHomework.setVisibility(View.VISIBLE);
         } else {
@@ -213,7 +210,8 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                HomeworkDao.delete(SharedPreferenceUtil.getHomeworkDate(getApplicationContext()));
+                HomeworkDao.delete(childInfo.getSectionId(),
+                        SharedPreferenceUtil.getHomeworkDate(getApplicationContext()));
                 HomeworkDao.insert(homeworks);
             }
         }).start();

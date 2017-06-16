@@ -127,7 +127,7 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
         if(NetworkUtil.isNetworkAvailable(this)) {
             presenter.getGroups(childInfo.getStudentId());
         } else {
-            List<Groups> groups = GroupDao.getGroups();
+            List<Groups> groups = GroupDao.getGroups(childInfo.getClassId());
             if(groups.size() == 0) {
                 noGroups.setVisibility(View.VISIBLE);
             } else {

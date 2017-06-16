@@ -70,7 +70,6 @@ public class TimetableActivity extends AppCompatActivity implements TimetableVie
 
         presenter = new TimetablePresenterImpl(this, new TimetableInteractorImpl());
 
-
         if(NetworkUtil.isNetworkAvailable(this)) {
             presenter.getTimetable(childInfo.getSectionId());
         } else {
@@ -218,7 +217,7 @@ public class TimetableActivity extends AppCompatActivity implements TimetableVie
             this.scrollViewC = new TableMainLayout.MyScrollView(this.context);
             this.scrollViewD = new TableMainLayout.MyScrollView(this.context);
 
-            this.tableA.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
+            this.tableA.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
             this.horizontalScrollViewB.setBackgroundColor(Color.WHITE);
         }
 
@@ -273,7 +272,7 @@ public class TimetableActivity extends AppCompatActivity implements TimetableVie
             TextView textView = this.headerTextView("Timetable");
             textView.setPadding(36, 24, 36, 24);
             textView.setTextSize(18);
-            textView.setTextColor(ContextCompat.getColor(context, R.color.default_white));
+            textView.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor));
             componentATableRow.addView(textView);
             return componentATableRow;
         }

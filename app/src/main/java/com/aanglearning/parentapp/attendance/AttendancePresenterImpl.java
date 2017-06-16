@@ -28,20 +28,6 @@ class AttendancePresenterImpl implements AttendancePresenter,
     }
 
     @Override
-    public void getAttendance(long sectionId, long studentId, String attendanceDate) {
-        if(mView != null) {
-            mView.showProgress();
-            List<Attendance> attendanceList = AttendanceDao.getAttendance(sectionId, attendanceDate);
-            if(attendanceList.size() == 0) {
-                mInteractor.getAttendance(sectionId, attendanceDate, this);
-            } else {
-                mView.showAttendance(attendanceList);
-                mView.hideProgess();
-            }
-        }
-    }
-
-    @Override
     public void onDestroy() {
         mView = null;
     }

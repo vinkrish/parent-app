@@ -33,6 +33,7 @@
 
     <!--attendanceFragment.java-->
     <string name="attendance">Attendance</string>
+    <string name="no_attendance">No absent record!</string>
     <string name="absent">Absent</string>
     <string name="absent_dates">Absent dates</string>
     <string name="absent_session">Absent dates - Morning / Afternoon</string>

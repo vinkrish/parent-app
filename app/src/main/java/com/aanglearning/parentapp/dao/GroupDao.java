@@ -94,10 +94,10 @@ public class GroupDao {
         return group;
     }
 
-    public static List<Groups> getGroups() {
+    public static List<Groups> getGroups(long classId) {
         List<Groups> groups = new ArrayList<>();
         SQLiteDatabase sqliteDatabase = AppGlobal.getSqlDbHelper().getReadableDatabase();
-        Cursor c = sqliteDatabase.rawQuery("select * from groups", null);
+        Cursor c = sqliteDatabase.rawQuery("select * from groups where ClassId = " + classId, null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Groups group = new Groups();

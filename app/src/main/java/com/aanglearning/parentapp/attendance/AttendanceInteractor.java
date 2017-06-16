@@ -17,6 +17,4 @@ interface AttendanceInteractor {
 
     void getStudentAbsentDays(long studentId, AttendanceInteractor.OnFinishedListener listener);
 
-    void getAttendance(long sectionId, String attendanceDate,
-                       AttendanceInteractor.OnFinishedListener listener);
 }

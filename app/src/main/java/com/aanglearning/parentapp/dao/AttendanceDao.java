@@ -1,6 +1,7 @@
 package com.aanglearning.parentapp.dao;
 
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
@@ -47,12 +48,11 @@ public class AttendanceDao {
         return 1;
     }
 
-    public static List<Attendance> getAttendance(long sectionId, String date) {
+    public static List<Attendance> getAttendance(long studentId) {
         List<Attendance> attendanceList = new ArrayList<>();
         SQLiteDatabase sqliteDatabase = AppGlobal.getSqlDbHelper().getReadableDatabase();
         Cursor c = sqliteDatabase.rawQuery("select * from attendance" +
-                " where DateAttendance = '" + date +
-                "' and SectionId = " + sectionId + " order by Session ASC", null);
+                " where StudentId = " + studentId + " order by Session ASC", null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Attendance attendance = new Attendance();
@@ -84,5 +84,15 @@ public class AttendanceDao {
         }
         c.close();
         return date;
+    }
+
+    public static int delete(long studentId) {
+        SQLiteDatabase sqliteDb = AppGlobal.getSqlDbHelper().getWritableDatabase();
+        try {
+            sqliteDb.execSQL("delete from attendance where StudentId = " + studentId);
+        } catch(SQLException e) {
+            return 0;
+        }
+        return 1;
     }
 }
