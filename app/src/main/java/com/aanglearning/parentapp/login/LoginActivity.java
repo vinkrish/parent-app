@@ -97,6 +97,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     public void saveUser(Credentials credentials) {
         ChildInfoDao.clear();
         ChildInfoDao.insert(credentials.getInfo());
+        ServiceDao.clear();
         for(ChildInfo info: credentials.getInfo()) {
             ServiceDao.insert(info.getService());
         }

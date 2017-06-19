@@ -45,6 +45,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
     private long recipientId;
     private String recipientName;
+    private String recipientRole;
     private ChildInfo childInfo;
     private ChatPresenter presenter;
     private ChatAdapter adapter;
@@ -64,6 +65,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         if (extras != null) {
             recipientId = getIntent().getLongExtra("recipientId", 0);
             recipientName = extras.getString("recipientName", "");
+            recipientRole = extras.getString("recipientRole", "");
         }
         getSupportActionBar().setTitle(recipientName);
 
@@ -74,9 +76,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         newMsg.addTextChangedListener(newMsgWatcher);
 
         if(NetworkUtil.isNetworkAvailable(this)) {
-            presenter.getMessages("student", childInfo.getStudentId(), "teacher", recipientId);
+            presenter.getMessages("student", childInfo.getStudentId(), recipientRole, recipientId);
         } else {
-            List<Message> messages = MessageDao.getMessages(childInfo.getStudentId(), "student", recipientId, "teacher");
+            List<Message> messages = MessageDao.getMessages(childInfo.getStudentId(), "student", recipientId, recipientRole);
             if(messages.size() == 0) {
                 noChats.setVisibility(View.VISIBLE);
             } else {
@@ -106,7 +108,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if(NetworkUtil.isNetworkAvailable(ChatActivity.this)) {
-                    presenter.getFollowupMessages("student", childInfo.getStudentId(), "teacher", recipientId,
+                    presenter.getFollowupMessages("student", childInfo.getStudentId(), recipientRole, recipientId,
                             adapter.getDataSet().get(adapter.getDataSet().size()-1).getId());
                 }
             }
@@ -202,7 +204,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                 message.setSenderName(childInfo.getName());
                 message.setSenderRole("student");
                 message.setRecipientId(recipientId);
-                message.setRecipientRole("teacher");
+                message.setRecipientRole(recipientRole);
                 message.setGroupId(0);
                 message.setMessageType(messageType);
                 message.setImageUrl(imgUrl);

@@ -1,5 +1,6 @@
 package com.aanglearning.parentapp.dashboard;
 
+import com.aanglearning.parentapp.model.Authorization;
 import com.aanglearning.parentapp.model.Groups;
 
 import java.util.List;
@@ -16,4 +17,6 @@ interface GroupInteractor {
     }
 
     void getGroups(long userId, GroupInteractor.OnFinishedListener listener);
+
+    void updateFcmToken(Authorization authorization);
 }

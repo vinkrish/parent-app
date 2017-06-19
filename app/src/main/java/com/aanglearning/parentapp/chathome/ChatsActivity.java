@@ -142,6 +142,7 @@ public class ChatsActivity extends AppCompatActivity implements ChatsView {
             Intent intent = new Intent(ChatsActivity.this, ChatActivity.class);
             intent.putExtra("recipientId", chat.getTeacherId());
             intent.putExtra("recipientName", chat.getTeacherName());
+            intent.putExtra("recipientRole", chat.getCreatorRole());
             startActivity(intent);
         }
     };

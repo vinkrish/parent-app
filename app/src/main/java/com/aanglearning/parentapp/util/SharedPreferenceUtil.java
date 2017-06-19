@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.aanglearning.parentapp.model.Authorization;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Credentials;
 
@@ -68,17 +69,6 @@ public class SharedPreferenceUtil {
         return childInfo;
     }
 
-    public static void saveAttendanceDate(Context context, String date) {
-        SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("attendanceDate", date);
-        editor.apply();
-    }
-
-    public static String getAttendanceDate(Context context){
-        SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
-        return sharedPref.getString("attendanceDate", "");
-    }
     public static void saveHomeworkDate(Context context, String date) {
         SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -89,6 +79,41 @@ public class SharedPreferenceUtil {
     public static String getHomeworkDate(Context context){
         SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
         return sharedPref.getString("homeworkDate", "");
+    }
+
+    public static void saveFcmToken(Context context, String fcmToken) {
+        SharedPreferences sharedPref = context.getSharedPreferences("fcm", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("fcmToken", fcmToken);
+        editor.putBoolean("isSaved", false);
+        editor.apply();
+    }
+
+    public static Authorization getAuthorization(Context context){
+        SharedPreferences sharedPref = context.getSharedPreferences("fcm", Context.MODE_PRIVATE);
+        Authorization authorization = new Authorization();
+        authorization.setFcmToken(sharedPref.getString("fcmToken", ""));
+        authorization.setUser(sharedPref.getString("user", ""));
+        return authorization;
+    }
+
+    public static void saveAuthorizedUser(Context context, String user) {
+        SharedPreferences sharedPref = context.getSharedPreferences("fcm", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("user", user);
+        editor.apply();
+    }
+
+    public static boolean isFcmTokenSaved(Context context){
+        SharedPreferences sharedPref = context.getSharedPreferences("fcm", Context.MODE_PRIVATE);
+        return sharedPref.getBoolean("isSaved", false);
+    }
+
+    public static void fcmTokenSaved(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("fcm", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("isSaved", true);
+        editor.apply();
     }
 
 }

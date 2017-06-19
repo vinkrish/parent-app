@@ -180,7 +180,8 @@ interface SqlConstant {
             " IsAttendance TEXT, " +
             " IsAttendanceSms TEXT," +
             " IsHomework TEXT, " +
-            " IsHomeworkSms TEXT" +
+            " IsHomeworkSms TEXT," +
+            " IsTimetable TEXT" +
             ")";
 
 }

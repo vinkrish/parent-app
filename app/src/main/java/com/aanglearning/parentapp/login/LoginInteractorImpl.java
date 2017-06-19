@@ -1,11 +1,13 @@
 package com.aanglearning.parentapp.login;
 
+import com.aanglearning.parentapp.App;
 import com.aanglearning.parentapp.api.APIError;
 import com.aanglearning.parentapp.api.ApiClient;
 import com.aanglearning.parentapp.api.AuthApi;
 import com.aanglearning.parentapp.api.ErrorUtils;
 import com.aanglearning.parentapp.model.CommonResponse;
 import com.aanglearning.parentapp.model.Credentials;
+import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,7 +19,7 @@ import retrofit2.Response;
 
 class LoginInteractorImpl implements LoginInteractor {
     @Override
-    public void login(Credentials credentials, final OnLoginFinishedListener listener) {
+    public void login(final Credentials credentials, final OnLoginFinishedListener listener) {
 
         AuthApi authApi = ApiClient.getClient().create(AuthApi.class);
 
@@ -26,6 +28,7 @@ class LoginInteractorImpl implements LoginInteractor {
             @Override
             public void onResponse(Call<Credentials> call, Response<Credentials> response) {
                 if(response.isSuccessful()) {
+                    SharedPreferenceUtil.saveAuthorizedUser(App.getInstance(), credentials.getMobileNo());
                     listener.onSuccess(response.body());
                 } else {
                     listener.onAPIError("Mobile number and password don't match");
