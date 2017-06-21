@@ -40,10 +40,34 @@ class ChatInteractorImpl implements ChatInteractor {
     }
 
     @Override
-    public void getMessages(String senderRole, long senderId, String recipientRole, long recipeintId, final OnFinishedListener listener) {
+    public void getRecentMessages(String senderRole, long senderId, String recipientRole, long recipientId,
+                                  long messageId, final OnFinishedListener listener) {
         ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
-        Call<ArrayList<Message>> msgList = api.getChatMessages(senderRole, senderId, recipientRole, recipeintId);
+        Call<ArrayList<Message>> msgList = api.getChatMessagesAboveId(senderRole, senderId, recipientRole, recipientId, messageId);
+        msgList.enqueue(new Callback<ArrayList<Message>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
+                if(response.isSuccessful()) {
+                    listener.onRecentMessagesReceived(response.body());
+                } else {
+                    listener.onError(App.getInstance().getString(R.string.request_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
+                listener.onError(App.getInstance().getString(R.string.network_error));
+            }
+        });
+    }
+
+    @Override
+    public void getMessages(String senderRole, long senderId, String recipientRole, long recipientId,
+                            final OnFinishedListener listener) {
+        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
+
+        Call<ArrayList<Message>> msgList = api.getChatMessages(senderRole, senderId, recipientRole, recipientId);
         msgList.enqueue(new Callback<ArrayList<Message>>() {
             @Override
             public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
@@ -62,10 +86,11 @@ class ChatInteractorImpl implements ChatInteractor {
     }
 
     @Override
-    public void getFollowupMessages(String senderRole, long senderId, String recipientRole, long recipeintId, long messageId, final OnFinishedListener listener) {
+    public void getFollowupMessages(String senderRole, long senderId, String recipientRole, long recipientId,
+                                    long messageId, final OnFinishedListener listener) {
         ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
-        Call<ArrayList<Message>> msgList = api.getChatMessagesFromId(senderRole, senderId, recipientRole, recipeintId, messageId);
+        Call<ArrayList<Message>> msgList = api.getChatMessagesFromId(senderRole, senderId, recipientRole, recipientId, messageId);
         msgList.enqueue(new Callback<ArrayList<Message>>() {
             @Override
             public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {

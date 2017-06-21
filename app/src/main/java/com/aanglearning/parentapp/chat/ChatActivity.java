@@ -17,14 +17,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.dao.MessageDao;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Message;
+import com.aanglearning.parentapp.model.MessageEvent;
 import com.aanglearning.parentapp.util.EndlessRecyclerViewScrollListener;
 import com.aanglearning.parentapp.util.NetworkUtil;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -89,6 +95,18 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         presenter.onDestroy();
@@ -110,6 +128,11 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                 if(NetworkUtil.isNetworkAvailable(ChatActivity.this)) {
                     presenter.getFollowupMessages("student", childInfo.getStudentId(), recipientRole, recipientId,
                             adapter.getDataSet().get(adapter.getDataSet().size()-1).getId());
+                } else {
+                    List<Message> messages = MessageDao.getMessagesFromId(childInfo.getStudentId(), "student",
+                            recipientId, recipientRole,
+                            adapter.getDataSet().get(adapter.getDataSet().size()-1).getId());
+                    adapter.updateDataSet(messages);
                 }
             }
         };
@@ -130,6 +153,14 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                 }
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        if(NetworkUtil.isNetworkAvailable(this) && event.senderId == recipientId){
+            presenter.getRecentMessages("student", childInfo.getStudentId(), recipientRole, recipientId,
+                    adapter.getDataSet().get(0).getId());
+        }
     }
 
     private void showSnackbar(String message) {
@@ -159,6 +190,12 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     @Override
+    public void showRecentMessages(List<Message> messages) {
+        adapter.insertDataSet(messages);
+        recyclerView.smoothScrollToPosition(0);
+    }
+
+    @Override
     public void showMessages(List<Message> messages) {
         if(messages.size() == 0) {
             noChats.setVisibility(View.VISIBLE);
@@ -180,8 +217,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     }
 
     @Override
-    public void showFollowupMessages(List<Message> msgs) {
-        adapter.updateDataSet(msgs);
+    public void showFollowupMessages(List<Message> messages) {
+        adapter.updateDataSet(messages);
+        backupChats(messages);
     }
 
     public void newMsgSendListener (View view) {

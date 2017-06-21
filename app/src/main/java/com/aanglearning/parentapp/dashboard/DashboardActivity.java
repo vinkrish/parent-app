@@ -276,7 +276,7 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
         spinner.setAdapter(adapter);
 
         childInfo = SharedPreferenceUtil.getProfile(this);
-        if (childInfo.getName().equals("")) {
+        if (childInfo.getName().equals("") && childInfos.size()>0) {
             SharedPreferenceUtil.saveProfile(this, childInfos.get(0));
         } else {
             spinner.setSelection(((ArrayAdapter<String>) spinner.getAdapter()).getPosition(childInfo.getName()));

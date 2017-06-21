@@ -17,6 +17,8 @@ interface ChatView {
 
     void onMessageSaved(Message message);
 
+    void showRecentMessages(List<Message> messages);
+
     void showMessages(List<Message> messages);
 
     void showFollowupMessages(List<Message> messages);

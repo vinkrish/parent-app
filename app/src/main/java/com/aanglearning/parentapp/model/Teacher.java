@@ -2,7 +2,7 @@ package com.aanglearning.parentapp.model;
 
 public class Teacher {
     private long id;
-    private String teacherName;
+    private String name;
     private String image;
     private String username;
     private String password;
@@ -22,12 +22,12 @@ public class Teacher {
         this.id = teacherId;
     }
 
-    public String getTeacherName() {
-        return teacherName;
+    public String getName() {
+        return name;
     }
 
-    public void setTeacherName(String teacherName) {
-        this.teacherName = teacherName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getImage() {
