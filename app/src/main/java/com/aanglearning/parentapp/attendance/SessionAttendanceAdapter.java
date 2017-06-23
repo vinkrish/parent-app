@@ -2,6 +2,7 @@ package com.aanglearning.parentapp.attendance;
 
 import android.support.annotation.UiThread;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,10 @@ import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.model.Attendance;
 import com.aanglearning.parentapp.util.DateUtil;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,6 +26,7 @@ import butterknife.ButterKnife;
 
 class SessionAttendanceAdapter extends RecyclerView.Adapter<SessionAttendanceAdapter.ViewHolder> {
     private LinkedHashMap<String, List<Attendance>> attendanceList;
+    private ArrayList<List<Attendance>> list = new ArrayList<>();
 
     SessionAttendanceAdapter(LinkedHashMap<String, List<Attendance>> attendanceList) {
         this.attendanceList = attendanceList;
@@ -37,6 +41,7 @@ class SessionAttendanceAdapter extends RecyclerView.Adapter<SessionAttendanceAda
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.bind(attendanceList.get((attendanceList.keySet().toArray())[ position ]));
+        //holder.bind(list.get(position));
     }
 
     @Override
@@ -47,6 +52,11 @@ class SessionAttendanceAdapter extends RecyclerView.Adapter<SessionAttendanceAda
     @UiThread
     void setDataSet(LinkedHashMap<String, List<Attendance>> attendanceList) {
         this.attendanceList = attendanceList;
+        /*for (Map.Entry<String, List<Attendance>> entry : attendanceList.entrySet()) {
+            String key = entry.getKey();
+            List<Attendance> value = entry.getValue();
+            list.add(entry.getValue());
+        }*/
         notifyDataSetChanged();
     }
 
@@ -63,7 +73,7 @@ class SessionAttendanceAdapter extends RecyclerView.Adapter<SessionAttendanceAda
             ButterKnife.bind(this, view);
         }
 
-        void bind(final List<Attendance> attendances) {
+        void bind(List<Attendance> attendances) {
             date.setText(DateUtil.getDisplayFormattedDate(attendances.get(0).getDateAttendance()));
             for(Attendance attendance: attendances) {
                 if(attendance.getSession() == 0) {

@@ -154,7 +154,6 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
                 case "Daily":
                     attendanceType = "Daily";
                     dailyAttendanceLayout.setVisibility(View.VISIBLE);
-                    dailyAttendanceAdapter.setDataSet(attendanceList);
                     break;
                 case "Session":
                     attendanceType = "Session";
@@ -185,7 +184,9 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
                     break;
             }
         }
-        if(attendanceType.equals("Session")) {
+        if(attendanceType.equals("Daily")) {
+            dailyAttendanceAdapter.setDataSet(attendanceList);
+        } else if(attendanceType.equals("Session")) {
             sessionAttendanceLayout.setVisibility(View.VISIBLE);
             sessionAttendanceAdapter.setDataSet(attendanceMap);
         } else if(attendanceType.equals("Period")) {
