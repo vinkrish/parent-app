@@ -66,6 +66,7 @@ interface SqlConstant {
             "  Id INTEGER," +
             "  Name TEXT," +
             "  SchoolId INTEGER," +
+            "  ClassId INTEGER," +
             "  SectionId INTEGER," +
             "  AdmissionNo TEXT," +
             "  RollNo INTEGER," +

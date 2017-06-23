@@ -33,7 +33,7 @@ class ChatsPresenterImpl implements ChatsPresenter, ChatsInteractor.OnFinishedLi
     @Override
     public void onError(String message) {
         if (mView != null) {
-            mView.hideProgess();
+            mView.hideProgress();
             mView.showError(message);
         }
     }
@@ -42,7 +42,7 @@ class ChatsPresenterImpl implements ChatsPresenter, ChatsInteractor.OnFinishedLi
     public void onChatsReceived(List<Chat> chats) {
         if (mView != null) {
             mView.setChats(chats);
-            mView.hideProgess();
+            mView.hideProgress();
         }
     }
 }

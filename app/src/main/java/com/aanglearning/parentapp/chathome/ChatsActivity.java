@@ -95,7 +95,7 @@ public class ChatsActivity extends AppCompatActivity implements ChatsView {
     }
 
     private void showSnackbar(String message) {
-        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class ChatsActivity extends AppCompatActivity implements ChatsView {
     }
 
     @Override
-    public void hideProgess() {
+    public void hideProgress() {
         refreshLayout.setRefreshing(false);
     }
 

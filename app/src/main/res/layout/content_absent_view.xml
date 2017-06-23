@@ -16,6 +16,7 @@
         android:visibility="gone" />
 
     <FrameLayout
+        android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -39,7 +40,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/daily_attendance_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
@@ -63,8 +64,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/session_attendance_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
@@ -78,6 +78,12 @@
         </LinearLayout>
 
     </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5px"
+        android:layout_below="@+id/frame"
+        android:background="@color/dividerColor" />
 
     <LinearLayout
         android:id="@+id/no_attendance"

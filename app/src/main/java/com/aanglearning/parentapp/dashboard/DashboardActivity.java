@@ -1,5 +1,6 @@
 package com.aanglearning.parentapp.dashboard;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,6 +43,7 @@ import com.aanglearning.parentapp.messagegroup.MessageActivity;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Service;
+import com.aanglearning.parentapp.profile.ProfileActivity;
 import com.aanglearning.parentapp.timetable.TimetableActivity;
 import com.aanglearning.parentapp.util.AppGlobal;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
@@ -195,7 +198,7 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     }
 
     @Override
-    public void hideProgess() {
+    public void hideProgress() {
         refreshLayout.setRefreshing(false);
     }
 
@@ -260,11 +263,29 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
                             case R.id.chat_item:
                                 startActivity(new Intent(DashboardActivity.this, ChatsActivity.class));
                                 break;
+                            case R.id.profile_item:
+                                startActivity(new Intent(DashboardActivity.this, ProfileActivity.class));
+                                break;
                             case R.id.logout_item:
-                                SharedPreferenceUtil.logout(DashboardActivity.this);
-                                SharedPreferenceUtil.clearProfile(DashboardActivity.this);
-                                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
-                                finish();
+                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(DashboardActivity.this);
+                                //alertDialog.setTitle("Confirm");
+                                alertDialog.setMessage("Are you sure you want to logout?");
+                                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        SharedPreferenceUtil.logout(DashboardActivity.this);
+                                        SharedPreferenceUtil.clearProfile(DashboardActivity.this);
+                                        startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+                                        finish();
+                                    }
+                                });
+                                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener(){
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss();
+                                    }
+                                });
+                                alertDialog.show();
                                 break;
                             default:
                                 break;

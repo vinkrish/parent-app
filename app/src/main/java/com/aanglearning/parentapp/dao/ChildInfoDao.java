@@ -68,6 +68,25 @@ public class ChildInfoDao {
         return childInfos;
     }
 
+    public static int update(long studentId, String imageName) {
+        String sql = "update child_info set Image = ? where StudentId = ?";
+        SQLiteDatabase db = AppGlobal.getSqlDbHelper().getWritableDatabase();
+        db.beginTransactionNonExclusive();
+        SQLiteStatement stmt = db.compileStatement(sql);
+        try {
+            stmt.bindString(1, imageName);
+            stmt.bindLong(2, studentId);
+            stmt.execute();
+            stmt.clearBindings();
+        } catch (Exception e) {
+            db.endTransaction();
+            return 0;
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        return 1;
+    }
+
     public static int clear() {
         SQLiteDatabase sqliteDb = AppGlobal.getSqlDbHelper().getWritableDatabase();
         try {

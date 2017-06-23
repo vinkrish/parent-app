@@ -5,6 +5,7 @@ import com.aanglearning.parentapp.model.Chat;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Homework;
 import com.aanglearning.parentapp.model.Message;
+import com.aanglearning.parentapp.model.Student;
 import com.aanglearning.parentapp.model.Timetable;
 
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ import retrofit2.http.Path;
  */
 
 public interface ParentApi {
+
+    @GET("student/{studentId}")
+    Call<Student> getStudent(@Path("studentId") long studentId);
 
     @GET("app/homework/section/{sectionId}")
     Call<List<Homework>> syncHomework(@Path("sectionId") long sectionId);

@@ -27,6 +27,11 @@
             android:icon="@drawable/ic_chat_bubble"
             android:title="@string/chat" />
         <item
+            android:id="@+id/profile_item"
+            android:checked="false"
+            android:icon="@drawable/ic_profile"
+            android:title="@string/profile" />
+        <item
             android:id="@+id/logout_item"
             android:checked="false"
             android:icon="@drawable/exit"

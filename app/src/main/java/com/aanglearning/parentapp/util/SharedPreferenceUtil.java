@@ -71,6 +71,13 @@ public class SharedPreferenceUtil {
         return childInfo;
     }
 
+    public static void updateProfile(Context context, String image) {
+        SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("image", image);
+        editor.apply();
+    }
+
     public static void saveHomeworkDate(Context context, String date) {
         SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
