@@ -168,7 +168,8 @@ interface SqlConstant {
             "  SectionId INTEGER," +
             "  SectionName TEXT," +
             "  StudentId INTEGER," +
-            "  Name TEXT" +
+            "  Name TEXT," +
+            "  Image TEXT" +
             ")";
 
     String CREATE_SERVICE = "CREATE TABLE service (" +

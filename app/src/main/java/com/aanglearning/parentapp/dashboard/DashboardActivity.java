@@ -1,7 +1,11 @@
 package com.aanglearning.parentapp.dashboard;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -41,8 +45,14 @@ import com.aanglearning.parentapp.timetable.TimetableActivity;
 import com.aanglearning.parentapp.util.AppGlobal;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
 import com.aanglearning.parentapp.util.NetworkUtil;
+import com.aanglearning.parentapp.util.PermissionUtil;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +76,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
 
     private GroupPresenter presenter;
     private GroupAdapter adapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,18 +119,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
 
         setupHeaderAndSpinner();
 
-        if(NetworkUtil.isNetworkAvailable(this)) {
-            presenter.getGroups(childInfo.getStudentId());
-        } else {
-            List<Groups> groups = GroupDao.getGroups(childInfo.getClassId());
-            if(groups.size() == 0) {
-                noGroups.setVisibility(View.VISIBLE);
-            } else {
-                noGroups.setVisibility(View.INVISIBLE);
-                adapter.replaceData(groups);
-            }
-        }
-
         refreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(this, R.color.colorPrimary),
                 ContextCompat.getColor(this, R.color.colorAccent),
@@ -136,6 +133,22 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
             }
         });
 
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if(NetworkUtil.isNetworkAvailable(DashboardActivity.this)) {
+            presenter.getGroups(childInfo.getStudentId());
+        } else {
+            List<Groups> groups = GroupDao.getGroups(childInfo.getClassId());
+            if(groups.size() == 0) {
+                noGroups.setVisibility(View.VISIBLE);
+            } else {
+                noGroups.setVisibility(View.INVISIBLE);
+                adapter.replaceData(groups);
+            }
+        }
     }
 
     @Override
@@ -282,12 +295,7 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
             spinner.setSelection(((ArrayAdapter<String>) spinner.getAdapter()).getPosition(childInfo.getName()));
         }
 
-        View hView = navigationView.inflateHeaderView(R.layout.header);
-        ImageView imageView = (ImageView) hView.findViewById(R.id.user_image);
-        TextView tv = (TextView) hView.findViewById(R.id.name);
-        imageView.setImageResource(R.drawable.ic_account);
-        tv.setText(childInfo.getName());
-        schoolId = childInfo.getSchoolId();
+        setProfile();
 
         hideDrawerItem();
 
@@ -309,6 +317,47 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
 
             }
         });
+    }
+
+    private void setProfile() {
+        View hView = navigationView.inflateHeaderView(R.layout.header);
+        final ImageView imageView = (ImageView) hView.findViewById(R.id.user_image);
+        TextView tv = (TextView) hView.findViewById(R.id.name);
+        tv.setText(childInfo.getName());
+        schoolId = childInfo.getSchoolId();
+
+        if(PermissionUtil.getStoragePermissionStatus(this)) {
+            File dir = new File(Environment.getExternalStorageDirectory().getPath(), "Shikshitha/Parent/Images");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            final File file = new File(dir, childInfo.getImage());
+            if(file.exists()) {
+                imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
+            } else {
+                Picasso.with(this)
+                        .load("https://s3.ap-south-1.amazonaws.com/aang-solutions/" + childInfo.getImage())
+                        .placeholder(R.drawable.splash_image)
+                        .into(imageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+                                try {
+                                    FileOutputStream fos = new FileOutputStream(file);
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                                    fos.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onError() {
+                                imageView.setImageResource(R.drawable.ic_account);
+                            }
+                        });
+            }
+        }
     }
 
     GroupAdapter.OnItemClickListener mItemListener = new GroupAdapter.OnItemClickListener() {

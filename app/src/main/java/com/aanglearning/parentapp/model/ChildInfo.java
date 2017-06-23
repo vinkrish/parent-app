@@ -13,6 +13,7 @@ public class ChildInfo {
     private String sectionName;
     private long studentId;
     private String name;
+    private String image;
     private Service service;
 
     public long getSchoolId() {
@@ -77,6 +78,14 @@ public class ChildInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Service getService() {

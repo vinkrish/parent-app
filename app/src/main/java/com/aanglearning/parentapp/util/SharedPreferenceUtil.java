@@ -52,6 +52,7 @@ public class SharedPreferenceUtil {
         editor.putString("sectionName", childInfo.getSectionName());
         editor.putLong("studentId", childInfo.getStudentId());
         editor.putString("name", childInfo.getName());
+        editor.putString("image", childInfo.getImage());
         editor.apply();
     }
 
@@ -66,6 +67,7 @@ public class SharedPreferenceUtil {
         childInfo.setSectionName(sharedPref.getString("sectionName", ""));
         childInfo.setStudentId(sharedPref.getLong("studentId", 0));
         childInfo.setName(sharedPref.getString("name", ""));
+        childInfo.setImage(sharedPref.getString("image", ""));
         return childInfo;
     }
 

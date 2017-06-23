@@ -53,7 +53,7 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
             .beginConfig()
             .withBorder(4)
             .endConfig()
-            .round();
+            .roundRect(10);
 
     MessageAdapter(Context context, List<Message> messages) {
         this.mContext = context;
@@ -264,7 +264,7 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
         messageText.setText(message.getMessageBody());
 
         TouchImageView fullImage = (TouchImageView) dialog.findViewById(R.id.full_image);
-        File file = new File(Environment.getExternalStorageDirectory().getPath(), "ThyWardParent/Images/" + message.getImageUrl());
+        File file = new File(Environment.getExternalStorageDirectory().getPath(), "Shikshitha/Parent/Images/" + message.getImageUrl());
         if(file.exists()) {
             fullImage.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
         }
