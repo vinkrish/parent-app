@@ -183,7 +183,7 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
             });
 
             //sharedImage.setImageResource(R.drawable.books);
-            File dir = new File(Environment.getExternalStorageDirectory().getPath(), "ThyWardParent/Images");
+            File dir = new File(Environment.getExternalStorageDirectory().getPath(), "Shikshitha/Parent/Images");
             if (!dir.exists()) {
                 dir.mkdirs();
             }
@@ -225,12 +225,20 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
         TextView sender = (TextView) dialog.findViewById(R.id.sender_name);
         TextView createdTime = (TextView) dialog.findViewById(R.id.created_date);
+        ImageView closeWindow = (ImageView) dialog.findViewById(R.id.close_window);
         TextView messageText = (TextView) dialog.findViewById(R.id.message);
 
         sender.setText(message.getSenderName());
         DateTime dateTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.S").parseDateTime(message.getCreatedAt());
         createdTime.setText(DateTimeFormat.forPattern("dd-MMM, HH:mm").print(dateTime));
         messageText.setText(message.getMessageBody());
+
+        closeWindow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
 
         dialog.show();
 
@@ -256,6 +264,7 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
         TextView sender = (TextView) dialog.findViewById(R.id.sender_name);
         TextView createdTime = (TextView) dialog.findViewById(R.id.created_date);
+        ImageView closeWindow = (ImageView) dialog.findViewById(R.id.close_window);
         TextView messageText = (TextView) dialog.findViewById(R.id.message);
 
         sender.setText(message.getSenderName());
@@ -268,6 +277,13 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
         if(file.exists()) {
             fullImage.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
         }
+
+        closeWindow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
 
         dialog.show();
 
