@@ -80,7 +80,17 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         setupRecyclerView();
 
         newMsg.addTextChangedListener(newMsgWatcher);
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if(NetworkUtil.isNetworkAvailable(this)) {
             presenter.getMessages("student", childInfo.getStudentId(), recipientRole, recipientId);
         } else {
@@ -92,12 +102,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                 adapter.setDataSet(messages);
             }
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override

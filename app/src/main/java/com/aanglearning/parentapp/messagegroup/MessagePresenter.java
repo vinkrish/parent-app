@@ -7,6 +7,8 @@ import com.aanglearning.parentapp.model.Message;
  */
 
 interface MessagePresenter {
+    void getRecentMessages(long groupId, long messageId);
+
     void getMessages(long groupId);
 
     void getFollowupMessages(long groupId, long messageId);

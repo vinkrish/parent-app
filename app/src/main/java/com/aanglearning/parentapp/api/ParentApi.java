@@ -60,6 +60,10 @@ public interface ParentApi {
     @GET("groups/student/{id}")
     Call<List<Groups>> getGroups(@Path("id") long id);
 
+    @GET("message/group/{groupId}/messagesUp/{messageId}")
+    Call<ArrayList<Message>> getGroupMessagesAboveId(@Path("groupId") long groupId,
+                                                     @Path("messageId") long messageId);
+
     @GET("message/group/{groupId}")
     Call<ArrayList<Message>> getGroupMessages(@Path("groupId") long groupId);
 

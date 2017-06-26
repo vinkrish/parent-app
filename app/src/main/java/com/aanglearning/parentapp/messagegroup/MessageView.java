@@ -2,7 +2,7 @@ package com.aanglearning.parentapp.messagegroup;
 
 import com.aanglearning.parentapp.model.Message;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Vinay on 07-04-2017.
@@ -15,9 +15,9 @@ interface MessageView {
 
     void showError(String message);
 
-    void onMessageSaved(Message message);
+    void showRecentMessages(List<Message> messages);
 
-    void showMessages(ArrayList<Message> messages);
+    void showMessages(List<Message> messages);
 
-    void showFollowupMessages(ArrayList<Message> messages);
+    void showFollowupMessages(List<Message> messages);
 }

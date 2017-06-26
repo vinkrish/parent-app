@@ -3,6 +3,7 @@ package com.aanglearning.parentapp.messagegroup;
 import com.aanglearning.parentapp.model.Message;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Vinay on 07-04-2017.
@@ -15,6 +16,14 @@ class MessagePresenterImpl implements MessagePresenter, MessageInteractor.OnFini
     MessagePresenterImpl(MessageView view, MessageInteractor interactor) {
         mView = view;
         mInteractor = interactor;
+    }
+
+    @Override
+    public void getRecentMessages(long groupId, long messageId) {
+        if(mView != null) {
+            mView.showProgress();
+            mInteractor.getRecentMessages(groupId, messageId, this);
+        }
     }
 
     @Override
@@ -47,7 +56,15 @@ class MessagePresenterImpl implements MessagePresenter, MessageInteractor.OnFini
     }
 
     @Override
-    public void onMessageReceived(ArrayList<Message> messages) {
+    public void onRecentMessagesReceived(List<Message> messages) {
+        if(mView != null) {
+            mView.showRecentMessages(messages);
+            mView.hideProgress();
+        }
+    }
+
+    @Override
+    public void onMessageReceived(List<Message> messages) {
         if(mView != null) {
             mView.showMessages(messages);
             mView.hideProgress();

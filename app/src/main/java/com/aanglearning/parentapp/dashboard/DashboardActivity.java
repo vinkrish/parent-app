@@ -44,6 +44,7 @@ import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Service;
 import com.aanglearning.parentapp.profile.ProfileActivity;
+import com.aanglearning.parentapp.sqlite.SqlDbHelper;
 import com.aanglearning.parentapp.timetable.TimetableActivity;
 import com.aanglearning.parentapp.util.AppGlobal;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
@@ -268,13 +269,13 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
                                 break;
                             case R.id.logout_item:
                                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(DashboardActivity.this);
-                                //alertDialog.setTitle("Confirm");
                                 alertDialog.setMessage("Are you sure you want to logout?");
                                 alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         SharedPreferenceUtil.logout(DashboardActivity.this);
                                         SharedPreferenceUtil.clearProfile(DashboardActivity.this);
+                                        SqlDbHelper.getInstance(DashboardActivity.this).deleteTables();
                                         startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
                                         finish();
                                     }
