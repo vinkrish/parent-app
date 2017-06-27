@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -80,6 +81,14 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         setupRecyclerView();
 
         newMsg.addTextChangedListener(newMsgWatcher);
+
+        List<Message> messages = MessageDao.getMessages(childInfo.getStudentId(), "student", recipientId, recipientRole);
+        if(messages.size() == 0) {
+            noChats.setVisibility(View.VISIBLE);
+        } else {
+            noChats.setVisibility(View.INVISIBLE);
+            adapter.setDataSet(messages);
+        }
     }
 
     @Override
@@ -92,14 +101,11 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     public void onResume() {
         super.onResume();
         if(NetworkUtil.isNetworkAvailable(this)) {
-            presenter.getMessages("student", childInfo.getStudentId(), recipientRole, recipientId);
-        } else {
-            List<Message> messages = MessageDao.getMessages(childInfo.getStudentId(), "student", recipientId, recipientRole);
-            if(messages.size() == 0) {
-                noChats.setVisibility(View.VISIBLE);
+            if(adapter.getItemCount() == 0) {
+                presenter.getMessages("student", childInfo.getStudentId(), recipientRole, recipientId);
             } else {
-                noChats.setVisibility(View.INVISIBLE);
-                adapter.setDataSet(messages);
+                presenter.getRecentMessages("student", childInfo.getStudentId(), recipientRole, recipientId,
+                        adapter.getDataSet().get(0).getId());
             }
         }
     }
@@ -191,12 +197,14 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         noChats.setVisibility(View.INVISIBLE);
         adapter.insertDataSet(message);
         recyclerView.smoothScrollToPosition(0);
+        backupChats(Arrays.asList(message));
     }
 
     @Override
     public void showRecentMessages(List<Message> messages) {
         adapter.insertDataSet(messages);
         recyclerView.smoothScrollToPosition(0);
+        backupChats(messages);
     }
 
     @Override
@@ -214,7 +222,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                MessageDao.clearChatMessages(childInfo.getStudentId(), "student", recipientId, "teacher");
+                //MessageDao.clearChatMessages(childInfo.getStudentId(), "student", recipientId, "teacher");
                 MessageDao.insertChatMessages(messages);
             }
         }).start();
