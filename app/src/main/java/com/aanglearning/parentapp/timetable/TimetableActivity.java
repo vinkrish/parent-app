@@ -73,23 +73,27 @@ public class TimetableActivity extends AppCompatActivity implements TimetableVie
         if(NetworkUtil.isNetworkAvailable(this)) {
             presenter.getTimetable(childInfo.getSectionId());
         } else {
-            List<Timetable> timetableList = TimetableDao.getTimetable(childInfo.getSectionId());
-            if(timetableList.size() == 0) {
-                noTimetable.setVisibility(View.VISIBLE);
-            } else {
-                noTimetable.setVisibility(View.INVISIBLE);
-                for(String day: days) {
-                    List<Timetable> timtableList = new ArrayList<>();
-                    for(Timetable timetable: timetableList) {
-                        if(timetable.getDayOfWeek().equals(day)) {
-                            timtableList.add(timetable);
-                            if(timetable.getPeriodNo() > noOfPeriods) noOfPeriods = timetable.getPeriodNo();
-                        }
+            showOfflineData();
+        }
+    }
+
+    private void showOfflineData() {
+        List<Timetable> timetableList = TimetableDao.getTimetable(childInfo.getSectionId());
+        if(timetableList.size() == 0) {
+            noTimetable.setVisibility(View.VISIBLE);
+        } else {
+            noTimetable.setVisibility(View.INVISIBLE);
+            for(String day: days) {
+                List<Timetable> timtableList = new ArrayList<>();
+                for(Timetable timetable: timetableList) {
+                    if(timetable.getDayOfWeek().equals(day)) {
+                        timtableList.add(timetable);
+                        if(timetable.getPeriodNo() > noOfPeriods) noOfPeriods = timetable.getPeriodNo();
                     }
-                    timetableMap.put(day, timtableList);
                 }
-                tableLayout.addView(new TableMainLayout(this));
+                timetableMap.put(day, timtableList);
             }
+            tableLayout.addView(new TableMainLayout(this));
         }
     }
 
@@ -118,8 +122,8 @@ public class TimetableActivity extends AppCompatActivity implements TimetableVie
 
     @Override
     public void showError(String message) {
-        progressBar.setVisibility(View.INVISIBLE);
         showSnackbar(message);
+        showOfflineData();
     }
 
     @Override

@@ -105,15 +105,19 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
         if(NetworkUtil.isNetworkAvailable(this)) {
             presenter.getStudentAbsentDays(childInfo.getStudentId());
         } else {
-            List<Attendance> attendanceList = AttendanceDao.getAttendance(childInfo.getStudentId());
-            if(attendanceList.size() == 0) {
-                noAttendance.setVisibility(View.VISIBLE);
-            } else {
-                noAttendance.setVisibility(View.INVISIBLE);
-                showAbsentAttendance(attendanceList);
-            }
+            showOfflineData();
         }
 
+    }
+
+    private void showOfflineData() {
+        List<Attendance> attendanceList = AttendanceDao.getAttendance(childInfo.getStudentId());
+        if(attendanceList.size() == 0) {
+            noAttendance.setVisibility(View.VISIBLE);
+        } else {
+            noAttendance.setVisibility(View.INVISIBLE);
+            showAbsentAttendance(attendanceList);
+        }
     }
 
     private void showSnackbar(String message) {
@@ -132,8 +136,8 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
 
     @Override
     public void showError(String message) {
-        progressBar.setVisibility(View.INVISIBLE);
         showSnackbar(message);
+        showOfflineData();
     }
 
     @Override

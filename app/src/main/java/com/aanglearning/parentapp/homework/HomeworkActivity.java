@@ -100,14 +100,18 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
         if(NetworkUtil.isNetworkAvailable(this)) {
             getHomework();
         } else {
-            List<Homework> homeworks = HomeworkDao.getHomework(childInfo.getSectionId(),
-                    SharedPreferenceUtil.getHomeworkDate(this));
-            if(homeworks.size() == 0) {
-                noHomework.setVisibility(View.VISIBLE);
-            } else {
-                noHomework.setVisibility(View.INVISIBLE);
-                showHomework(homeworks);
-            }
+            showOfflineData();
+        }
+    }
+
+    private void showOfflineData() {
+        List<Homework> homeworks = HomeworkDao.getHomework(childInfo.getSectionId(),
+                SharedPreferenceUtil.getHomeworkDate(this));
+        if(homeworks.size() == 0) {
+            noHomework.setVisibility(View.VISIBLE);
+        } else {
+            noHomework.setVisibility(View.INVISIBLE);
+            showHomework(homeworks);
         }
     }
 
@@ -229,7 +233,7 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
 
     @Override
     public void showError(String message) {
-        refreshLayout.setRefreshing(false);
         showSnackbar(message);
+        showOfflineData();
     }
 }

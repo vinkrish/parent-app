@@ -82,6 +82,10 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
 
         newMsg.addTextChangedListener(newMsgWatcher);
 
+        showOfflineData();
+    }
+
+    private void showOfflineData() {
         List<Message> messages = MessageDao.getMessages(childInfo.getStudentId(), "student", recipientId, recipientRole);
         if(messages.size() == 0) {
             noChats.setVisibility(View.VISIBLE);

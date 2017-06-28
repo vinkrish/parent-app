@@ -145,13 +145,17 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
         if(NetworkUtil.isNetworkAvailable(DashboardActivity.this)) {
             presenter.getGroups(childInfo.getStudentId());
         } else {
-            List<Groups> groups = GroupDao.getGroups(childInfo.getClassId());
-            if(groups.size() == 0) {
-                noGroups.setVisibility(View.VISIBLE);
-            } else {
-                noGroups.setVisibility(View.INVISIBLE);
-                adapter.replaceData(groups);
-            }
+            loadOfflineData();
+        }
+    }
+
+    private void loadOfflineData() {
+        List<Groups> groups = GroupDao.getGroups(childInfo.getClassId());
+        if(groups.size() == 0) {
+            noGroups.setVisibility(View.VISIBLE);
+        } else {
+            noGroups.setVisibility(View.INVISIBLE);
+            adapter.replaceData(groups);
         }
     }
 
@@ -205,8 +209,8 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
 
     @Override
     public void showError(String message) {
-        refreshLayout.setRefreshing(false);
         showSnackbar(message);
+        loadOfflineData();
     }
 
     @Override
