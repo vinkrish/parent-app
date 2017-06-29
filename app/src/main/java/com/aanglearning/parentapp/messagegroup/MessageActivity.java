@@ -124,12 +124,6 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
         recyclerView.addOnScrollListener(scrollListener);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.onDestroy();
-    }
-
     private void showSnackbar(String message) {
         Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
     }
@@ -153,12 +147,14 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
     @Override
     public void showRecentMessages(List<Message> messages) {
         adapter.insertDataSet(messages);
+        recyclerView.smoothScrollToPosition(0);
         backupMessages(messages);
     }
 
     @Override
     public void showMessages(List<Message> messages) {
         adapter.setDataSet(messages);
+        recyclerView.smoothScrollToPosition(0);
         backupMessages(messages);
     }
 
@@ -177,4 +173,9 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
         }).start();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
+    }
 }

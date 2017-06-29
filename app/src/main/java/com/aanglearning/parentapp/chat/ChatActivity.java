@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.aanglearning.parentapp.App;
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.dao.MessageDao;
 import com.aanglearning.parentapp.model.ChildInfo;
@@ -105,6 +106,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     @Override
     public void onResume() {
         super.onResume();
+        App.activityResumed();
         if(NetworkUtil.isNetworkAvailable(this)) {
             if(adapter.getItemCount() == 0) {
                 presenter.getMessages("student", childInfo.getStudentId(), recipientRole, recipientId);
@@ -113,6 +115,12 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
                         adapter.getDataSet().get(0).getId());
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        App.activityPaused();
     }
 
     @Override

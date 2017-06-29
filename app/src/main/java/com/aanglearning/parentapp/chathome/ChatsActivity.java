@@ -47,7 +47,6 @@ public class ChatsActivity extends AppCompatActivity implements ChatsView {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         childInfo = SharedPreferenceUtil.getProfile(this);

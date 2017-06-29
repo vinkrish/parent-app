@@ -87,8 +87,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
         setContentView(R.layout.activity_dashboard);
         check = false;
         ButterKnife.bind(this);
-        
-        AppGlobal.setSqlDbHelper(getApplicationContext());
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -272,25 +270,7 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
                                 startActivity(new Intent(DashboardActivity.this, ProfileActivity.class));
                                 break;
                             case R.id.logout_item:
-                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(DashboardActivity.this);
-                                alertDialog.setMessage("Are you sure you want to logout?");
-                                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        SharedPreferenceUtil.logout(DashboardActivity.this);
-                                        SharedPreferenceUtil.clearProfile(DashboardActivity.this);
-                                        SqlDbHelper.getInstance(DashboardActivity.this).deleteTables();
-                                        startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
-                                        finish();
-                                    }
-                                });
-                                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener(){
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.dismiss();
-                                    }
-                                });
-                                alertDialog.show();
+                                logout();
                                 break;
                             default:
                                 break;
@@ -317,6 +297,7 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
         childInfo = SharedPreferenceUtil.getProfile(this);
         if (childInfo.getName().equals("") && childInfos.size()>0) {
             SharedPreferenceUtil.saveProfile(this, childInfos.get(0));
+            childInfo = SharedPreferenceUtil.getProfile(this);
         } else {
             spinner.setSelection(((ArrayAdapter<String>) spinner.getAdapter()).getPosition(childInfo.getName()));
         }
@@ -395,5 +376,27 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
             startActivity(intent);
         }
     };
+
+    private void logout() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setMessage("Are you sure you want to logout?");
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                SharedPreferenceUtil.logout(DashboardActivity.this);
+                SharedPreferenceUtil.clearProfile(DashboardActivity.this);
+                SqlDbHelper.getInstance(DashboardActivity.this).deleteTables();
+                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+                finish();
+            }
+        });
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialog.show();
+    }
 
 }
