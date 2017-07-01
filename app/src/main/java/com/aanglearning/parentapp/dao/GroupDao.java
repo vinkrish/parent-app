@@ -117,10 +117,10 @@ public class GroupDao {
         return groups;
     }
 
-    public static int clear() {
+    public static int clear(long classId) {
         SQLiteDatabase sqliteDb = AppGlobal.getSqlDbHelper().getWritableDatabase();
         try {
-            sqliteDb.execSQL("delete from groups");
+            sqliteDb.execSQL("delete from groups where ClassId = " + classId);
         } catch(SQLException e) {
             return 0;
         }

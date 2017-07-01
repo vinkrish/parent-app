@@ -107,7 +107,7 @@
             android:name=".profile.ProfileActivity"
             android:label="@string/title_activity_profile"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar">
+            android:theme="@style/profileTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".dashboard.DashboardActivity" />

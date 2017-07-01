@@ -6,7 +6,7 @@ import com.aanglearning.parentapp.model.Credentials;
  * Created by Vinay on 16-02-2017.
  */
 
-public interface LoginInteractor {
+interface LoginInteractor {
     interface OnLoginFinishedListener{
 
         void onSuccess(Credentials credentials);
@@ -15,12 +15,10 @@ public interface LoginInteractor {
 
         void onNoUser();
 
-        void onError();
-
-        void onAPIError(String message);
+        void onError(String message);
     }
 
     void login(Credentials credentials, OnLoginFinishedListener listener);
 
-    void recoverPwd(String authToken, String newPassword, OnLoginFinishedListener listener);
+    void recoverPwd(String username, OnLoginFinishedListener listener);
 }

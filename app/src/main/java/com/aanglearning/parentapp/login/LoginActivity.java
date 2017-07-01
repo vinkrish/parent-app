@@ -65,20 +65,14 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
     }
 
     @Override
-    public void setError() {
-        showSnackbar(getString(R.string.request_error));
-    }
-
-    @Override
-    public void showAPIError(String message) {
+    public void setError(String message) {
         showSnackbar(message);
     }
 
     @Override
     public void pwdRecovered() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setTitle("Notification");
-        alertDialog.setMessage("New password has been sent to your mobile number");
+        alertDialog.setMessage("Password has been sent to your registered mobile");
         alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -128,15 +122,13 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         if(mobile.getText().toString().length() != 10) {
             mobileLayout.setError(getString(R.string.valid_mobile));
         } else {
-            presenter.pwdRecovery(
-                    SharedPreferenceUtil.getUser(this).getAuthToken(),
-                    mobile.getText().toString());
+            presenter.pwdRecovery(mobile.getText().toString());
         }
     }
 
     public boolean validate(){
         if(mobile.getText().toString().isEmpty()){
-            mobileLayout.setError(getString(R.string.password_error));
+            mobileLayout.setError(getString(R.string.mobile_error));
             return false;
         } else if (mobile.getText().toString().length() != 10) {
             mobileLayout.setError(getString(R.string.valid_mobile));

@@ -12,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.dao.MessageDao;
@@ -105,6 +106,9 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setItemViewCacheSize(10);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         adapter = new MessageAdapter(this, new ArrayList<Message>(0));
         recyclerView.setAdapter(adapter);

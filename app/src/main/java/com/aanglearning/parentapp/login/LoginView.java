@@ -6,15 +6,13 @@ import com.aanglearning.parentapp.model.Credentials;
  * Created by Vinay on 16-02-2017.
  */
 
-public interface LoginView {
+interface LoginView {
 
     void showProgress();
 
     void hideProgress();
 
-    void setError();
-
-    void showAPIError(String message);
+    void setError(String message);
 
     void pwdRecovered();
 

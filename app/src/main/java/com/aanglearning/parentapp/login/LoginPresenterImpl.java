@@ -25,10 +25,10 @@ class LoginPresenterImpl implements LoginPresenter, LoginInteractor.OnLoginFinis
     }
 
     @Override
-    public void pwdRecovery(String authToken, String newPassword) {
+    public void pwdRecovery(String username) {
         if(loginView != null) {
             loginView.showProgress();
-            interactor.recoverPwd(authToken, newPassword, this);
+            interactor.recoverPwd(username, this);
         }
     }
 
@@ -63,18 +63,10 @@ class LoginPresenterImpl implements LoginPresenter, LoginInteractor.OnLoginFinis
     }
 
     @Override
-    public void onError() {
+    public void onError(String message) {
         if(loginView != null) {
             loginView.hideProgress();
-            loginView.setError();
-        }
-    }
-
-    @Override
-    public void onAPIError(String message) {
-        if(loginView != null) {
-            loginView.hideProgress();
-            loginView.showAPIError(message);
+            loginView.setError(message);
         }
     }
 }

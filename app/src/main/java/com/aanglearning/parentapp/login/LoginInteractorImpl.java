@@ -1,6 +1,7 @@
 package com.aanglearning.parentapp.login;
 
 import com.aanglearning.parentapp.App;
+import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.api.APIError;
 import com.aanglearning.parentapp.api.ApiClient;
 import com.aanglearning.parentapp.api.AuthApi;
@@ -31,40 +32,37 @@ class LoginInteractorImpl implements LoginInteractor {
                     SharedPreferenceUtil.saveAuthorizedUser(App.getInstance(), credentials.getMobileNo());
                     listener.onSuccess(response.body());
                 } else {
-                    listener.onAPIError("Mobile number and password don't match");
+                    listener.onError("Mobile number and password don't match");
                 }
             }
 
             @Override
             public void onFailure(Call<Credentials> call, Throwable t) {
-                listener.onError();
+                listener.onError(App.getInstance().getString(R.string.network_error));
             }
         });
     }
 
     @Override
-    public void recoverPwd(String authToken, String newPassword, final OnLoginFinishedListener listener) {
-        AuthApi authApi = ApiClient.getAuthorizedClient().create(AuthApi.class);
+    public void recoverPwd(String username, final OnLoginFinishedListener listener) {
+        AuthApi authApi = ApiClient.getClient().create(AuthApi.class);
 
-        Call<CommonResponse> sendNewPwd = authApi.newPassword(newPassword);
-        sendNewPwd.enqueue(new Callback<CommonResponse>() {
+        Call<Void> sendNewPwd = authApi.newPassword(username);
+        sendNewPwd.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccessful()) {
-                    if(response.body().isSuccess()){
-                        listener.onPwdRecovered();
-                    } else {
-                        listener.onNoUser();
-                    }
+                    listener.onPwdRecovered();
                 } else {
-                    APIError error = ErrorUtils.parseError(response);
-                    listener.onAPIError(error.getMessage());
+                    //APIError error = ErrorUtils.parseError(response);
+                    //listener.onAPIError(error.getMessage());
+                    listener.onError(App.getInstance().getString(R.string.request_error));
                 }
             }
 
             @Override
-            public void onFailure(Call<CommonResponse> call, Throwable t) {
-                listener.onError();
+            public void onFailure(Call<Void> call, Throwable t) {
+                listener.onError(App.getInstance().getString(R.string.network_error));
             }
         });
     }

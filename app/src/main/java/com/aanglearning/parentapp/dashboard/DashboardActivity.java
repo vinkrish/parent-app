@@ -228,7 +228,7 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                GroupDao.clear();
+                GroupDao.clear(childInfo.getSectionId());
                 GroupDao.insertMany(groups);
             }
         }).start();
