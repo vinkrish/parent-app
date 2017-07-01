@@ -120,6 +120,7 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
     }
 
     private void getHomework() {
+        recyclerView.setAdapter(null);
         presenter.getHomeworks(childInfo.getSectionId(),
                 SharedPreferenceUtil.getHomeworkDate(this));
     }
