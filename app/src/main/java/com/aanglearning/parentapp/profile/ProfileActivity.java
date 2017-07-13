@@ -147,7 +147,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileView,
     }
 
     private void setImage() {
-        File dir = new File(Environment.getExternalStorageDirectory().getPath(), "Shikshitha/Parent/Images");
+        File dir = new File(Environment.getExternalStorageDirectory().getPath(), "Shikshitha/Parent/" + student.getSchoolId());
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -156,7 +156,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileView,
             profileImage.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
         } else {
             Picasso.with(this)
-                    .load("https://s3.ap-south-1.amazonaws.com/aang-solutions/" + student.getImage())
+                    .load("https://s3.ap-south-1.amazonaws.com/shikshitha-images/" + student.getSchoolId() + "/" + student.getImage())
                     .placeholder(R.drawable.splash_image)
                     .into(profileImage, new Callback() {
                         @Override

@@ -6,7 +6,7 @@ import com.aanglearning.parentapp.model.Student;
  * Created by Vinay on 23-06-2017.
  */
 
-public interface ProfileView {
+interface ProfileView {
     void showProgress();
 
     void hideProgress();
