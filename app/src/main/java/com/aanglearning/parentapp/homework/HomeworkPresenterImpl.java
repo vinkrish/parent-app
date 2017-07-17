@@ -22,13 +22,7 @@ class HomeworkPresenterImpl implements HomeworkPresenter, HomeworkInteractor.OnF
     public void getHomeworks(long sectionId, String lastDate) {
         if(mView != null) {
             mView.showProgress();
-            List<Homework> homeworkList = HomeworkDao.getHomework(sectionId, lastDate);
-            if(homeworkList.size() == 0) {
-                mInteractor.getHomeworks(sectionId, lastDate, this);
-            } else {
-                mView.showHomework(homeworkList);
-                mView.hideProgess();
-            }
+            mInteractor.getHomeworks(sectionId, lastDate, this);
         }
     }
 
