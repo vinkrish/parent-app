@@ -86,5 +86,9 @@
     <string name="title_activity_message">Group Message</string>
     <string name="title_activity_absent_view">Attendance</string>
     <string name="title_activity_timetable">Timetable</string>
+    <string name="title_activity_events">Events</string>
     <string name="title_activity_profile">Profile</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
