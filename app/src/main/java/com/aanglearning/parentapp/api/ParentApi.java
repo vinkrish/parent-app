@@ -2,6 +2,7 @@ package com.aanglearning.parentapp.api;
 
 import com.aanglearning.parentapp.model.Attendance;
 import com.aanglearning.parentapp.model.Chat;
+import com.aanglearning.parentapp.model.Evnt;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Homework;
 import com.aanglearning.parentapp.model.Message;
@@ -97,5 +98,10 @@ public interface ParentApi {
                                                    @Path("recipientRole") String recipientRole,
                                                    @Path("recipientId") long recipientId,
                                                    @Path("messageId") long messageId);
+
+    //Event API
+
+    @GET("event/school/{schoolId}")
+    Call<List<Evnt>> getEvents(@Path("schoolId") long schoolId);
 
 }
