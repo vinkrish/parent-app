@@ -7,8 +7,8 @@ android {
         applicationId "com.aanglearning.parentapp"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 5
-        versionName "0.5"
+        versionCode 7
+        versionName "0.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -47,9 +47,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }
-
-
-
-
 
 apply plugin: 'com.google.gms.google-services'
