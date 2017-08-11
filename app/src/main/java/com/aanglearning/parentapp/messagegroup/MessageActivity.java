@@ -1,5 +1,6 @@
 package com.aanglearning.parentapp.messagegroup;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -111,7 +112,8 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
-        adapter = new MessageAdapter(this, new ArrayList<Message>(0), SharedPreferenceUtil.getProfile(this).getSchoolId());
+        adapter = new MessageAdapter(this, new ArrayList<Message>(0), SharedPreferenceUtil.getProfile(this).getSchoolId(),
+                onItemClickListener);
         recyclerView.setAdapter(adapter);
 
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
@@ -177,6 +179,19 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
             }
         }).start();
     }
+
+    MessageAdapter.OnItemClickListener onItemClickListener = new MessageAdapter.OnItemClickListener() {
+        @Override
+        public void onItemClick(Message message) {
+            Intent intent = new Intent(MessageActivity.this, MessageViewActivity.class);
+            Bundle args = new Bundle();
+            if(group != null){
+                args.putSerializable("message", message);
+            }
+            intent.putExtras(args);
+            startActivity(intent);
+        }
+    };
 
     @Override
     public void onDestroy() {
