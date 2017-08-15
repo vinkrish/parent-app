@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "235476986847",
+    "firebase_url": "https://shikshitha-parent.firebaseio.com",
+    "project_id": "shikshitha-parent",
+    "storage_bucket": "shikshitha-parent.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235476986847:android:7f0122c611526578",
+        "android_client_info": {
+          "package_name": "com.aanglearning.parentapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235476986847-veq0dt82eebvhbfof0li4i99n5ffrj6m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa3szeQGT-PX4LPF0hh-D7Rzpx7rZADF4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
