@@ -173,7 +173,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileView,
 
                         @Override
                         public void onError() {
-                            profileImage.setImageResource(R.drawable.ic_account);
+                            profileImage.setImageResource(R.drawable.ic_account_black);
                         }
                     });
         }
