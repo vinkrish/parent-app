@@ -31,11 +31,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MessageActivity extends AppCompatActivity implements MessageView,
-        ActivityCompat.OnRequestPermissionsResultCallback  {
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+        ActivityCompat.OnRequestPermissionsResultCallback {
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.refreshLayout)
+    SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
 
     private MessagePresenter presenter;
     private Groups group;
@@ -54,9 +58,7 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            group = new Groups();
-            group.setId(extras.getLong("groupId"));
-            group.setName(extras.getString("groupName"));
+            group = (Groups) extras.getSerializable("group");
         }
         getSupportActionBar().setTitle(group.getName());
 
@@ -77,7 +79,7 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
             }
         });
 
-        if(PermissionUtil.isStoragePermissionGranted(this, WRITE_STORAGE_PERMISSION)) {
+        if (PermissionUtil.isStoragePermissionGranted(this, WRITE_STORAGE_PERMISSION)) {
             getBackupMessages();
         }
     }
@@ -85,8 +87,8 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
     private void getBackupMessages() {
         List<Message> messages = MessageDao.getGroupMessages(group.getId());
         adapter.setDataSet(messages);
-        if(NetworkUtil.isNetworkAvailable(this)) {
-            if(messages.size() == 0) {
+        if (NetworkUtil.isNetworkAvailable(this)) {
+            if (messages.size() == 0) {
                 presenter.getMessages(group.getId());
             } else {
                 presenter.getRecentMessages(group.getId(), adapter.getDataSet().get(0).getId());
@@ -97,7 +99,7 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             getBackupMessages();
         } else {
             showSnackbar("Permission has been denied");
@@ -112,18 +114,18 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
-        adapter = new MessageAdapter(this, new ArrayList<Message>(0), SharedPreferenceUtil.getProfile(this).getSchoolId(),
+        adapter = new MessageAdapter(getApplicationContext(), new ArrayList<Message>(0), SharedPreferenceUtil.getProfile(this).getSchoolId(),
                 onItemClickListener);
         recyclerView.setAdapter(adapter);
 
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if(NetworkUtil.isNetworkAvailable(MessageActivity.this)) {
-                    presenter.getFollowupMessages(group.getId(), adapter.getDataSet().get(adapter.getDataSet().size()-1).getId());
+                if (NetworkUtil.isNetworkAvailable(MessageActivity.this)) {
+                    presenter.getFollowupMessages(group.getId(), adapter.getDataSet().get(adapter.getDataSet().size() - 1).getId());
                 } else {
                     List<Message> messages = MessageDao.getGroupMessagesFromId(group.getId(),
-                            adapter.getDataSet().get(adapter.getDataSet().size()-1).getId());
+                            adapter.getDataSet().get(adapter.getDataSet().size() - 1).getId());
                     adapter.updateDataSet(messages);
                 }
             }
@@ -185,7 +187,7 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
         public void onItemClick(Message message) {
             Intent intent = new Intent(MessageActivity.this, MessageViewActivity.class);
             Bundle args = new Bundle();
-            if(group != null){
+            if (group != null) {
                 args.putSerializable("message", message);
             }
             intent.putExtras(args);

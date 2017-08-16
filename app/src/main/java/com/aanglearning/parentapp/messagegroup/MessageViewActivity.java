@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.model.Message;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
+import com.aanglearning.parentapp.util.YouTubeHelper;
 import com.aanglearning.parentapp.util.YoutubeDeveloperKey;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -69,14 +70,8 @@ public class MessageViewActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
 
         if(message.getVideoUrl() != null && !message.getVideoUrl().equals("")) {
-            String pattern = "(?<=watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*";
-
-            Pattern compiledPattern = Pattern.compile(pattern);
-            Matcher matcher = compiledPattern.matcher(message.getVideoUrl());
-
-            if(matcher.find()){
-                videoId = matcher.group();
-            }
+            YouTubeHelper youTubeHelper = new YouTubeHelper();
+            videoId = youTubeHelper.extractVideoIdFromUrl(message.getVideoUrl());
 
             fm.beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
@@ -85,7 +80,7 @@ public class MessageViewActivity extends AppCompatActivity
             frag.initialize(YoutubeDeveloperKey.DEVELOPER_KEY, this);
         } else {
             fm.beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .setCustomAnimations(android.R.anim.fade_out, android.R.anim.fade_in)
                     .hide(frag)
                     .commit();
         }

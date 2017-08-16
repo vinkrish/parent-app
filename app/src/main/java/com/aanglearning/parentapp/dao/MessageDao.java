@@ -37,9 +37,8 @@ public class MessageDao {
                 stmt.bindString(9, message.getMessageBody());
                 stmt.bindString(10, message.getImageUrl());
                 stmt.bindString(11, message.getVideoUrl());
-                stmt.bindString(11, message.getVideoUrl());
                 stmt.bindString(12, message.getCreatedAt());
-                stmt.execute();
+                stmt.executeInsert();
                 stmt.clearBindings();
             }
         } catch (Exception e) {
