@@ -32,7 +32,7 @@ class LoginInteractorImpl implements LoginInteractor {
                     SharedPreferenceUtil.saveAuthorizedUser(App.getInstance(), credentials.getMobileNo());
                     listener.onSuccess(response.body());
                 } else {
-                    listener.onError("Mobile number and password don't match");
+                    listener.onError("mobile number and password don't match");
                 }
             }
 

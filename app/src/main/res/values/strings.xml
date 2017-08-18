@@ -28,7 +28,6 @@
     <string name="change">Change</string>
     <string name="future_date">Selected date can\'t be future to present day</string>
 
-    <string name="dashboard">Dashboard</string>
     <string name="logout">Logout</string>
 
     <!--attendanceFragment.java-->
