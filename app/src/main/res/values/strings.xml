@@ -57,6 +57,7 @@
     <!--Message-->
     <string name="no_groups">You are not part of any group</string>
     <string name="groups">Groups</string>
+    <string name="nothing_shared">Nothing Shared!</string>
     <string name="no_chats">No Chats!</string>
     <string name="chat">Chat</string>
     <string name="type_your_message">Enter msg</string>
@@ -75,6 +76,7 @@
     <string name="end_date">End Date :</string>
     <string name="start_time">Start Time :</string>
     <string name="end_time">End Time :</string>
+    <string name="show_hide_cal">Show / Hide Calendar</string>
 
     <string name="profile">Profile</string>
     <string name="name">Name</string>

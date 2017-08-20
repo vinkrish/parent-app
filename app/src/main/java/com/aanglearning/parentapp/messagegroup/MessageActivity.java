@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.dao.MessageDao;
@@ -40,6 +41,8 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R.id.noMessage)
+    LinearLayout noMessage;
 
     private MessagePresenter presenter;
     private Groups group;
@@ -162,9 +165,14 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
 
     @Override
     public void showMessages(List<Message> messages) {
-        adapter.setDataSet(messages);
-        recyclerView.smoothScrollToPosition(0);
-        backupMessages(messages);
+        if(messages.size() == 0) {
+            noMessage.setVisibility(View.VISIBLE);
+        } else {
+            noMessage.setVisibility(View.GONE);
+            adapter.setDataSet(messages);
+            recyclerView.smoothScrollToPosition(0);
+            backupMessages(messages);
+        }
     }
 
     @Override
