@@ -14,6 +14,7 @@ import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.chat.ChatActivity;
 import com.aanglearning.parentapp.chathome.ChatsActivity;
 import com.aanglearning.parentapp.dao.ChildInfoDao;
+import com.aanglearning.parentapp.dao.StudentDao;
 import com.aanglearning.parentapp.dashboard.DashboardActivity;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.MessageEvent;
@@ -32,17 +33,53 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         AppGlobal.setSqlDbHelper(getApplicationContext());
 
         if (remoteMessage.getData().size() > 0) {
-            ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
-            for (ChildInfo childInfo : childInfos) {
-                if(childInfo.getName().equals(remoteMessage.getData().get("recipient_name"))) {
-                    SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
-                    break;
+            if(App.isActivityVisible() && ChatActivity.isActivityVisible()) {
+                ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
+                for (ChildInfo childInfo : childInfos) {
+                    if(childInfo.getName().equals(remoteMessage.getData().get("recipient_name"))) {
+                        SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
+                        break;
+                    }
                 }
-            }
-            if(App.isActivityVisible()) {
                 EventBus.getDefault().post(new MessageEvent(remoteMessage.getData().get("message"),
                         Long.valueOf(remoteMessage.getData().get("sender_id"))));
+            } else if (remoteMessage.getData().get("is_group").equals("true")) {
+                String studentName = StudentDao.getStudentName(Long.valueOf(remoteMessage.getData().get("group_id")));
+                ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
+                for (ChildInfo childInfo : childInfos) {
+                    if(childInfo.getName().equals(studentName)) {
+                        SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
+                        break;
+                    }
+                }
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(getApplicationContext())
+                                .setSmallIcon(R.drawable.ic_stat_notify)
+                                .setContentTitle(remoteMessage.getData().get("group_name"))
+                                .setContentText("You have new message in this group!")
+                                .setDefaults(Notification.DEFAULT_SOUND)
+                                .setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getData().get("message")));
+
+                mBuilder.setAutoCancel(true);
+
+                Intent resultIntent = new Intent(getApplicationContext(), DashboardActivity.class);
+                resultIntent.putExtra("group_id", Long.valueOf(remoteMessage.getData().get("group_id")));
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                //stackBuilder.addParentStack(DashboardActivity.class);
+                stackBuilder.addNextIntent(resultIntent);
+                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(789, PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.setContentIntent(resultPendingIntent);
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.notify(0, mBuilder.build());
             } else {
+                ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
+                for (ChildInfo childInfo : childInfos) {
+                    if(childInfo.getName().equals(remoteMessage.getData().get("recipient_name"))) {
+                        SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
+                        break;
+                    }
+                }
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(getApplicationContext())
                                 .setSmallIcon(R.drawable.ic_stat_notify)

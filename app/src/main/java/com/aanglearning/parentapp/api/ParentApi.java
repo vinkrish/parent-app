@@ -58,6 +58,10 @@ public interface ParentApi {
     Call<List<Timetable>> getTimetable(@Path("sectionId") long sectionId);
 
     //Group Message API
+
+    @GET("groups/{groupId}")
+    Call<Groups> getGroup(@Path("groupId") long groupId);
+
     @GET("groups/student/{id}")
     Call<List<Groups>> getGroups(@Path("id") long id);
 

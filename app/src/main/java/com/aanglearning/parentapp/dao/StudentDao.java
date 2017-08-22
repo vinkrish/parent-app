@@ -89,6 +89,18 @@ public class StudentDao {
         return student;
     }
 
+    public static String getStudentName(long groupId) {
+        String studentname = "";
+        SQLiteDatabase sqliteDatabase = AppGlobal.getSqlDbHelper().getReadableDatabase();
+        Cursor c = sqliteDatabase.rawQuery("select Name from student where SectionId in (select SectionId from groups where Id = " + groupId + ")", null);
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            studentname = c.getString(c.getColumnIndex("Name"));
+        }
+        c.close();
+        return studentname;
+    }
+
     public static int clear(long studentId) {
         SQLiteDatabase sqliteDb = AppGlobal.getSqlDbHelper().getWritableDatabase();
         try {

@@ -21,6 +21,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -79,8 +80,9 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
 
     private ArrayList<ChildInfo> childInfos;
     private ChildInfo childInfo;
-    private long schoolId;
+    private long schoolId, groupId;
     private boolean check;
+    private boolean isNotified;
 
     private GroupPresenter presenter;
     private GroupAdapter adapter;
@@ -94,6 +96,12 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            isNotified = true;
+            groupId = extras.getLong("group_id", 0);
+        }
 
         presenter = new GroupPresenterImpl(this, new GroupInteractorImpl());
 
@@ -145,7 +153,16 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         if(NetworkUtil.isNetworkAvailable(DashboardActivity.this)) {
-            presenter.getGroups(childInfo.getStudentId());
+            if(isNotified) {
+                Groups group = GroupDao.getGroup(groupId);
+                if(group.getId() == 0) {
+                    presenter.getGroup(groupId);
+                } else {
+                    setGroup(group);
+                }
+            }else{
+                presenter.getGroups(childInfo.getStudentId());
+            }
         } else {
             loadOfflineData();
         }
@@ -213,6 +230,18 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     public void showError(String message) {
         showSnackbar(message);
         loadOfflineData();
+    }
+
+    @Override
+    public void setGroup(Groups group) {
+        Intent intent = new Intent(DashboardActivity.this, MessageActivity.class);
+        Bundle args = new Bundle();
+        if(group != null){
+            args.putSerializable("group", group);
+        }
+        intent.putExtras(args);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -406,7 +435,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-                dbBackup();
             }
         });
         alertDialog.show();

@@ -59,6 +59,8 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     private ChatPresenter presenter;
     private ChatAdapter adapter;
 
+    private static boolean isActivityVisible;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +109,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     public void onResume() {
         super.onResume();
         App.activityResumed();
+        isActivityVisible = true;
         if(NetworkUtil.isNetworkAvailable(this)) {
             if(adapter.getItemCount() == 0) {
                 presenter.getMessages("student", childInfo.getStudentId(), recipientRole, recipientId);
@@ -121,6 +124,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     protected void onPause() {
         super.onPause();
         App.activityPaused();
+        isActivityVisible = true;
     }
 
     @Override
@@ -303,5 +307,9 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             }
         }
     };
+
+    public static boolean isActivityVisible() {
+        return isActivityVisible;
+    }
 
 }

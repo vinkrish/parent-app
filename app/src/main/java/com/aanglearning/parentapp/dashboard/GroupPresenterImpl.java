@@ -19,6 +19,14 @@ class GroupPresenterImpl implements GroupPresenter, GroupInteractor.OnFinishedLi
     }
 
     @Override
+    public void getGroup(long groupId) {
+        if (mView != null) {
+            mView.showProgress();
+            mInteractor.getGroup(groupId, this);
+        }
+    }
+
+    @Override
     public void getGroups(long userId) {
         if (mView != null) {
             mView.showProgress();
@@ -41,6 +49,14 @@ class GroupPresenterImpl implements GroupPresenter, GroupInteractor.OnFinishedLi
         if (mView != null) {
             mView.hideProgress();
             mView.showError(message);
+        }
+    }
+
+    @Override
+    public void onGroupReceived(Groups group) {
+        if (mView != null) {
+            mView.hideProgress();
+            mView.setGroup(group);
         }
     }
 
