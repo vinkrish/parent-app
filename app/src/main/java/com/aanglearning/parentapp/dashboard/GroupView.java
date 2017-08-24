@@ -1,6 +1,7 @@
 package com.aanglearning.parentapp.dashboard;
 
 import com.aanglearning.parentapp.model.Groups;
+import com.aanglearning.parentapp.model.MessageRecipient;
 
 import java.util.List;
 
@@ -15,7 +16,11 @@ interface GroupView {
 
     void showError(String message);
 
+    void backupGroup(Groups group);
+
     void setGroup(Groups group);
 
     void setGroups(List<Groups> groups);
+
+    void setMessageRecipients(List<MessageRecipient> mrList);
 }

@@ -2,6 +2,7 @@ package com.aanglearning.parentapp.dashboard;
 
 import com.aanglearning.parentapp.model.Authorization;
 import com.aanglearning.parentapp.model.Groups;
+import com.aanglearning.parentapp.model.MessageRecipient;
 
 import java.util.List;
 
@@ -35,8 +36,11 @@ class GroupPresenterImpl implements GroupPresenter, GroupInteractor.OnFinishedLi
     }
 
     @Override
-    public void updateFcmToken(Authorization authorization) {
-        mInteractor.updateFcmToken(authorization);
+    public void getMessageRecipients(long recipientId) {
+        if (mView != null) {
+            mView.showProgress();
+            mInteractor.getMessageRecipients(recipientId, this);
+        }
     }
 
     @Override
@@ -55,6 +59,7 @@ class GroupPresenterImpl implements GroupPresenter, GroupInteractor.OnFinishedLi
     @Override
     public void onGroupReceived(Groups group) {
         if (mView != null) {
+            mView.backupGroup(group);
             mView.hideProgress();
             mView.setGroup(group);
         }
@@ -65,6 +70,13 @@ class GroupPresenterImpl implements GroupPresenter, GroupInteractor.OnFinishedLi
         if (mView != null) {
             mView.setGroups(groupsList);
             mView.hideProgress();
+        }
+    }
+
+    @Override
+    public void onMessageRecipientsReceived(List<MessageRecipient> mrList) {
+        if (mView != null) {
+            mView.setMessageRecipients(mrList);
         }
     }
 

@@ -35,14 +35,6 @@ class MessagePresenterImpl implements MessagePresenter, MessageInteractor.OnFini
     }
 
     @Override
-    public void getFollowupMessages(long groupId, long messageId) {
-        if(mView != null) {
-            mView.showProgress();
-            mInteractor.getFollowupMessages(groupId, messageId, this);
-        }
-    }
-
-    @Override
     public void onDestroy() {
         mView = null;
     }
@@ -71,11 +63,4 @@ class MessagePresenterImpl implements MessagePresenter, MessageInteractor.OnFini
         }
     }
 
-    @Override
-    public void onFollowupMessagesReceived(ArrayList<Message> messages) {
-        if(mView != null) {
-            mView.showFollowupMessages(messages);
-            mView.hideProgress();
-        }
-    }
 }

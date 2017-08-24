@@ -6,6 +6,7 @@ import com.aanglearning.parentapp.model.Evnt;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Homework;
 import com.aanglearning.parentapp.model.Message;
+import com.aanglearning.parentapp.model.MessageRecipient;
 import com.aanglearning.parentapp.model.Student;
 import com.aanglearning.parentapp.model.Timetable;
 
@@ -58,6 +59,12 @@ public interface ParentApi {
     Call<List<Timetable>> getTimetable(@Path("sectionId") long sectionId);
 
     //Group Message API
+
+    @POST("messagerecipient")
+    Call<List<MessageRecipient>> saveMessageRecipient(@Body List<MessageRecipient> mrList);
+
+    @GET("messagerecipient/{recipientId}")
+    Call<List<MessageRecipient>> getAllMessageRecipients(@Path("recipientId") long recipientId);
 
     @GET("groups/{groupId}")
     Call<Groups> getGroup(@Path("groupId") long groupId);

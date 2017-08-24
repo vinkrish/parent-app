@@ -39,12 +39,14 @@ import com.aanglearning.parentapp.calendar.CalendarActivity;
 import com.aanglearning.parentapp.chathome.ChatsActivity;
 import com.aanglearning.parentapp.dao.ChildInfoDao;
 import com.aanglearning.parentapp.dao.GroupDao;
+import com.aanglearning.parentapp.dao.MessageRecipientDao;
 import com.aanglearning.parentapp.dao.ServiceDao;
 import com.aanglearning.parentapp.homework.HomeworkActivity;
 import com.aanglearning.parentapp.login.LoginActivity;
 import com.aanglearning.parentapp.messagegroup.MessageActivity;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Groups;
+import com.aanglearning.parentapp.model.MessageRecipient;
 import com.aanglearning.parentapp.model.Service;
 import com.aanglearning.parentapp.profile.ProfileActivity;
 import com.aanglearning.parentapp.sqlite.SqlDbHelper;
@@ -63,6 +65,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -153,18 +156,24 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         if(NetworkUtil.isNetworkAvailable(DashboardActivity.this)) {
-            if(isNotified) {
-                Groups group = GroupDao.getGroup(groupId);
-                if(group.getId() == 0) {
-                    presenter.getGroup(groupId);
-                } else {
-                    setGroup(group);
-                }
-            }else{
-                presenter.getGroups(childInfo.getStudentId());
-            }
+            if(!SharedPreferenceUtil.isMessageRecipientsSaved(getApplicationContext())) {
+                presenter.getMessageRecipients(childInfo.getStudentId());
+            } else loadGroups();
         } else {
             loadOfflineData();
+        }
+    }
+
+    private void loadGroups() {
+        if(isNotified) {
+            Groups group = GroupDao.getGroup(groupId);
+            if(group.getId() == 0) {
+                presenter.getGroup(groupId);
+            } else {
+                setGroup(group);
+            }
+        }else{
+            presenter.getGroups(childInfo.getStudentId());
         }
     }
 
@@ -233,7 +242,13 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     }
 
     @Override
+    public void backupGroup(Groups group) {
+        GroupDao.insertMany(Collections.singletonList(group));
+    }
+
+    @Override
     public void setGroup(Groups group) {
+        loadOfflineData();
         Intent intent = new Intent(DashboardActivity.this, MessageActivity.class);
         Bundle args = new Bundle();
         if(group != null){
@@ -241,7 +256,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
         }
         intent.putExtras(args);
         startActivity(intent);
-        finish();
     }
 
     @Override
@@ -256,7 +270,14 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
             backupGroups(groups);
         }
         refreshLayout.setRefreshing(false);
-        updateFcmToken();
+    }
+
+    @Override
+    public void setMessageRecipients(List<MessageRecipient> mrList) {
+        MessageRecipientDao.insertMany(mrList);
+        SharedPreferenceUtil.messageRecipientsSaved(getApplicationContext());
+        hideProgress();
+        loadGroups();
     }
 
     private void backupGroups(final List<Groups> groups) {
@@ -267,17 +288,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
                 GroupDao.insertMany(groups);
             }
         }).start();
-    }
-
-    private void updateFcmToken() {
-        if(!SharedPreferenceUtil.isFcmTokenSaved(DashboardActivity.this)) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    presenter.updateFcmToken(SharedPreferenceUtil.getAuthorization(DashboardActivity.this));
-                }
-            }).start();
-        }
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -366,8 +376,8 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
 
     private void setProfile() {
         View hView = navigationView.inflateHeaderView(R.layout.header);
-        final ImageView imageView = (ImageView) hView.findViewById(R.id.user_image);
-        TextView tv = (TextView) hView.findViewById(R.id.name);
+        final ImageView imageView = hView.findViewById(R.id.user_image);
+        TextView tv = hView.findViewById(R.id.name);
         tv.setText(childInfo.getName());
         schoolId = childInfo.getSchoolId();
 

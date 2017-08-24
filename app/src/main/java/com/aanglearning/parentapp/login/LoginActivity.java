@@ -20,6 +20,7 @@ import com.aanglearning.parentapp.dao.ServiceDao;
 import com.aanglearning.parentapp.dashboard.DashboardActivity;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Credentials;
+import com.aanglearning.parentapp.fcm.FCMIntentService;
 import com.aanglearning.parentapp.util.AppGlobal;
 import com.aanglearning.parentapp.util.EditTextWatcher;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
@@ -96,6 +97,7 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
             ServiceDao.insert(info.getService());
         }
         SharedPreferenceUtil.saveUser(this, credentials);
+        startService(new Intent(this, FCMIntentService.class));
     }
 
     @Override

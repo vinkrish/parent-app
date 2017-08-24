@@ -1,7 +1,6 @@
 package com.aanglearning.parentapp.homework;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -15,21 +14,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.aanglearning.parentapp.R;
-import com.aanglearning.parentapp.dao.GroupDao;
 import com.aanglearning.parentapp.dao.HomeworkDao;
-import com.aanglearning.parentapp.model.Groups;
-import com.aanglearning.parentapp.model.Message;
-import com.aanglearning.parentapp.service.SyncHomeworkIntentService;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Homework;
 import com.aanglearning.parentapp.util.DatePickerFragment;
 import com.aanglearning.parentapp.util.DateUtil;
 import com.aanglearning.parentapp.util.NetworkUtil;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
+
+import org.joda.time.LocalDate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,6 +53,7 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
     private HomeworkAdapter adapter;
     private HomeworkPresenter presenter;
     private ChildInfo childInfo;
+    private String homeworkDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +102,7 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
     }
 
     private void showOfflineData() {
-        List<Homework> homeworks = HomeworkDao.getHomework(childInfo.getSectionId(),
-                SharedPreferenceUtil.getHomeworkDate(this));
+        List<Homework> homeworks = HomeworkDao.getHomework(childInfo.getSectionId(), homeworkDate);
         if(homeworks.size() == 0) {
             noHomework.setVisibility(View.VISIBLE);
         } else {
@@ -121,19 +117,19 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
 
     private void getHomework() {
         recyclerView.setAdapter(null);
-        presenter.getHomeworks(childInfo.getSectionId(),
-                SharedPreferenceUtil.getHomeworkDate(this));
+        presenter.getHomeworks(childInfo.getSectionId(), homeworkDate);
     }
 
     private void setDefaultDate() {
-        dateView.setText(DateUtil.getDisplayFormattedDate(SharedPreferenceUtil.getHomeworkDate(this)));
+        homeworkDate = new LocalDate().toString();
+        dateView.setText(DateUtil.getDisplayFormattedDate(homeworkDate));
     }
 
     private void changeDate() {
         SimpleDateFormat defaultFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         Date date = new Date();
         try {
-            date = defaultFormat.parse(SharedPreferenceUtil.getHomeworkDate(this));
+            date = defaultFormat.parse(homeworkDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -186,7 +182,6 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
             if (validDateView != null && validDateView.getVisibility() == View.VISIBLE) {
                 validDateView.setVisibility(View.GONE);
             }
-            SharedPreferenceUtil.saveHomeworkDate(this, date);
             getHomework();
         }
     }
@@ -215,8 +210,7 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                HomeworkDao.delete(childInfo.getSectionId(),
-                        SharedPreferenceUtil.getHomeworkDate(getApplicationContext()));
+                HomeworkDao.delete(childInfo.getSectionId(), homeworkDate);
                 HomeworkDao.insert(homeworks);
             }
         }).start();

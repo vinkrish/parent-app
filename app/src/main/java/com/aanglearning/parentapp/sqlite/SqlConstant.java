@@ -3,7 +3,7 @@ package com.aanglearning.parentapp.sqlite;
 interface SqlConstant {
 
     String DATABASE_NAME = "parent.db";
-    int DATABASE_VERSION = 4;
+    int DATABASE_VERSION = 6;
 
     String CREATE_ATTENDANCE = "CREATE TABLE attendance (" +
             "  Id INTEGER PRIMARY KEY," +
@@ -135,7 +135,8 @@ interface SqlConstant {
             " CreatorName TEXT, " +
             " CreatorRole TEXT, " +
             " CreatedDate TEXT, " +
-            " IsActive INTEGER" +
+            " IsActive INTEGER, " +
+            " SchoolId INTEGER " +
             ")";
 
     String CREATE_CHAT = "CREATE TABLE chat (" +
@@ -230,6 +231,18 @@ interface SqlConstant {
             " Id INTEGER, " +
             " EventId INTEGER, " +
             " EventDate TEXT" +
+            ")";
+
+    String CREATE_MESSAGE_RECIPIENT = "CREATE TABLE message_recipient (" +
+            " Id INTEGER, " +
+            " RecipientId INTEGER, " +
+            " RecipientName TEXT," +
+            " Role TEXT," +
+            " GroupId INTEGER, " +
+            " MessageId INTEGER, " +
+            " IsRead INTEGER, " +
+            " ReadAt INTEGER, " +
+            " PRIMARY KEY(RecipientId, GroupId, MessageId)" +
             ")";
 
 }

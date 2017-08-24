@@ -18,6 +18,4 @@ interface MessageView {
     void showRecentMessages(List<Message> messages);
 
     void showMessages(List<Message> messages);
-
-    void showFollowupMessages(List<Message> messages);
 }

@@ -7,6 +7,7 @@ import com.aanglearning.parentapp.api.AuthApi;
 import com.aanglearning.parentapp.api.ParentApi;
 import com.aanglearning.parentapp.model.Authorization;
 import com.aanglearning.parentapp.model.Groups;
+import com.aanglearning.parentapp.model.MessageRecipient;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
 import java.util.List;
@@ -65,22 +66,25 @@ class GroupInteractorImpl implements GroupInteractor {
     }
 
     @Override
-    public void updateFcmToken(Authorization authorization) {
-        AuthApi api = ApiClient.getAuthorizedClient().create(AuthApi.class);
+    public void getMessageRecipients(long recipientId, final OnFinishedListener listener) {
+        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
-        Call<Void> classList = api.updateFcmToken(authorization);
-        classList.enqueue(new Callback<Void>() {
+        Call<List<MessageRecipient>> classList = api.getAllMessageRecipients(recipientId);
+        classList.enqueue(new Callback<List<MessageRecipient>>() {
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void onResponse(Call<List<MessageRecipient>> call, Response<List<MessageRecipient>> response) {
                 if(response.isSuccessful()) {
-                    SharedPreferenceUtil.fcmTokenSaved(App.getInstance());
+                    listener.onMessageRecipientsReceived(response.body());
+                } else {
+                    listener.onError(App.getInstance().getString(R.string.request_error));
                 }
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-
+            public void onFailure(Call<List<MessageRecipient>> call, Throwable t) {
+                listener.onError(App.getInstance().getString(R.string.network_error));
             }
         });
     }
+
 }

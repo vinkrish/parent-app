@@ -7,11 +7,10 @@ import android.os.Bundle;
 import com.aanglearning.parentapp.dao.ChildInfoDao;
 import com.aanglearning.parentapp.dashboard.DashboardActivity;
 import com.aanglearning.parentapp.login.LoginActivity;
-import com.aanglearning.parentapp.model.ChildInfo;
+import com.aanglearning.parentapp.model.Credentials;
+import com.aanglearning.parentapp.fcm.FCMIntentService;
 import com.aanglearning.parentapp.util.AppGlobal;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
-
-import org.joda.time.LocalDate;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -20,16 +19,18 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         AppGlobal.setSqlDbHelper(getApplicationContext());
+        Credentials credentials = SharedPreferenceUtil.getUser(this);
 
-        LocalDate localDate = new LocalDate();
-        SharedPreferenceUtil.saveHomeworkDate(this, localDate.toString());
+        if(!credentials.getMobileNo().equals("") && !SharedPreferenceUtil.isFcmTokenSaved(this)) {
+            startService(new Intent(this, FCMIntentService.class));
+        }
 
         if (ChildInfoDao.getChildInfos().size() == 0) {
             SharedPreferenceUtil.logout(this);
             SharedPreferenceUtil.clearProfile(this);
             startActivity(new Intent(this, LoginActivity.class));
             finish();
-        } else if (SharedPreferenceUtil.getUser(this).getAuthToken() != "") {
+        } else if (!credentials.getAuthToken().equals("")) {
             startActivity(new Intent(this, DashboardActivity.class));
             finish();
         } else {

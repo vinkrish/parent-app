@@ -33,8 +33,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
 
-        <service android:name=".service.SyncHomeworkIntentService" />
-        <service android:name=".service.SyncAttendanceIntentService" />
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
@@ -143,6 +141,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".messagegroup.MessageActivity" />
         </activity>
+
+        <service
+            android:name=".messagegroup.MessageRecipientIntentService"
+            android:exported="false" />
+        <service
+            android:name=".fcm.FCMIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

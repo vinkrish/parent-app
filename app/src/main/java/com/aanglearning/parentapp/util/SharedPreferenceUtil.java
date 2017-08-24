@@ -38,6 +38,7 @@ public class SharedPreferenceUtil {
         SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("name", "");
+        editor.putBoolean("is_message_recipients_Saved", false);
         editor.apply();
     }
 
@@ -78,18 +79,6 @@ public class SharedPreferenceUtil {
         editor.apply();
     }
 
-    public static void saveHomeworkDate(Context context, String date) {
-        SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("homeworkDate", date);
-        editor.apply();
-    }
-
-    public static String getHomeworkDate(Context context){
-        SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
-        return sharedPref.getString("homeworkDate", "");
-    }
-
     public static void saveFcmToken(Context context, String fcmToken) {
         SharedPreferences sharedPref = context.getSharedPreferences("fcm", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -122,6 +111,18 @@ public class SharedPreferenceUtil {
         SharedPreferences sharedPref = context.getSharedPreferences("fcm", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean("isSaved", true);
+        editor.apply();
+    }
+
+    public static boolean isMessageRecipientsSaved(Context context){
+        SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
+        return sharedPref.getBoolean("is_message_recipients_Saved", false);
+    }
+
+    public static void messageRecipientsSaved(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("profile", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("is_message_recipients_Saved", true);
         editor.apply();
     }
 

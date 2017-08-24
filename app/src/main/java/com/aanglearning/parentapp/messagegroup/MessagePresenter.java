@@ -11,7 +11,5 @@ interface MessagePresenter {
 
     void getMessages(long groupId);
 
-    void getFollowupMessages(long groupId, long messageId);
-
     void onDestroy();
 }

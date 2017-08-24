@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.dao.MessageDao;
+import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Message;
 import com.aanglearning.parentapp.util.EndlessRecyclerViewScrollListener;
@@ -47,6 +48,7 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
     private MessagePresenter presenter;
     private Groups group;
     private MessageAdapter adapter;
+    private ChildInfo childInfo;
 
     private static final int WRITE_STORAGE_PERMISSION = 666;
 
@@ -64,6 +66,8 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
             group = (Groups) extras.getSerializable("group");
         }
         getSupportActionBar().setTitle(group.getName());
+
+        childInfo = SharedPreferenceUtil.getProfile(this);
 
         presenter = new MessagePresenterImpl(this, new MessageInteractorImpl());
 
@@ -124,11 +128,12 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if (NetworkUtil.isNetworkAvailable(MessageActivity.this)) {
+                /*if (NetworkUtil.isNetworkAvailable(MessageActivity.this)) {
                     presenter.getFollowupMessages(group.getId(), adapter.getDataSet().get(adapter.getDataSet().size() - 1).getId());
-                } else {
-                    List<Message> messages = MessageDao.getGroupMessagesFromId(group.getId(),
-                            adapter.getDataSet().get(adapter.getDataSet().size() - 1).getId());
+                }*/
+                List<Message> messages = MessageDao.getGroupMessagesFromId(group.getId(),
+                        adapter.getDataSet().get(adapter.getDataSet().size() - 1).getId());
+                if(messages.size() > 0) {
                     adapter.updateDataSet(messages);
                 }
             }
@@ -161,6 +166,7 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
         adapter.insertDataSet(messages);
         recyclerView.smoothScrollToPosition(0);
         backupMessages(messages);
+        saveMessageRecipient();
     }
 
     @Override
@@ -172,13 +178,16 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
             adapter.setDataSet(messages);
             recyclerView.smoothScrollToPosition(0);
             backupMessages(messages);
+            saveMessageRecipient();
         }
     }
 
-    @Override
-    public void showFollowupMessages(List<Message> messages) {
-        adapter.updateDataSet(messages);
-        backupMessages(messages);
+    private void saveMessageRecipient() {
+        Intent i = new Intent(this, MessageRecipientIntentService.class);
+        i.putExtra("recipient_id", childInfo.getStudentId());
+        i.putExtra("recipient_name", childInfo.getName());
+        i.putExtra("group_id", group.getId());
+        startService(i);
     }
 
     private void backupMessages(final List<Message> messages) {

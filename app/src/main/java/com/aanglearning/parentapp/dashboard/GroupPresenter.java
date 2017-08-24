@@ -11,7 +11,7 @@ interface GroupPresenter {
 
     void getGroups(long studentId);
 
-    void updateFcmToken(Authorization authorization);
+    void getMessageRecipients(long recipientId);
 
     void onDestroy();
 }
