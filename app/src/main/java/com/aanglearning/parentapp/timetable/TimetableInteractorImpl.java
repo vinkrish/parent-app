@@ -16,14 +16,14 @@ import retrofit2.Response;
  * Created by Vinay on 13-06-2017.
  */
 
-public class TimetableInteractorImpl implements TimetableInteractor {
+class TimetableInteractorImpl implements TimetableInteractor {
 
     @Override
     public void getTimetable(long sectionId, final OnFinishedListener listener) {
         ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
-        Call<List<Timetable>> attendanceList = api.getTimetable(sectionId);
-        attendanceList.enqueue(new Callback<List<Timetable>>() {
+        Call<List<Timetable>> queue = api.getTimetable(sectionId);
+        queue.enqueue(new Callback<List<Timetable>>() {
             @Override
             public void onResponse(Call<List<Timetable>> call, Response<List<Timetable>> response) {
                 if(response.isSuccessful()) {

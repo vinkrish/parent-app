@@ -22,8 +22,8 @@ class AttendanceInteractorImpl implements AttendanceInteractor {
     public void getStudentAbsentDays(long studentId, final OnFinishedListener listener) {
         ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
-        Call<List<Attendance>> attendanceList = api.getStudentAbsentDays(studentId);
-        attendanceList.enqueue(new Callback<List<Attendance>>() {
+        Call<List<Attendance>> queue = api.getStudentAbsentDays(studentId);
+        queue.enqueue(new Callback<List<Attendance>>() {
             @Override
             public void onResponse(Call<List<Attendance>> call, Response<List<Attendance>> response) {
                 if(response.isSuccessful()) {

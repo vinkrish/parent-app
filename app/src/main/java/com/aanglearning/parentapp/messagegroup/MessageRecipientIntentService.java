@@ -14,10 +14,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- */
 public class MessageRecipientIntentService extends IntentService {
 
     public MessageRecipientIntentService() {

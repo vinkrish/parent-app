@@ -22,8 +22,8 @@ class MessageInteractorImpl implements MessageInteractor {
     public void getRecentMessages(long groupId, long messageId, final OnFinishedListener listener) {
         ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
-        Call<ArrayList<Message>> msgList = api.getGroupMessagesAboveId(groupId, messageId);
-        msgList.enqueue(new Callback<ArrayList<Message>>() {
+        Call<ArrayList<Message>> queue = api.getGroupMessagesAboveId(groupId, messageId);
+        queue.enqueue(new Callback<ArrayList<Message>>() {
             @Override
             public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
                 if(response.isSuccessful()) {
@@ -44,8 +44,8 @@ class MessageInteractorImpl implements MessageInteractor {
     public void getMessages(long groupId, final OnFinishedListener listener) {
         ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
-        Call<ArrayList<Message>> msgList = api.getGroupMessages(groupId);
-        msgList.enqueue(new Callback<ArrayList<Message>>() {
+        Call<ArrayList<Message>> queue = api.getGroupMessages(groupId);
+        queue.enqueue(new Callback<ArrayList<Message>>() {
             @Override
             public void onResponse(Call<ArrayList<Message>> call, Response<ArrayList<Message>> response) {
                 if(response.isSuccessful()) {

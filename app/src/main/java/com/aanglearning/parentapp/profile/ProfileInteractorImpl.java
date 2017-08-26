@@ -14,13 +14,13 @@ import retrofit2.Response;
  * Created by Vinay on 23-06-2017.
  */
 
-public class ProfileInteractorImpl implements ProfileInteractor {
+class ProfileInteractorImpl implements ProfileInteractor {
     @Override
     public void getStudent(long studentId, final OnFinishedListener listener) {
         ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
-        Call<Student> classList = api.getStudent(studentId);
-        classList.enqueue(new Callback<Student>() {
+        Call<Student> queue = api.getStudent(studentId);
+        queue.enqueue(new Callback<Student>() {
             @Override
             public void onResponse(Call<Student> call, Response<Student> response) {
                 if(response.isSuccessful()) {

@@ -216,6 +216,11 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
     public void onDestroy() {
         super.onDestroy();
         presenter.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
         adapter.releaseLoaders();
     }
 }

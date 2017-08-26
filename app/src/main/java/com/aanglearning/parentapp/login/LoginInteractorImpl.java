@@ -24,8 +24,8 @@ class LoginInteractorImpl implements LoginInteractor {
 
         AuthApi authApi = ApiClient.getClient().create(AuthApi.class);
 
-        Call<Credentials> login = authApi.login(credentials);
-        login.enqueue(new Callback<Credentials>() {
+        Call<Credentials> queue = authApi.login(credentials);
+        queue.enqueue(new Callback<Credentials>() {
             @Override
             public void onResponse(Call<Credentials> call, Response<Credentials> response) {
                 if(response.isSuccessful()) {
@@ -47,15 +47,13 @@ class LoginInteractorImpl implements LoginInteractor {
     public void recoverPwd(String username, final OnLoginFinishedListener listener) {
         AuthApi authApi = ApiClient.getClient().create(AuthApi.class);
 
-        Call<Void> sendNewPwd = authApi.newPassword(username);
-        sendNewPwd.enqueue(new Callback<Void>() {
+        Call<Void> queue = authApi.newPassword(username);
+        queue.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccessful()) {
                     listener.onPwdRecovered();
                 } else {
-                    //APIError error = ErrorUtils.parseError(response);
-                    //listener.onAPIError(error.getMessage());
                     listener.onError(App.getInstance().getString(R.string.request_error));
                 }
             }

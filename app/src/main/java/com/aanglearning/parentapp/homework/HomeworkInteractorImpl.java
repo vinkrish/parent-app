@@ -16,14 +16,14 @@ import retrofit2.Response;
  * Created by Vinay on 03-03-2017.
  */
 
-public class HomeworkInteractorImpl implements HomeworkInteractor {
+class HomeworkInteractorImpl implements HomeworkInteractor {
     @Override
     public void getHomeworks(long sectionId, String lastDate,
                              final OnFinishedListener listener) {
         ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
-        Call<List<Homework>> subscribedCourses = api.getHomework(sectionId, lastDate);
-        subscribedCourses.enqueue(new Callback<List<Homework>>() {
+        Call<List<Homework>> queue = api.getHomework(sectionId, lastDate);
+        queue.enqueue(new Callback<List<Homework>>() {
             @Override
             public void onResponse(Call<List<Homework>> call, Response<List<Homework>> response) {
                 if(response.isSuccessful()) {
