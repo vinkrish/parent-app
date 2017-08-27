@@ -21,6 +21,7 @@ import com.aanglearning.parentapp.dao.MessageDao;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Message;
+import com.aanglearning.parentapp.util.DividerItemDecoration;
 import com.aanglearning.parentapp.util.EndlessRecyclerViewScrollListener;
 import com.aanglearning.parentapp.util.NetworkUtil;
 import com.aanglearning.parentapp.util.PermissionUtil;
@@ -117,6 +118,7 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this));
         recyclerView.setItemViewCacheSize(10);
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);

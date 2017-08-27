@@ -126,6 +126,7 @@
 
         <activity
             android:name=".calendar.CalendarActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
@@ -147,7 +148,7 @@
             android:exported="false" />
         <service
             android:name=".fcm.FCMIntentService"
-            android:exported="false"></service>
+            android:exported="false"/>
     </application>
 
 </manifest>

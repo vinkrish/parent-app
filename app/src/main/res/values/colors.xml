@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#7B1FA2</color>
     <color name="colorPrimaryLight">#E1BEE7</color>
     <color name="colorAccent">#FF5252</color>
+    <color name="activity_background">#FCFCFC </color>
     <color name="default_white">#FAFAFA</color>
     <color name="black">#000000</color>
     <color name="black_light">#0D0D0D</color>
