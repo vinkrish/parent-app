@@ -7,8 +7,8 @@ android {
         applicationId "com.aanglearning.parentapp"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 17
-        versionName "1.7"
+        versionCode 18
+        versionName "1.8"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

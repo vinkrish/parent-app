@@ -148,7 +148,10 @@
             android:exported="false" />
         <service
             android:name=".fcm.FCMIntentService"
-            android:exported="false"/>
+            android:exported="false" />
+        <service
+            android:name=".util.VersionIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

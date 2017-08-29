@@ -1,5 +1,6 @@
 package com.aanglearning.parentapp.api;
 
+import com.aanglearning.parentapp.model.AppVersion;
 import com.aanglearning.parentapp.model.Attendance;
 import com.aanglearning.parentapp.model.Chat;
 import com.aanglearning.parentapp.model.Evnt;
@@ -24,6 +25,9 @@ import retrofit2.http.Path;
  */
 
 public interface ParentApi {
+    @GET("appversion/{versionId}/{appName}")
+    Call<AppVersion> getAppVersion(@Path("versionId") int versionId,
+                                   @Path("appName") String appName);
 
     @GET("student/{studentId}")
     Call<Student> getStudent(@Path("studentId") long studentId);
