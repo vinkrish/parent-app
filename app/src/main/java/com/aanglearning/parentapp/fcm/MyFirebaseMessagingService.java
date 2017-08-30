@@ -32,18 +32,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         AppGlobal.setSqlDbHelper(getApplicationContext());
 
-        if (remoteMessage.getData().size() > 0) {
-            if(App.isActivityVisible() && ChatActivity.isActivityVisible()) {
-                ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
-                for (ChildInfo childInfo : childInfos) {
-                    if(childInfo.getName().equals(remoteMessage.getData().get("recipient_name"))) {
-                        SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
-                        break;
-                    }
-                }
-                EventBus.getDefault().post(new MessageEvent(remoteMessage.getData().get("message"),
-                        Long.valueOf(remoteMessage.getData().get("sender_id"))));
-            } else if (remoteMessage.getData().get("is_group").equals("true")) {
+        if (remoteMessage.getData().size() > 0 &&
+                !SharedPreferenceUtil.getUser(getApplicationContext()).getAuthToken().equals("")) {
+             if (remoteMessage.getData().get("type").equals("group_message")) {
                 String studentName = StudentDao.getStudentName(Long.valueOf(remoteMessage.getData().get("group_id")));
                 ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
                 for (ChildInfo childInfo : childInfos) {
@@ -72,7 +63,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 NotificationManager mNotificationManager =
                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotificationManager.notify(0, mBuilder.build());
-            } else {
+            } else if(App.isActivityVisible() && ChatActivity.isActivityVisible()) {
+                 ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
+                 for (ChildInfo childInfo : childInfos) {
+                     if(childInfo.getName().equals(remoteMessage.getData().get("recipient_name"))) {
+                         SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
+                         break;
+                     }
+                 }
+                 EventBus.getDefault().post(new MessageEvent(remoteMessage.getData().get("message"),
+                         Long.valueOf(remoteMessage.getData().get("sender_id"))));
+             } else {
                 ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
                 for (ChildInfo childInfo : childInfos) {
                     if(childInfo.getName().equals(remoteMessage.getData().get("recipient_name"))) {

@@ -41,8 +41,7 @@ import butterknife.ButterKnife;
 
 public class HomeworkActivity extends AppCompatActivity implements HomeworkView {
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.coordinatorLayout)
-    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.date_tv) TextView dateView;
     @BindView(R.id.change_btn) Button changeDateBtn;
     @BindView(R.id.penultimate_date) TextView validDateView;
