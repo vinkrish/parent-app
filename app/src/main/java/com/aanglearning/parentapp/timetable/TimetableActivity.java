@@ -334,7 +334,12 @@ public class TimetableActivity extends AppCompatActivity implements TimetableVie
 
             SparseArray<String> sparseArray = new SparseArray<>();
                 for(Timetable timtbl: timetables){
-                sparseArray.put(timtbl.getPeriodNo(), timtbl.getSubjectName() + "\n [ " + timtbl.getTeacherName() + " ]");
+                    if(sparseArray.get(timtbl.getPeriodNo()) != null) {
+                        sparseArray.put(timtbl.getPeriodNo(),
+                                timtbl.getSubjectName() + "\n " + sparseArray.get(timtbl.getPeriodNo()).split("\\r?\\n")[1] + "/" + timtbl.getTeacherName() + " ");
+                    } else {
+                        sparseArray.put(timtbl.getPeriodNo(), timtbl.getSubjectName() + "\n " + timtbl.getTeacherName() + " ");
+                    }
             }
 
             for(int x=1 ; x<=loopCount; x++){

@@ -16,6 +16,7 @@ import com.aanglearning.parentapp.chathome.ChatsActivity;
 import com.aanglearning.parentapp.dao.ChildInfoDao;
 import com.aanglearning.parentapp.dao.StudentDao;
 import com.aanglearning.parentapp.dashboard.DashboardActivity;
+import com.aanglearning.parentapp.homework.HomeworkActivity;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.MessageEvent;
 import com.aanglearning.parentapp.util.AppGlobal;
@@ -63,7 +64,37 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 NotificationManager mNotificationManager =
                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotificationManager.notify(0, mBuilder.build());
-            } else if(App.isActivityVisible() && ChatActivity.isActivityVisible()) {
+            } else if(remoteMessage.getData().get("type").equals("homework")) {
+                 String studentName = "";
+                 ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
+                 for (ChildInfo childInfo : childInfos) {
+                     if(childInfo.getSectionId() == Long.valueOf(remoteMessage.getData().get("section_id"))) {
+                         studentName = childInfo.getName();
+                         SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
+                         break;
+                     }
+                 }
+                 NotificationCompat.Builder mBuilder =
+                         new NotificationCompat.Builder(getApplicationContext())
+                                 .setSmallIcon(R.drawable.ic_stat_notify)
+                                 .setContentTitle(studentName)
+                                 .setContentText("Homework for " + remoteMessage.getData().get("date") + ", please check.")
+                                 .setDefaults(Notification.DEFAULT_SOUND)
+                                 .setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getData().get("message")));
+
+                 mBuilder.setAutoCancel(true);
+
+                 Intent resultIntent = new Intent(getApplicationContext(), HomeworkActivity.class);
+                 //resultIntent.putExtra("group_id", Long.valueOf(remoteMessage.getData().get("group_id")));
+                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                 //stackBuilder.addParentStack(DashboardActivity.class);
+                 stackBuilder.addNextIntent(resultIntent);
+                 PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(666, PendingIntent.FLAG_UPDATE_CURRENT);
+                 mBuilder.setContentIntent(resultPendingIntent);
+                 NotificationManager mNotificationManager =
+                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                 mNotificationManager.notify(0, mBuilder.build());
+             } else if(App.isActivityVisible() && ChatActivity.isActivityVisible()) {
                  ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
                  for (ChildInfo childInfo : childInfos) {
                      if(childInfo.getName().equals(remoteMessage.getData().get("recipient_name"))) {
