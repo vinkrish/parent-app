@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -50,6 +51,8 @@ public class ProfileActivity extends AppCompatActivity implements ProfileView,
     @BindView(R.id.name) TextView name;
     @BindView(R.id.clas) TextView clas;
     @BindView(R.id.section) TextView section;
+    @BindView(R.id.sectionLayout)
+    TextInputLayout sectionLayout;
     @BindView(R.id.school) TextView school;
     @BindView(R.id.father) TextView father;
     @BindView(R.id.mother) TextView mother;
@@ -87,6 +90,10 @@ public class ProfileActivity extends AppCompatActivity implements ProfileView,
             student = StudentDao.getStudent(childInfo.getStudentId());
             viewStudent();
             setImage();
+        }
+
+        if(childInfo.getSectionName().equals("none")) {
+            sectionLayout.setVisibility(View.GONE);
         }
 
     }

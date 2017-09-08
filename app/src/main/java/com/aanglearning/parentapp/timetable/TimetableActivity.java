@@ -66,7 +66,11 @@ public class TimetableActivity extends AppCompatActivity implements TimetableVie
 
         childInfo = SharedPreferenceUtil.getProfile(this);
 
-        getSupportActionBar().setTitle(childInfo.getName() + " [ " + childInfo.getClassName() + " - " + childInfo.getSectionName() + " ]");
+        if(childInfo.getSectionName().equals("none")) {
+            getSupportActionBar().setTitle(childInfo.getName() + " [ " + childInfo.getClassName() + " ]");
+        } else {
+            getSupportActionBar().setTitle(childInfo.getName() + " [ " + childInfo.getClassName() + " - " + childInfo.getSectionName() + " ]");
+        }
 
         presenter = new TimetablePresenterImpl(this, new TimetableInteractorImpl());
 

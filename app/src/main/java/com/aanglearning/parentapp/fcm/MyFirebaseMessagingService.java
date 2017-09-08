@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.aanglearning.parentapp.App;
 import com.aanglearning.parentapp.R;
+import com.aanglearning.parentapp.attendance.AbsentViewActivity;
 import com.aanglearning.parentapp.chat.ChatActivity;
 import com.aanglearning.parentapp.chathome.ChatsActivity;
 import com.aanglearning.parentapp.dao.ChildInfoDao;
@@ -86,6 +87,43 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                  Intent resultIntent = new Intent(getApplicationContext(), HomeworkActivity.class);
                  //resultIntent.putExtra("group_id", Long.valueOf(remoteMessage.getData().get("group_id")));
+                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                 //stackBuilder.addParentStack(DashboardActivity.class);
+                 stackBuilder.addNextIntent(resultIntent);
+                 PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(666, PendingIntent.FLAG_UPDATE_CURRENT);
+                 mBuilder.setContentIntent(resultPendingIntent);
+                 NotificationManager mNotificationManager =
+                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                 mNotificationManager.notify(0, mBuilder.build());
+             } else if(remoteMessage.getData().get("type").equals("attendance")) {
+                 String studentName = "";
+                 ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
+                 for (ChildInfo childInfo : childInfos) {
+                     if(childInfo.getStudentId() == Long.valueOf(remoteMessage.getData().get("student_id"))) {
+                         studentName = childInfo.getName();
+                         SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
+                         break;
+                     }
+                 }
+                 String notificationMessage = "";
+                 if(remoteMessage.getData().get("attendance_type").equals("Daily")) {
+                     notificationMessage = "Absent on " + remoteMessage.getData().get("date") ;
+                 } else if (remoteMessage.getData().get("attendance_type").equals("Session")) {
+                     notificationMessage = "Absent during " + remoteMessage.getData().get("session") + " session on " + remoteMessage.getData().get("date") ;
+                 } else {
+                     notificationMessage = "Absent during " + remoteMessage.getData().get("session") + " period on " + remoteMessage.getData().get("date") ;
+                 }
+                 NotificationCompat.Builder mBuilder =
+                         new NotificationCompat.Builder(getApplicationContext())
+                                 .setSmallIcon(R.drawable.ic_stat_notify)
+                                 .setContentTitle(studentName)
+                                 .setContentText(notificationMessage)
+                                 .setDefaults(Notification.DEFAULT_SOUND)
+                                 .setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getData().get("message")));
+
+                 mBuilder.setAutoCancel(true);
+
+                 Intent resultIntent = new Intent(getApplicationContext(), AbsentViewActivity.class);
                  TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
                  //stackBuilder.addParentStack(DashboardActivity.class);
                  stackBuilder.addNextIntent(resultIntent);

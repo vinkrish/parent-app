@@ -273,7 +273,7 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
             this.scrollViewC = new TableMainLayout.MyScrollView(this.context);
             this.scrollViewD = new TableMainLayout.MyScrollView(this.context);
 
-            this.tableA.setBackgroundColor(ContextCompat.getColor(context, R.color.default_tv_color));
+            this.tableA.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
             this.horizontalScrollViewB.setBackgroundColor(Color.WHITE);
         }
 
@@ -328,7 +328,7 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
             TextView textView = this.headerTextView("Dates / Periods");
             textView.setPadding(32, 16, 32, 16);
             textView.setTextSize(16);
-            textView.setTextColor(ContextCompat.getColor(context, R.color.default_white));
+            textView.setTextColor(ContextCompat.getColor(context, R.color.primaryTextColor));
             componentATableRow.addView(textView);
             return componentATableRow;
         }
