@@ -3,7 +3,7 @@ package com.aanglearning.parentapp.sqlite;
 interface SqlConstant {
 
     String DATABASE_NAME = "parent.db";
-    int DATABASE_VERSION = 6;
+    int DATABASE_VERSION = 7;
 
     String CREATE_ATTENDANCE = "CREATE TABLE attendance (" +
             "  Id INTEGER PRIMARY KEY," +
@@ -38,6 +38,7 @@ interface SqlConstant {
             "  Id INTEGER," +
             "  SchoolName TEXT," +
             "  Website TEXT," +
+            "  Logo TEXT," +
             "  ShortenedSchoolName TEXT," +
             "  ContactPersonName TEXT," +
             "  AdminUsername TEXT," +
@@ -52,7 +53,8 @@ interface SqlConstant {
             "  State TEXT," +
             "  Pincode TEXT," +
             "  PrincipalId INTEGER," +
-            "  NumberOfStudents INTEGER" +
+            "  NumberOfStudents INTEGER," +
+            "  NumberOfSms INTEGER" +
             ")";
 
     String CREATE_SECTION = "CREATE TABLE section (" +
@@ -85,15 +87,6 @@ interface SqlConstant {
             "  District TEXT," +
             "  State TEXT," +
             "  Pincode TEXT" +
-            ")";
-
-    String CREATE_SUBJECT = "CREATE TABLE subject (" +
-            "  Id INTEGER," +
-            "  SchoolId INTEGER," +
-            "  SubjectName TEXT," +
-            "  PartitionType INTEGER," +
-            "  TheorySubjectId INTEGER," +
-            "  PracticalSubjectId INTEGER" +
             ")";
 
     String CREATE_TEACHER = "CREATE TABLE teacher (" +
@@ -188,7 +181,8 @@ interface SqlConstant {
             " IsAttendanceSms TEXT," +
             " IsHomework TEXT, " +
             " IsHomeworkSms TEXT," +
-            " IsTimetable TEXT" +
+            " IsTimetable TEXT," +
+            " IsReport TEXT" +
             ")";
 
     String CREATE_EVENT = "CREATE TABLE event (" +
