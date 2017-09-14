@@ -102,7 +102,8 @@ public interface ParentApi {
 
     //Event API
 
-    @GET("event/school/{schoolId}")
-    Call<List<Evnt>> getEvents(@Path("schoolId") long schoolId);
+    @GET("event/school/{schoolId}/student/{classId}")
+    Call<List<Evnt>> getEvents(@Path("schoolId") long schoolId,
+                               @Path("classId") long classId);
 
 }

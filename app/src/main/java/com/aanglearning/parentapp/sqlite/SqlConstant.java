@@ -3,7 +3,7 @@ package com.aanglearning.parentapp.sqlite;
 interface SqlConstant {
 
     String DATABASE_NAME = "parent.db";
-    int DATABASE_VERSION = 7;
+    int DATABASE_VERSION = 8;
 
     String CREATE_ATTENDANCE = "CREATE TABLE attendance (" +
             "  Id INTEGER PRIMARY KEY," +
@@ -187,6 +187,7 @@ interface SqlConstant {
 
     String CREATE_EVENT = "CREATE TABLE event (" +
             " Id INTEGER, " +
+            " SchoolId INTEGER, " +
             " EventTitle TEXT, " +
             " EventDescription TEXT, " +
             " StartDate TEXT, " +
@@ -198,7 +199,9 @@ interface SqlConstant {
             " IsFullDayEvent TEXT, " +
             " IsRecurring TEXT, " +
             " CreatedBy TEXT, " +
-            " CreatedDate TEXT" +
+            " CreatedDate TEXT, " +
+            " ParentEventId INTEGER, " +
+            " IsSchool TEXT" +
             ")";
 
     String CREATE_RECURRING_PATTERN = "CREATE TABLE event_recurring_pattern (" +
