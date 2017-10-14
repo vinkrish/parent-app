@@ -262,7 +262,7 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     public void setGroups(List<Groups> groups) {
         if(groups.size() == 0) {
             recyclerView.invalidate();
-            GroupDao.clear(childInfo.getSectionId());
+            GroupDao.clear(childInfo.getClassId(), childInfo.getSectionId());
             noGroups.setVisibility(View.VISIBLE);
         } else {
             noGroups.setVisibility(View.INVISIBLE);
@@ -284,7 +284,7 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                GroupDao.clear(childInfo.getSectionId());
+                GroupDao.clear(childInfo.getClassId(), childInfo.getSectionId());
                 GroupDao.insertMany(groups);
             }
         }).start();

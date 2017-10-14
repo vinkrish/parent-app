@@ -79,7 +79,7 @@ public class GroupDao {
     public static List<Groups> getGroups(long classId) {
         List<Groups> groups = new ArrayList<>();
         SQLiteDatabase sqliteDatabase = AppGlobal.getSqlDbHelper().getReadableDatabase();
-        Cursor c = sqliteDatabase.rawQuery("select * from groups where ClassId = " + classId, null);
+        Cursor c = sqliteDatabase.rawQuery("select * from groups where ClassId = " + classId + " or IsSchool = 'true'", null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Groups group = new Groups();
@@ -103,10 +103,10 @@ public class GroupDao {
         return groups;
     }
 
-    public static int clear(long sectionId) {
+    public static int clear(long classId, long sectionId) {
         SQLiteDatabase sqliteDb = AppGlobal.getSqlDbHelper().getWritableDatabase();
         try {
-            sqliteDb.execSQL("delete from groups where SectionId = " + sectionId);
+            sqliteDb.execSQL("delete from groups where SectionId = " + sectionId + " or ClassId = " + classId + " or IsSchool = 'true'");
         } catch(SQLException e) {
             return 0;
         }

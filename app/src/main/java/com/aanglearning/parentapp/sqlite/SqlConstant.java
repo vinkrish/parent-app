@@ -3,7 +3,7 @@ package com.aanglearning.parentapp.sqlite;
 interface SqlConstant {
 
     String DATABASE_NAME = "parent.db";
-    int DATABASE_VERSION = 8;
+    int DATABASE_VERSION = 10;
 
     String CREATE_ATTENDANCE = "CREATE TABLE attendance (" +
             "  Id INTEGER PRIMARY KEY," +
@@ -124,7 +124,7 @@ interface SqlConstant {
             " IsSection INTEGER, " +
             " ClassId INTEGER, " +
             " IsClass INTEGER," +
-            " CreatedBy INEGER, " +
+            " CreatedBy INTEGER, " +
             " CreatorName TEXT, " +
             " CreatorRole TEXT, " +
             " CreatedDate TEXT, " +
@@ -157,6 +157,15 @@ interface SqlConstant {
             " ImageUrl TEXT, " +
             " VideoUrl TEXT, " +
             " CreatedAt TEXT" +
+            ")";
+
+    String CREATE_DELETED_MESSAGE = "CREATE TABLE deleted_message (" +
+            " Id INTEGER, " +
+            " MessageId INTEGER, " +
+            " SenderId INTEGER, " +
+            " RecipientId INTEGER, " +
+            " GroupId INTEGER, " +
+            " DeletedAt INTEGER" +
             ")";
 
     String CREATE_CHILD_INFO = "CREATE TABLE child_info (" +
