@@ -11,5 +11,9 @@ interface MessagePresenter {
 
     void getMessages(long groupId);
 
+    void getRecentDeletedMessages(long groupId, long id);
+
+    void getDeletedMessages(long groupId);
+
     void onDestroy();
 }

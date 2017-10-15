@@ -17,8 +17,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.aanglearning.parentapp.R;
+import com.aanglearning.parentapp.dao.DeletedMessageDao;
 import com.aanglearning.parentapp.dao.MessageDao;
 import com.aanglearning.parentapp.model.ChildInfo;
+import com.aanglearning.parentapp.model.DeletedMessage;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Message;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
@@ -35,16 +37,12 @@ import butterknife.ButterKnife;
 
 public class MessageActivity extends AppCompatActivity implements MessageView,
         ActivityCompat.OnRequestPermissionsResultCallback {
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.coordinatorLayout)
-    CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.refreshLayout)
-    SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
-    @BindView(R.id.noMessage)
-    LinearLayout noMessage;
+
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.noMessage) LinearLayout noMessage;
 
     private MessagePresenter presenter;
     private Groups group;
@@ -73,19 +71,6 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
         presenter = new MessagePresenterImpl(this, new MessageInteractorImpl());
 
         setupRecyclerView();
-
-        refreshLayout.setColorSchemeColors(
-                ContextCompat.getColor(this, R.color.colorPrimary),
-                ContextCompat.getColor(this, R.color.colorAccent),
-                ContextCompat.getColor(this, R.color.colorPrimaryDark)
-        );
-
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getBackupMessages();
-            }
-        });
 
         if (PermissionUtil.isStoragePermissionGranted(this, WRITE_STORAGE_PERMISSION)) {
             getBackupMessages();
@@ -141,6 +126,19 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
             }
         };
         recyclerView.addOnScrollListener(scrollListener);
+
+        refreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(this, R.color.colorPrimary),
+                ContextCompat.getColor(this, R.color.colorAccent),
+                ContextCompat.getColor(this, R.color.colorPrimaryDark)
+        );
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getBackupMessages();
+            }
+        });
     }
 
     private void showSnackbar(String message) {
@@ -167,6 +165,7 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
     public void showRecentMessages(List<Message> messages) {
         adapter.insertDataSet(messages);
         recyclerView.smoothScrollToPosition(0);
+        syncDeletedMessages();
         backupMessages(messages);
         saveMessageRecipient();
     }
@@ -182,6 +181,7 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
             backupMessages(messages);
             saveMessageRecipient();
         }
+        syncDeletedMessages();
     }
 
     private void saveMessageRecipient() {
@@ -199,6 +199,15 @@ public class MessageActivity extends AppCompatActivity implements MessageView,
                 MessageDao.insertGroupMessages(messages);
             }
         }).start();
+    }
+
+    private void syncDeletedMessages() {
+        DeletedMessage deletedMessage = DeletedMessageDao.getNewestDeletedMessage(group.getId());
+        if(deletedMessage.getGroupId() != 0) {
+            presenter.getRecentDeletedMessages(group.getId(), deletedMessage.getId());
+        } else {
+            presenter.getDeletedMessages(group.getId());
+        }
     }
 
     MessageAdapter.OnItemClickListener onItemClickListener = new MessageAdapter.OnItemClickListener() {

@@ -3,6 +3,7 @@ package com.aanglearning.parentapp.api;
 import com.aanglearning.parentapp.model.AppVersion;
 import com.aanglearning.parentapp.model.Attendance;
 import com.aanglearning.parentapp.model.Chat;
+import com.aanglearning.parentapp.model.DeletedMessage;
 import com.aanglearning.parentapp.model.Evnt;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Homework;
@@ -72,6 +73,13 @@ public interface ParentApi {
     @GET("message/group/{groupId}/message/{messageId}")
     Call<ArrayList<Message>> getGroupMessagesFromId(@Path("groupId") long groupId,
                                                     @Path("messageId") long messageId);
+
+    @GET("deletedmessage/{id}/group/{groupId}")
+    Call<ArrayList<DeletedMessage>> getDeletedMessagesAboveId(@Path("groupId") long groupId,
+                                                              @Path("id") long id);
+
+    @GET("deletedmessage/group/{groupId}")
+    Call<ArrayList<DeletedMessage>> getDeletedMessages(@Path("groupId") long groupId);
 
     //Chat API
     @GET("chat/parent/{id}")

@@ -4,6 +4,7 @@ import com.aanglearning.parentapp.App;
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.api.ApiClient;
 import com.aanglearning.parentapp.api.ParentApi;
+import com.aanglearning.parentapp.model.DeletedMessage;
 import com.aanglearning.parentapp.model.Message;
 
 import java.util.ArrayList;
@@ -57,6 +58,50 @@ class MessageInteractorImpl implements MessageInteractor {
 
             @Override
             public void onFailure(Call<ArrayList<Message>> call, Throwable t) {
+                listener.onError(App.getInstance().getString(R.string.network_error));
+            }
+        });
+    }
+
+    @Override
+    public void getRecentDeletedMessages(long groupId, long id, final OnFinishedListener listener) {
+        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
+
+        Call<ArrayList<DeletedMessage>> queue = api.getDeletedMessagesAboveId(groupId, id);
+        queue.enqueue(new Callback<ArrayList<DeletedMessage>>() {
+            @Override
+            public void onResponse(Call<ArrayList<DeletedMessage>> call, Response<ArrayList<DeletedMessage>> response) {
+                if(response.isSuccessful()) {
+                    listener.onDeletedMessagesReceived(response.body());
+                } else {
+                    listener.onError(App.getInstance().getString(R.string.request_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<DeletedMessage>> call, Throwable t) {
+                listener.onError(App.getInstance().getString(R.string.network_error));
+            }
+        });
+    }
+
+    @Override
+    public void getDeletedMessages(long groupId, final OnFinishedListener listener) {
+        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
+
+        Call<ArrayList<DeletedMessage>> queue = api.getDeletedMessages(groupId);
+        queue.enqueue(new Callback<ArrayList<DeletedMessage>>() {
+            @Override
+            public void onResponse(Call<ArrayList<DeletedMessage>> call, Response<ArrayList<DeletedMessage>> response) {
+                if(response.isSuccessful()) {
+                    listener.onDeletedMessagesReceived(response.body());
+                } else {
+                    listener.onError(App.getInstance().getString(R.string.request_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<DeletedMessage>> call, Throwable t) {
                 listener.onError(App.getInstance().getString(R.string.network_error));
             }
         });
