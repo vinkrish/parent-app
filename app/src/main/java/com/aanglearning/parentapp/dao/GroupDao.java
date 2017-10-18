@@ -76,10 +76,23 @@ public class GroupDao {
         return group;
     }
 
+    public static Groups getRecentGroup(long classId) {
+        Groups group = new Groups();
+        SQLiteDatabase sqliteDatabase = AppGlobal.getSqlDbHelper().getReadableDatabase();
+        Cursor c = sqliteDatabase.rawQuery("select Id from groups where ClassId = " + classId + " and IsSchool == 'false' order by Id asc", null);
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            group.setId(c.getLong(c.getColumnIndex("Id")));
+            c.moveToNext();
+        }
+        c.close();
+        return group;
+    }
+
     public static List<Groups> getGroups(long classId) {
         List<Groups> groups = new ArrayList<>();
         SQLiteDatabase sqliteDatabase = AppGlobal.getSqlDbHelper().getReadableDatabase();
-        Cursor c = sqliteDatabase.rawQuery("select * from groups where ClassId = " + classId + " or IsSchool = 'true'", null);
+        Cursor c = sqliteDatabase.rawQuery("select * from groups where ClassId = " + classId + " and IsSchool == 'false' order by Id asc", null);
         c.moveToFirst();
         while (!c.isAfterLast()) {
             Groups group = new Groups();
@@ -101,6 +114,46 @@ public class GroupDao {
         }
         c.close();
         return groups;
+    }
+
+    public static List<Groups> getSchoolGroups() {
+        List<Groups> groups = new ArrayList<>();
+        SQLiteDatabase sqliteDatabase = AppGlobal.getSqlDbHelper().getReadableDatabase();
+        Cursor c = sqliteDatabase.rawQuery("select * from groups where IsSchool = 'true' order by Id asc", null);
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            Groups group = new Groups();
+            group.setId(c.getLong(c.getColumnIndex("Id")));
+            group.setName(c.getString(c.getColumnIndex("Name")));
+            group.setSchool(Boolean.parseBoolean(c.getString(c.getColumnIndex("IsSchool"))));
+            group.setSectionId(c.getLong(c.getColumnIndex("SectionId")));
+            group.setSection(Boolean.parseBoolean(c.getString(c.getColumnIndex("IsSection"))));
+            group.setClassId(c.getLong(c.getColumnIndex("ClassId")));
+            group.setClas(Boolean.parseBoolean(c.getString(c.getColumnIndex("IsClass"))));
+            group.setCreatedBy(c.getLong(c.getColumnIndex("CreatedBy")));
+            group.setCreatorName(c.getString(c.getColumnIndex("CreatorName")));
+            group.setCreatorRole(c.getString(c.getColumnIndex("CreatorRole")));
+            group.setCreatedDate(c.getString(c.getColumnIndex("CreatedDate")));
+            group.setActive(Boolean.parseBoolean(c.getString(c.getColumnIndex("IsActive"))));
+            group.setSchoolId(c.getLong(c.getColumnIndex("SchoolId")));
+            groups.add(group);
+            c.moveToNext();
+        }
+        c.close();
+        return groups;
+    }
+
+    public static Groups getRecentSchoolGroup() {
+        Groups group = new Groups();
+        SQLiteDatabase sqliteDatabase = AppGlobal.getSqlDbHelper().getReadableDatabase();
+        Cursor c = sqliteDatabase.rawQuery("select Id from groups where IsSchool = 'true' order by Id asc", null);
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            group.setId(c.getLong(c.getColumnIndex("Id")));
+            c.moveToNext();
+        }
+        c.close();
+        return group;
     }
 
     public static int clear(long classId, long sectionId) {

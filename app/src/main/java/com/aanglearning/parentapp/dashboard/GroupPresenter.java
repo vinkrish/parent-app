@@ -9,6 +9,12 @@ import com.aanglearning.parentapp.model.Authorization;
 interface GroupPresenter {
     void getGroup(long groupId);
 
+    void getSchoolGroupsAboveId(long schoolId, long id);
+
+    void getSchoolGroups(long schoolId);
+
+    void getGroupsAboveId(long studentId, long id);
+
     void getGroups(long studentId);
 
     void getMessageRecipients(long recipientId);

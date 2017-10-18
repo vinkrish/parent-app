@@ -1,6 +1,5 @@
 package com.aanglearning.parentapp.dashboard;
 
-import com.aanglearning.parentapp.model.Authorization;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.MessageRecipient;
 
@@ -16,12 +15,24 @@ interface GroupInteractor {
 
         void onGroupReceived(Groups group);
 
+        void onRecentSchoolGroupsReceived(List<Groups> groupsList);
+
+        void onSchoolGroupsReceived(List<Groups> groupsList);
+
+        void onRecentGroupsReceived(List<Groups> groupsList);
+
         void onGroupsReceived(List<Groups> groupsList);
 
         void onMessageRecipientsReceived(List<MessageRecipient> mrList);
     }
 
     void getGroup(long groupId, GroupInteractor.OnFinishedListener listener);
+
+    void getSchoolGroupsAboveId(long schoolId, long id, GroupInteractor.OnFinishedListener listener);
+
+    void getschoolGroups(long schoolId, GroupInteractor.OnFinishedListener listener);
+
+    void getGroupsAboveId(long userId, long id, GroupInteractor.OnFinishedListener listener);
 
     void getGroups(long userId, GroupInteractor.OnFinishedListener listener);
 

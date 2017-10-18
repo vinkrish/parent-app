@@ -20,6 +20,12 @@ interface GroupView {
 
     void setGroup(Groups group);
 
+    void setRecentSchoolGroups(List<Groups> groups);
+
+    void setSchoolGroups(List<Groups> groups);
+
+    void setRecentGroups(List<Groups> groups);
+
     void setGroups(List<Groups> groups);
 
     void setMessageRecipients(List<MessageRecipient> mrList);

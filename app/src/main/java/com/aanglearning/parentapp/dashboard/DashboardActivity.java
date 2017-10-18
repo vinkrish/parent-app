@@ -21,7 +21,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.attendance.AbsentViewActivity;
@@ -51,7 +49,6 @@ import com.aanglearning.parentapp.model.Service;
 import com.aanglearning.parentapp.profile.ProfileActivity;
 import com.aanglearning.parentapp.sqlite.SqlDbHelper;
 import com.aanglearning.parentapp.timetable.TimetableActivity;
-import com.aanglearning.parentapp.util.AppGlobal;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
 import com.aanglearning.parentapp.util.NetworkUtil;
 import com.aanglearning.parentapp.util.PermissionUtil;
@@ -60,10 +57,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -146,7 +141,11 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
             @Override
             public void onRefresh() {
                 check = false;
-                presenter.getGroups(childInfo.getStudentId());
+                if(adapter.getDataSet().size() == 0) {
+                    presenter.getGroups(childInfo.getStudentId());
+                } else {
+                    presenter.getGroupsAboveId(childInfo.getStudentId(), adapter.getDataSet().get(adapter.getItemCount() - 1).getId());
+                }
             }
         });
 
@@ -155,16 +154,15 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if(NetworkUtil.isNetworkAvailable(DashboardActivity.this)) {
+        if(NetworkUtil.isNetworkAvailable(getApplicationContext())) {
             if(!SharedPreferenceUtil.isMessageRecipientsSaved(getApplicationContext())) {
                 presenter.getMessageRecipients(childInfo.getStudentId());
             } else loadGroups();
-        } else {
-            loadOfflineData();
         }
     }
 
     private void loadGroups() {
+        loadOfflineData();
         if(isNotified) {
             Groups group = GroupDao.getGroup(groupId);
             if(group.getId() == 0) {
@@ -172,19 +170,23 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
             } else {
                 setGroup(group);
             }
-        }else{
-            presenter.getGroups(childInfo.getStudentId());
+        } else {
+            if(GroupDao.getGroups(childInfo.getClassId()).size() == 0) {
+                presenter.getGroups(childInfo.getStudentId());
+            } else {
+                presenter.getGroupsAboveId(childInfo.getStudentId(), GroupDao.getRecentGroup(childInfo.getClassId()).getId());
+            }
         }
     }
 
     private void loadOfflineData() {
-        List<Groups> groups = GroupDao.getGroups(childInfo.getClassId());
-        if(groups.size() == 0) {
-            noGroups.setVisibility(View.VISIBLE);
+        adapter.replaceData(GroupDao.getGroups(childInfo.getClassId()));
+        if(adapter.getItemCount() == 0) {
+            adapter.replaceData(GroupDao.getSchoolGroups());
         } else {
-            noGroups.setVisibility(View.INVISIBLE);
-            adapter.replaceData(groups);
+            adapter.updateDataSet(GroupDao.getSchoolGroups());
         }
+        toggleNoGroupsVisibility();
     }
 
     @Override
@@ -238,7 +240,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     @Override
     public void showError(String message) {
         showSnackbar(message);
-        loadOfflineData();
     }
 
     @Override
@@ -259,17 +260,50 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     }
 
     @Override
+    public void setRecentSchoolGroups(List<Groups> groups) {
+        adapter.updateDataSet(groups);
+        backupGroups(groups);
+    }
+
+    @Override
+    public void setSchoolGroups(List<Groups> groups) {
+        if(adapter.getItemCount() == 0) {
+            adapter.replaceData(groups);
+        } else {
+            adapter.updateDataSet(groups);
+        }
+        toggleNoGroupsVisibility();
+        backupGroups(groups);
+    }
+
+    @Override
+    public void setRecentGroups(List<Groups> groups) {
+        adapter.updateDataSet(groups);
+        backupGroups(groups);
+        getSchoolGroups();
+    }
+
+    @Override
     public void setGroups(List<Groups> groups) {
-        if(groups.size() == 0) {
-            recyclerView.invalidate();
-            GroupDao.clear(childInfo.getClassId(), childInfo.getSectionId());
+        adapter.replaceData(groups);
+        backupGroups(groups);
+        getSchoolGroups();
+    }
+
+    private void getSchoolGroups() {
+        if(GroupDao.getSchoolGroups().size() == 0) {
+            presenter.getSchoolGroups(childInfo.getSchoolId());
+        } else {
+            presenter.getSchoolGroupsAboveId(childInfo.getSchoolId(), GroupDao.getRecentSchoolGroup().getId());
+        }
+    }
+
+    private void toggleNoGroupsVisibility() {
+        if(adapter.getItemCount() == 0) {
             noGroups.setVisibility(View.VISIBLE);
         } else {
             noGroups.setVisibility(View.INVISIBLE);
-            adapter.replaceData(groups);
-            backupGroups(groups);
         }
-        refreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -284,7 +318,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                GroupDao.clear(childInfo.getClassId(), childInfo.getSectionId());
                 GroupDao.insertMany(groups);
             }
         }).start();
@@ -448,27 +481,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
             }
         });
         alertDialog.show();
-    }
-
-    private void dbBackup() {
-        File sd = Environment.getExternalStorageDirectory();
-        File data = Environment.getDataDirectory();
-        FileChannel source = null;
-        FileChannel destination = null;
-        String currentDBPath = "/data/" + "com.aanglearning.parentapp" + "/databases/parent.db";
-        String backupDBPath = "parent";
-        File currentDB = new File(data, currentDBPath);
-        File backupDB = new File(sd, backupDBPath);
-        try {
-            source = new FileInputStream(currentDB).getChannel();
-            destination = new FileOutputStream(backupDB).getChannel();
-            destination.transferFrom(source, 0, source.size());
-            source.close();
-            destination.close();
-            Toast.makeText(this, "DB Exported!", Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }

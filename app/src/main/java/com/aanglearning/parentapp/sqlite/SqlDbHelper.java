@@ -40,6 +40,7 @@ public class SqlDbHelper extends SQLiteOpenHelper implements SqlConstant {
         db.execSQL(CREATE_EVENT_DATES);
         db.execSQL(CREATE_MESSAGE_RECIPIENT);
         db.execSQL(CREATE_DELETED_MESSAGE);
+        db.execSQL(CREATE_DELETED_GROUP);
     }
 
     @Override
@@ -63,6 +64,7 @@ public class SqlDbHelper extends SQLiteOpenHelper implements SqlConstant {
         db.execSQL("DROP TABLE IF EXISTS event_dates");
         db.execSQL("DROP TABLE IF EXISTS message_recipient");
         db.execSQL("DROP TABLE IF EXISTS deleted_message");
+        db.execSQL("DROP TABLE IF EXISTS deleted_group");
         onCreate(db);
     }
 
@@ -87,5 +89,6 @@ public class SqlDbHelper extends SQLiteOpenHelper implements SqlConstant {
         sqliteDatabase.delete("event_dates", null, null);
         sqliteDatabase.delete("message_recipient", null, null);
         sqliteDatabase.delete("deleted_message", null, null);
+        sqliteDatabase.delete("deleted_group", null, null);
     }
 }

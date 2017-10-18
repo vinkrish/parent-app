@@ -1,6 +1,5 @@
 package com.aanglearning.parentapp.dashboard;
 
-import com.aanglearning.parentapp.model.Authorization;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.MessageRecipient;
 
@@ -24,6 +23,28 @@ class GroupPresenterImpl implements GroupPresenter, GroupInteractor.OnFinishedLi
         if (mView != null) {
             mView.showProgress();
             mInteractor.getGroup(groupId, this);
+        }
+    }
+
+    @Override
+    public void getSchoolGroupsAboveId(long schoolId, long id) {
+        if (mView != null) {
+            mInteractor.getSchoolGroupsAboveId(schoolId, id, this);
+        }
+    }
+
+    @Override
+    public void getSchoolGroups(long schoolId) {
+        if (mView != null) {
+            mView.showProgress();
+            mInteractor.getschoolGroups(schoolId, this);
+        }
+    }
+
+    @Override
+    public void getGroupsAboveId(long studentId, long id) {
+        if (mView != null) {
+            mInteractor.getGroupsAboveId(studentId, id, this);
         }
     }
 
@@ -62,6 +83,28 @@ class GroupPresenterImpl implements GroupPresenter, GroupInteractor.OnFinishedLi
             mView.backupGroup(group);
             mView.hideProgress();
             mView.setGroup(group);
+        }
+    }
+
+    @Override
+    public void onRecentSchoolGroupsReceived(List<Groups> groupsList) {
+        if (mView != null) {
+            mView.setRecentSchoolGroups(groupsList);
+        }
+    }
+
+    @Override
+    public void onSchoolGroupsReceived(List<Groups> groupsList) {
+        if (mView != null) {
+            mView.setSchoolGroups(groupsList);
+            mView.hideProgress();
+        }
+    }
+
+    @Override
+    public void onRecentGroupsReceived(List<Groups> groupsList) {
+        if (mView != null) {
+            mView.setRecentGroups(groupsList);
         }
     }
 

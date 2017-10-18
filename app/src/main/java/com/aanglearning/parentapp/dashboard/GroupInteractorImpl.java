@@ -44,10 +44,76 @@ class GroupInteractorImpl implements GroupInteractor {
     }
 
     @Override
+    public void getSchoolGroupsAboveId(long schoolId, long id, final OnFinishedListener listener) {
+        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
+
+        Call<List<Groups>> queue = api.getSchoolGroupsAboveId(schoolId, id);
+        queue.enqueue(new Callback<List<Groups>>() {
+            @Override
+            public void onResponse(Call<List<Groups>> call, Response<List<Groups>> response) {
+                if(response.isSuccessful()) {
+                    listener.onRecentSchoolGroupsReceived(response.body());
+                } else {
+                    listener.onError(App.getInstance().getString(R.string.request_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Groups>> call, Throwable t) {
+                listener.onError(App.getInstance().getString(R.string.network_error));
+            }
+        });
+    }
+
+    @Override
+    public void getschoolGroups(long schoolId, final OnFinishedListener listener) {
+        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
+
+        Call<List<Groups>> queue = api.getSchoolGroups(schoolId);
+        queue.enqueue(new Callback<List<Groups>>() {
+            @Override
+            public void onResponse(Call<List<Groups>> call, Response<List<Groups>> response) {
+                if(response.isSuccessful()) {
+                    listener.onSchoolGroupsReceived(response.body());
+                } else {
+                    listener.onError(App.getInstance().getString(R.string.request_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Groups>> call, Throwable t) {
+                listener.onError(App.getInstance().getString(R.string.network_error));
+            }
+        });
+    }
+
+    @Override
+    public void getGroupsAboveId(long userId, long id, final OnFinishedListener listener) {
+        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
+
+        Call<List<Groups>> queue = api.getStudGroupsAboveId(userId, id);
+        queue.enqueue(new Callback<List<Groups>>() {
+            @Override
+            public void onResponse(Call<List<Groups>> call, Response<List<Groups>> response) {
+                if(response.isSuccessful()) {
+                    listener.onRecentGroupsReceived(response.body());
+                } else {
+                    listener.onError(App.getInstance().getString(R.string.request_error));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Groups>> call, Throwable t) {
+                listener.onError(App.getInstance().getString(R.string.network_error));
+            }
+        });
+    }
+
+    @Override
     public void getGroups(long userId, final OnFinishedListener listener) {
         ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
 
-        Call<List<Groups>> queue = api.getGroups(userId);
+        Call<List<Groups>> queue = api.getStudGroups(userId);
         queue.enqueue(new Callback<List<Groups>>() {
             @Override
             public void onResponse(Call<List<Groups>> call, Response<List<Groups>> response) {

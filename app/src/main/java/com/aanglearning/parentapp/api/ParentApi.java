@@ -3,6 +3,7 @@ package com.aanglearning.parentapp.api;
 import com.aanglearning.parentapp.model.AppVersion;
 import com.aanglearning.parentapp.model.Attendance;
 import com.aanglearning.parentapp.model.Chat;
+import com.aanglearning.parentapp.model.DeletedGroup;
 import com.aanglearning.parentapp.model.DeletedMessage;
 import com.aanglearning.parentapp.model.Evnt;
 import com.aanglearning.parentapp.model.Groups;
@@ -60,8 +61,26 @@ public interface ParentApi {
     @GET("groups/{groupId}")
     Call<Groups> getGroup(@Path("groupId") long groupId);
 
-    @GET("groups/student/{id}")
-    Call<List<Groups>> getGroups(@Path("id") long id);
+    @GET("groups/stud/{studentId}/group/{id}")
+    Call<List<Groups>> getStudGroupsAboveId(@Path("studentId") long studentId,
+                                            @Path("id") long id);
+
+    @GET("groups/stud/{studentId}")
+    Call<List<Groups>> getStudGroups(@Path("studentId") long studentId);
+
+    @GET("groups/school/{schoolId}/group/{id}")
+    Call<List<Groups>> getSchoolGroupsAboveId(@Path("schoolId") long schoolId,
+                                              @Path("id") long id);
+
+    @GET("groups/school/{schoolId}")
+    Call<List<Groups>> getSchoolGroups(@Path("schoolId") long schoolId);
+
+    @GET("deletedgroup/{id}/school/{schoolId}")
+    Call<ArrayList<DeletedGroup>> getDeletedGroupsAboveId(@Path("schoolId") long schoolId,
+                                                          @Path("id") long id);
+
+    @GET("deletedgroup/school/{schoolId}")
+    Call<ArrayList<DeletedGroup>> getDeletedGroups(@Path("schoolId") long schoolId);
 
     @GET("message/group/{groupId}/messagesUp/{messageId}")
     Call<ArrayList<Message>> getGroupMessagesAboveId(@Path("groupId") long groupId,
