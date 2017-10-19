@@ -90,6 +90,7 @@ class GroupPresenterImpl implements GroupPresenter, GroupInteractor.OnFinishedLi
     public void onRecentSchoolGroupsReceived(List<Groups> groupsList) {
         if (mView != null) {
             mView.setRecentSchoolGroups(groupsList);
+            mView.hideProgress();
         }
     }
 
@@ -105,6 +106,7 @@ class GroupPresenterImpl implements GroupPresenter, GroupInteractor.OnFinishedLi
     public void onRecentGroupsReceived(List<Groups> groupsList) {
         if (mView != null) {
             mView.setRecentGroups(groupsList);
+            mView.hideProgress();
         }
     }
 

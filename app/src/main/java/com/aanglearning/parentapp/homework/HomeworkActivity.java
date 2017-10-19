@@ -59,7 +59,10 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homework);
         ButterKnife.bind(this);
+        init();
+    }
 
+    private void init() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -70,19 +73,6 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
         adapter = new HomeworkAdapter(this, new ArrayList<HomeworkViewObj>(0));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
-        refreshLayout.setColorSchemeColors(
-                ContextCompat.getColor(this, R.color.colorPrimary),
-                ContextCompat.getColor(this, R.color.colorAccent),
-                ContextCompat.getColor(this, R.color.colorPrimaryDark)
-        );
-
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getHomework();
-            }
-        });
 
         changeDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +88,19 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
         } else {
             showOfflineData();
         }
+
+        refreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(this, R.color.colorPrimary),
+                ContextCompat.getColor(this, R.color.colorAccent),
+                ContextCompat.getColor(this, R.color.colorPrimaryDark)
+        );
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getHomework();
+            }
+        });
     }
 
     private void showOfflineData() {
@@ -229,5 +232,11 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
     public void showError(String message) {
         showSnackbar(message);
         showOfflineData();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 }

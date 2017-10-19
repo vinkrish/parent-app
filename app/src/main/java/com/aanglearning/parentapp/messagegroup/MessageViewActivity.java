@@ -1,13 +1,12 @@
 package com.aanglearning.parentapp.messagegroup;
 
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aanglearning.parentapp.R;
@@ -24,20 +23,15 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MessageViewActivity extends AppCompatActivity
         implements YouTubePlayer.OnInitializedListener{
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.shared_image)
-    PhotoView sharedImage;
-    @BindView(R.id.message)
-    TextView messageTV;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.shared_image) PhotoView sharedImage;
+    @BindView(R.id.message) TextView messageTV;
 
     private Message message;
     private String videoId;
@@ -46,9 +40,11 @@ public class MessageViewActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_view);
-
         ButterKnife.bind(this);
+        init();
+    }
 
+    private void init() {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             message = (Message) extras.getSerializable("message");

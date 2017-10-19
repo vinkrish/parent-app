@@ -43,16 +43,13 @@ import butterknife.ButterKnife;
 public class ProfileActivity extends AppCompatActivity implements ProfileView,
         ActivityCompat.OnRequestPermissionsResultCallback {
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.coordinatorLayout)
-    CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.refreshLayout)
-    SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
     @BindView(R.id.profile_image) ImageView profileImage;
     @BindView(R.id.name) TextView name;
     @BindView(R.id.clas) TextView clas;
     @BindView(R.id.section) TextView section;
-    @BindView(R.id.sectionLayout)
-    TextInputLayout sectionLayout;
+    @BindView(R.id.sectionLayout) TextInputLayout sectionLayout;
     @BindView(R.id.school) TextView school;
     @BindView(R.id.father) TextView father;
     @BindView(R.id.mother) TextView mother;
@@ -70,7 +67,10 @@ public class ProfileActivity extends AppCompatActivity implements ProfileView,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
+        init();
+    }
 
+    private void init() {
         setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -95,7 +95,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfileView,
         if(childInfo.getSectionName().equals("none")) {
             sectionLayout.setVisibility(View.GONE);
         }
-
     }
 
     @Override

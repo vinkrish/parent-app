@@ -6,13 +6,11 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.View;
@@ -27,17 +25,14 @@ import android.widget.TextView;
 
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.dao.AttendanceDao;
-import com.aanglearning.parentapp.dao.TimetableDao;
 import com.aanglearning.parentapp.model.Attendance;
 import com.aanglearning.parentapp.model.ChildInfo;
-import com.aanglearning.parentapp.model.Timetable;
 import com.aanglearning.parentapp.util.DateUtil;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
 import com.aanglearning.parentapp.util.NetworkUtil;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,22 +42,14 @@ import butterknife.ButterKnife;
 
 public class AbsentViewActivity extends AppCompatActivity implements AttendanceView {
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.coordinatorLayout)
-    CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.progress_bar)
-    ProgressBar progressBar;
-    @BindView(R.id.daily_attendance_layout)
-    LinearLayout dailyAttendanceLayout;
-    @BindView(R.id.session_attendance_layout)
-    LinearLayout sessionAttendanceLayout;
-    @BindView(R.id.period_attendance_layout)
-    LinearLayout periodAttendanceLayout;
-    @BindView(R.id.daily_attendance_view)
-    RecyclerView dailyAttendanceView;
-    @BindView(R.id.session_attendance_view)
-    RecyclerView sessionAttendanceView;
-    @BindView(R.id.no_attendance)
-    LinearLayout noAttendance;
+    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+    @BindView(R.id.daily_attendance_layout) LinearLayout dailyAttendanceLayout;
+    @BindView(R.id.session_attendance_layout) LinearLayout sessionAttendanceLayout;
+    @BindView(R.id.period_attendance_layout) LinearLayout periodAttendanceLayout;
+    @BindView(R.id.daily_attendance_view) RecyclerView dailyAttendanceView;
+    @BindView(R.id.session_attendance_view) RecyclerView sessionAttendanceView;
+    @BindView(R.id.no_attendance) LinearLayout noAttendance;
 
     private AttendancePresenter presenter;
     private ChildInfo childInfo;
@@ -78,7 +65,10 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_absent_view);
         ButterKnife.bind(this);
+        init();
+    }
 
+    private void init() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -107,7 +97,6 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
         } else {
             showOfflineData();
         }
-
     }
 
     private void showOfflineData() {
@@ -553,6 +542,12 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
                 }
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 
 }

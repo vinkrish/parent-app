@@ -89,9 +89,12 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        check = false;
         ButterKnife.bind(this);
+        init();
+    }
 
+    private void init() {
+        check = false;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -102,14 +105,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
         }
 
         presenter = new GroupPresenterImpl(this, new GroupInteractorImpl());
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this));
-
-        adapter = new GroupAdapter(new ArrayList<Groups>(0), mItemListener);
-        recyclerView.setAdapter(adapter);
 
         setupDrawerContent(navigationView);
 
@@ -131,6 +126,18 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
 
         setupHeaderAndSpinner();
 
+        setupRecyclerView();
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this));
+
+        adapter = new GroupAdapter(new ArrayList<Groups>(0), mItemListener);
+        recyclerView.setAdapter(adapter);
+
         refreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(this, R.color.colorPrimary),
                 ContextCompat.getColor(this, R.color.colorAccent),
@@ -148,7 +155,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
                 }
             }
         });
-
     }
 
     @Override
@@ -187,21 +193,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
             adapter.updateDataSet(GroupDao.getSchoolGroups());
         }
         toggleNoGroupsVisibility();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (isNavDrawerOpen()) {
-            closeNavDrawer();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     protected boolean isNavDrawerOpen() {
@@ -481,6 +472,21 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
             }
         });
         alertDialog.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isNavDrawerOpen()) {
+            closeNavDrawer();
+        } else {
+            super.onBackPressed();
+        }
     }
 
 }
