@@ -36,6 +36,7 @@ import com.aanglearning.parentapp.attendance.AbsentViewActivity;
 import com.aanglearning.parentapp.calendar.CalendarActivity;
 import com.aanglearning.parentapp.chathome.ChatsActivity;
 import com.aanglearning.parentapp.dao.ChildInfoDao;
+import com.aanglearning.parentapp.dao.DeletedGroupDao;
 import com.aanglearning.parentapp.dao.GroupDao;
 import com.aanglearning.parentapp.dao.MessageRecipientDao;
 import com.aanglearning.parentapp.dao.ServiceDao;
@@ -43,6 +44,7 @@ import com.aanglearning.parentapp.homework.HomeworkActivity;
 import com.aanglearning.parentapp.login.LoginActivity;
 import com.aanglearning.parentapp.messagegroup.MessageActivity;
 import com.aanglearning.parentapp.model.ChildInfo;
+import com.aanglearning.parentapp.model.DeletedGroup;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.MessageRecipient;
 import com.aanglearning.parentapp.model.Service;
@@ -94,7 +96,6 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
     }
 
     private void init() {
-        check = false;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -252,32 +253,40 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
 
     @Override
     public void setRecentSchoolGroups(List<Groups> groups) {
-        adapter.updateDataSet(groups);
-        backupGroups(groups);
+        if(groups.size() > 0) {
+            adapter.updateDataSet(groups);
+            backupGroups(groups);
+        }
+        syncDeletedGroups();
     }
 
     @Override
     public void setSchoolGroups(List<Groups> groups) {
-        if(adapter.getItemCount() == 0) {
+        if(adapter.getItemCount() == 0 && groups.size() > 0) {
             adapter.replaceData(groups);
-        } else {
+        } else if(groups.size() > 0) {
             adapter.updateDataSet(groups);
         }
         toggleNoGroupsVisibility();
         backupGroups(groups);
+        syncDeletedGroups();
     }
 
     @Override
     public void setRecentGroups(List<Groups> groups) {
-        adapter.updateDataSet(groups);
-        backupGroups(groups);
+        if(groups.size() > 0) {
+            adapter.updateDataSet(groups);
+            backupGroups(groups);
+        }
         getSchoolGroups();
     }
 
     @Override
     public void setGroups(List<Groups> groups) {
-        adapter.replaceData(groups);
-        backupGroups(groups);
+        if(groups.size() > 0) {
+            adapter.replaceData(groups);
+            backupGroups(groups);
+        }
         getSchoolGroups();
     }
 
@@ -312,6 +321,15 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
                 GroupDao.insertMany(groups);
             }
         }).start();
+    }
+
+    private void syncDeletedGroups() {
+        DeletedGroup deletedGroup = DeletedGroupDao.getNewestDeletedGroup();
+        if(deletedGroup.getId() == 0) {
+            presenter.getDeletedGroups(childInfo.getSchoolId());
+        } else {
+            presenter.getRecentDeletedGroups(childInfo.getSchoolId(), deletedGroup.getId());
+        }
     }
 
     private void setupDrawerContent(NavigationView navigationView) {

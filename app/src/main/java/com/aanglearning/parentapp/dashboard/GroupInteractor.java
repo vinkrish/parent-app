@@ -1,5 +1,6 @@
 package com.aanglearning.parentapp.dashboard;
 
+import com.aanglearning.parentapp.model.DeletedGroup;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.MessageRecipient;
 
@@ -23,6 +24,8 @@ interface GroupInteractor {
 
         void onGroupsReceived(List<Groups> groupsList);
 
+        void onDeletedGroupsReceived(List<DeletedGroup> deletedGroups);
+
         void onMessageRecipientsReceived(List<MessageRecipient> mrList);
     }
 
@@ -35,6 +38,10 @@ interface GroupInteractor {
     void getGroupsAboveId(long userId, long id, GroupInteractor.OnFinishedListener listener);
 
     void getGroups(long userId, GroupInteractor.OnFinishedListener listener);
+
+    void getRecentDeletedGroups(long schoolId, long id, GroupInteractor.OnFinishedListener listener);
+
+    void getDeletedGroups(long schoolId, GroupInteractor.OnFinishedListener listener);
 
     void getMessageRecipients(long recipientId, GroupInteractor.OnFinishedListener listener);
 }

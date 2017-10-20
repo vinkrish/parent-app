@@ -76,11 +76,11 @@ public interface ParentApi {
     Call<List<Groups>> getSchoolGroups(@Path("schoolId") long schoolId);
 
     @GET("deletedgroup/{id}/school/{schoolId}")
-    Call<ArrayList<DeletedGroup>> getDeletedGroupsAboveId(@Path("schoolId") long schoolId,
+    Call<List<DeletedGroup>> getDeletedGroupsAboveId(@Path("schoolId") long schoolId,
                                                           @Path("id") long id);
 
     @GET("deletedgroup/school/{schoolId}")
-    Call<ArrayList<DeletedGroup>> getDeletedGroups(@Path("schoolId") long schoolId);
+    Call<List<DeletedGroup>> getDeletedGroups(@Path("schoolId") long schoolId);
 
     @GET("message/group/{groupId}/messagesUp/{messageId}")
     Call<ArrayList<Message>> getGroupMessagesAboveId(@Path("groupId") long groupId,

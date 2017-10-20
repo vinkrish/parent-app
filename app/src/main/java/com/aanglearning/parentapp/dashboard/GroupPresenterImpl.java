@@ -1,5 +1,7 @@
 package com.aanglearning.parentapp.dashboard;
 
+import com.aanglearning.parentapp.dao.DeletedGroupDao;
+import com.aanglearning.parentapp.model.DeletedGroup;
 import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.MessageRecipient;
 
@@ -65,6 +67,20 @@ class GroupPresenterImpl implements GroupPresenter, GroupInteractor.OnFinishedLi
     }
 
     @Override
+    public void getRecentDeletedGroups(long schoolId, long id) {
+        if (mView != null) {
+            mInteractor.getRecentDeletedGroups(schoolId, id, this);
+        }
+    }
+
+    @Override
+    public void getDeletedGroups(long schoolId) {
+        if (mView != null) {
+            mInteractor.getDeletedGroups(schoolId, this);
+        }
+    }
+
+    @Override
     public void onDestroy() {
         mView = null;
     }
@@ -115,6 +131,13 @@ class GroupPresenterImpl implements GroupPresenter, GroupInteractor.OnFinishedLi
         if (mView != null) {
             mView.setGroups(groupsList);
             mView.hideProgress();
+        }
+    }
+
+    @Override
+    public void onDeletedGroupsReceived(List<DeletedGroup> deletedGroups) {
+        if (mView != null) {
+            DeletedGroupDao.insertDeletedGroups(deletedGroups);
         }
     }
 
