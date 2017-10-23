@@ -149,10 +149,10 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
             @Override
             public void onRefresh() {
                 check = false;
-                if(adapter.getDataSet().size() == 0) {
+                if(GroupDao.getGroups(childInfo.getClassId()).size() == 0) {
                     presenter.getGroups(childInfo.getStudentId());
                 } else {
-                    presenter.getGroupsAboveId(childInfo.getStudentId(), adapter.getDataSet().get(adapter.getItemCount() - 1).getId());
+                    presenter.getGroupsAboveId(childInfo.getStudentId(), GroupDao.getRecentGroup(childInfo.getClassId()).getId());
                 }
             }
         });
@@ -283,10 +283,12 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
 
     @Override
     public void setGroups(List<Groups> groups) {
-        if(groups.size() > 0) {
+        if(adapter.getDataSet().size() > 0 && groups.size() > 0) {
+            adapter.updateDataSet(groups);
+        } else if(groups.size() > 0){
             adapter.replaceData(groups);
-            backupGroups(groups);
         }
+        backupGroups(groups);
         getSchoolGroups();
     }
 
