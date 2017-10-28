@@ -35,12 +35,17 @@ public class SqlDbHelper extends SQLiteOpenHelper implements SqlConstant {
         db.execSQL(CREATE_CHILD_INFO);
         db.execSQL(CREATE_SERVICE);
         db.execSQL(CREATE_EVENT);
-        db.execSQL(CREATE_RECURRING_PATTERN);
-        db.execSQL(CREATE_EVENT_EXCEPTION);
-        db.execSQL(CREATE_EVENT_DATES);
         db.execSQL(CREATE_MESSAGE_RECIPIENT);
         db.execSQL(CREATE_DELETED_MESSAGE);
         db.execSQL(CREATE_DELETED_GROUP);
+        db.execSQL(CREATE_ALBUM);
+        db.execSQL(CREATE_ALBUM_IMAGE);
+        db.execSQL(CREATE_SUB_ALBUM);
+        db.execSQL(CREATE_SUBALBUM_IMAGE);
+        db.execSQL(CREATE_DELETED_ALBUM);
+        db.execSQL(CREATE_DELETED_ALBUM_IMAGE);
+        db.execSQL(CREATE_DELETED_SUBALBUM);
+        db.execSQL(CREATE_DELETED_SUBALBUM_IMAGE);
     }
 
     @Override
@@ -59,12 +64,17 @@ public class SqlDbHelper extends SQLiteOpenHelper implements SqlConstant {
         db.execSQL("DROP TABLE IF EXISTS child_info");
         db.execSQL("DROP TABLE IF EXISTS service");
         db.execSQL("DROP TABLE IF EXISTS event");
-        db.execSQL("DROP TABLE IF EXISTS event_recurring_pattern");
-        db.execSQL("DROP TABLE IF EXISTS event_exception");
-        db.execSQL("DROP TABLE IF EXISTS event_dates");
         db.execSQL("DROP TABLE IF EXISTS message_recipient");
         db.execSQL("DROP TABLE IF EXISTS deleted_message");
         db.execSQL("DROP TABLE IF EXISTS deleted_group");
+        db.execSQL("DROP TABLE IF EXISTS album");
+        db.execSQL("DROP TABLE IF EXISTS album_image");
+        db.execSQL("DROP TABLE IF EXISTS sub_album");
+        db.execSQL("DROP TABLE IF EXISTS subalbum_image");
+        db.execSQL("DROP TABLE IF EXISTS deleted_album");
+        db.execSQL("DROP TABLE IF EXISTS deleted_album_image");
+        db.execSQL("DROP TABLE IF EXISTS deleted_subalbum");
+        db.execSQL("DROP TABLE IF EXISTS deleted_subalbum_image");
         onCreate(db);
     }
 
@@ -84,11 +94,16 @@ public class SqlDbHelper extends SQLiteOpenHelper implements SqlConstant {
         sqliteDatabase.delete("child_info", null, null);
         sqliteDatabase.delete("service", null, null);
         sqliteDatabase.delete("event", null, null);
-        sqliteDatabase.delete("event_recurring_pattern", null, null);
-        sqliteDatabase.delete("event_exception", null, null);
-        sqliteDatabase.delete("event_dates", null, null);
         sqliteDatabase.delete("message_recipient", null, null);
         sqliteDatabase.delete("deleted_message", null, null);
         sqliteDatabase.delete("deleted_group", null, null);
+        sqliteDatabase.delete("album", null, null);
+        sqliteDatabase.delete("sub_album", null, null);
+        sqliteDatabase.delete("album_image", null, null);
+        sqliteDatabase.delete("subalbum_image", null, null);
+        sqliteDatabase.delete("deleted_album", null, null);
+        sqliteDatabase.delete("deleted_subalbum", null, null);
+        sqliteDatabase.delete("deleted_album_image", null, null);
+        sqliteDatabase.delete("deleted_subalbum_image", null, null);
     }
 }
