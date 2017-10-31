@@ -78,6 +78,13 @@
     <string name="end_time">End Time :</string>
     <string name="show_hide_cal">Show / Hide Calendar</string>
 
+    <string name="_new">New</string>
+    <string name="gallery">Gallery</string>
+    <string name="new_album">New Album</string>
+    <string name="album_name">Album Name</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_album">No Albums!</string>
+
     <string name="profile">Profile</string>
     <string name="name">Name</string>
     <string name="clas">Class</string>

@@ -40,6 +40,7 @@ import com.aanglearning.parentapp.dao.DeletedGroupDao;
 import com.aanglearning.parentapp.dao.GroupDao;
 import com.aanglearning.parentapp.dao.MessageRecipientDao;
 import com.aanglearning.parentapp.dao.ServiceDao;
+import com.aanglearning.parentapp.gallery.GalleryActivity;
 import com.aanglearning.parentapp.homework.HomeworkActivity;
 import com.aanglearning.parentapp.login.LoginActivity;
 import com.aanglearning.parentapp.messagegroup.MessageActivity;
@@ -354,6 +355,9 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
                                 break;
                             case R.id.event_item:
                                 startActivity(new Intent(DashboardActivity.this, CalendarActivity.class));
+                                break;
+                            case R.id.gallery_item:
+                                startActivity(new Intent(DashboardActivity.this, GalleryActivity.class));
                                 break;
                             case R.id.chat_item:
                                 startActivity(new Intent(DashboardActivity.this, ChatsActivity.class));

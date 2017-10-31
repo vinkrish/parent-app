@@ -152,7 +152,21 @@
             android:exported="false" />
         <service
             android:name=".util.VersionIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity
+            android:name=".gallery.GalleryActivity"
+            android:label="@string/gallery"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".dashboard.DashboardActivity" />
+        </activity>
+        <activity
+            android:name=".album.AlbumActivity">
+
+        </activity>
     </application>
 
 </manifest>
