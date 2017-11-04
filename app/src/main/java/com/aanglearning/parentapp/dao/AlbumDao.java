@@ -66,4 +66,19 @@ public class AlbumDao {
         return albums;
     }
 
+    public static int update(Album album) {
+        String sql = "update album set Name = ?, CoverPic = ? where Id = ? ";
+        SQLiteDatabase db = AppGlobal.getSqlDbHelper().getWritableDatabase();
+        SQLiteStatement stmt = db.compileStatement(sql);
+        try {
+            stmt.bindString(1, album.getName());
+            stmt.bindString(2, album.getCoverPic());
+            stmt.bindLong(3, album.getId());
+            stmt.executeUpdateDelete();
+        } catch (Exception e) {
+            return 0;
+        }
+        return 1;
+    }
+
 }

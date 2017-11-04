@@ -164,8 +164,20 @@
                 android:value=".dashboard.DashboardActivity" />
         </activity>
         <activity
-            android:name=".album.AlbumActivity">
-
+            android:name=".album.AlbumActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gallery.GalleryActivity" />
+        </activity>
+        <activity android:name=".album.ImageSlideActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BlackActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".album.AlbumActivity" />
         </activity>
     </application>
 

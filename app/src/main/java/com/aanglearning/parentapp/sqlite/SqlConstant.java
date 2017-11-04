@@ -288,6 +288,7 @@ interface SqlConstant {
             " SenderId INTEGER, " +
             " AlbumId INTEGER, " +
             " AlbumImageId INTEGER, " +
+            " Name TEXT, " +
             " DeletedAt INTEGER " +
             ")";
 
@@ -304,6 +305,7 @@ interface SqlConstant {
             " SenderId INTEGER, " +
             " SubAlbumId INTEGER, " +
             " SubAlbumImageId INTEGER, " +
+            " Name TEXT, " +
             " DeletedAt INTEGER " +
             ")";
 

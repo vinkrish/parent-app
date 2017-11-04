@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- typical textview size -->
     <dimen name="text_tiny">12sp</dimen>
@@ -23,4 +24,6 @@
 
     <dimen name="image_corner_radius">4dp</dimen>
     <dimen name="image_elevation">5dp</dimen>
+
+    <dimen name="grid_spacing">2dp</dimen>
 </resources>

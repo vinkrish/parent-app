@@ -163,14 +163,14 @@ public class ProfileActivity extends AppCompatActivity implements ProfileView,
         } else {
             Picasso.with(this)
                     .load("https://s3.ap-south-1.amazonaws.com/shikshitha-images/" + student.getSchoolId() + "/" + student.getImage())
-                    .placeholder(R.drawable.splash_image)
+                    .placeholder(R.drawable.ic_account_black)
                     .into(profileImage, new Callback() {
                         @Override
                         public void onSuccess() {
                             Bitmap bitmap = ((BitmapDrawable)profileImage.getDrawable()).getBitmap();
                             try {
                                 FileOutputStream fos = new FileOutputStream(file);
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 70, fos);
                                 fos.close();
                             } catch (IOException e) {
                                 e.printStackTrace();

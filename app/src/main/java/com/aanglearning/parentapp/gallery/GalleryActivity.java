@@ -32,6 +32,7 @@ import com.aanglearning.parentapp.dao.DeletedAlbumDao;
 import com.aanglearning.parentapp.model.Album;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.DeletedAlbum;
+import com.aanglearning.parentapp.util.GridSpacingItemDecoration;
 import com.aanglearning.parentapp.util.NetworkUtil;
 import com.aanglearning.parentapp.util.RecyclerItemClickListener;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
@@ -93,10 +94,11 @@ public class GalleryActivity extends AppCompatActivity implements GalleryView{
     }
 
     private void setupRecyclerView() {
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),2);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(layoutManager);
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_spacing);
 
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),2);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, spacingInPixels, true));
         adapter = new GalleryAdapter(getApplicationContext(), childInfo.getSchoolId(), new ArrayList<Album>(0));
         recyclerView.setAdapter(adapter);
 

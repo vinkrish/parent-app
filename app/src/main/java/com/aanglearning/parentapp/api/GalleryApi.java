@@ -9,6 +9,7 @@ import com.aanglearning.parentapp.model.DeletedSubAlbumImage;
 import com.aanglearning.parentapp.model.SubAlbum;
 import com.aanglearning.parentapp.model.SubAlbumImage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -20,6 +21,9 @@ import retrofit2.http.Path;
  */
 
 public interface GalleryApi {
+
+    @GET("album/{albumId}")
+    Call<Album> getAlbum(@Path("albumId") long albumId);
 
     @GET("album/{id}/school/{schoolId}")
     Call<List<Album>> getAlbumAboveId(@Path("schoolId") long schoolId,
@@ -36,11 +40,11 @@ public interface GalleryApi {
     Call<List<DeletedAlbum>> getDeletedAlbums(@Path("schoolId") long schoolId);
 
     @GET("ai/{id}/album/{albumId}")
-    Call<List<AlbumImage>> getAlbumImagesAboveId(@Path("albumId") long albumId,
-                                                 @Path("id") long id);
+    Call<ArrayList<AlbumImage>> getAlbumImagesAboveId(@Path("albumId") long albumId,
+                                                      @Path("id") long id);
 
     @GET("ai/album/{albumId}")
-    Call<List<AlbumImage>> getAlbumImages(@Path("albumId") long albumId);
+    Call<ArrayList<AlbumImage>> getAlbumImages(@Path("albumId") long albumId);
 
     @GET("deletedai/{id}/album/{albumId}")
     Call<List<DeletedAlbumImage>> getDeletedAlbumImagesAboveId(@Path("albumId") long albumId,

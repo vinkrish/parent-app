@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.aanglearning.parentapp.util.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/album_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitXY" />
+
+</com.aanglearning.parentapp.util.SquareRelativeLayout>
