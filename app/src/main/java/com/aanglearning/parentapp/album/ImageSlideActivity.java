@@ -87,7 +87,7 @@ public class ImageSlideActivity extends AppCompatActivity {
             String imageName = bundle.getString("imageName");
             long schoolId = bundle.getLong("schoolId");
 
-            File dir = new File(Environment.getExternalStorageDirectory().getPath(), "Shikshitha/Teacher/" + schoolId );
+            File dir = new File(Environment.getExternalStorageDirectory().getPath(), "Shikshitha/Parent/" + schoolId );
             if (!dir.exists()) {
                 dir.mkdirs();
             }

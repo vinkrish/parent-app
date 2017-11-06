@@ -42,7 +42,6 @@ public class AlbumActivity extends AppCompatActivity implements AlbumView {
     private AlbumAdapter adapter;
     private AlbumPresenter presenter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
