@@ -4,8 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_extra_tiny"
     android:layout_marginLeft="@dimen/spacing_small"
-    android:layout_marginRight="@dimen/spacing_extra_large"
-    android:background="@drawable/incoming_msg">
+    android:layout_marginRight="@dimen/spacing_extra_large">
 
     <TextView
         android:id="@+id/message_text"
@@ -14,7 +13,18 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:autoLink="web"
+        android:background="@drawable/incoming_msg"
         android:paddingLeft="@dimen/spacing_normal"
         android:textColor="@color/primaryTextColor" />
+
+    <ImageView
+        android:id="@+id/shared_image"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginLeft="@dimen/spacing_extra_small"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder"
+        android:visibility="gone" />
 
 </RelativeLayout>

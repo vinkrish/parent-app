@@ -113,6 +113,10 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         super.onResume();
         App.activityResumed();
         isActivityVisible = true;
+        syncRecentData();
+    }
+
+    private void syncRecentData() {
         if(NetworkUtil.isNetworkAvailable(this)) {
             if(adapter.getItemCount() == 0) {
                 presenter.getMessages("student", childInfo.getStudentId(), recipientRole, recipientId);
@@ -149,7 +153,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        adapter = new ChatAdapter(new ArrayList<Message>(0));
+        adapter = new ChatAdapter(getApplicationContext(), new ArrayList<Message>(0), childInfo.getSchoolId());
         recyclerView.setAdapter(adapter);
 
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
@@ -157,11 +161,11 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if(NetworkUtil.isNetworkAvailable(ChatActivity.this)) {
                     presenter.getFollowupMessages("student", childInfo.getStudentId(), recipientRole, recipientId,
-                            adapter.getDataSet().get(adapter.getDataSet().size()-1).getId());
+                            adapter.getDataSet().get(adapter.getItemCount()-1).getId());
                 } else {
                     List<Message> messages = MessageDao.getMessagesFromId(childInfo.getStudentId(), "student",
                             recipientId, recipientRole,
-                            adapter.getDataSet().get(adapter.getDataSet().size()-1).getId());
+                            adapter.getDataSet().get(adapter.getItemCount()-1).getId());
                     adapter.updateDataSet(messages);
                 }
             }
@@ -215,9 +219,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
     @Override
     public void onMessageSaved(Message message) {
         noChats.setVisibility(View.INVISIBLE);
-        adapter.insertDataSet(message);
-        recyclerView.smoothScrollToPosition(0);
-        backupChats(Collections.singletonList(message));
+        syncRecentData();
     }
 
     @Override
@@ -242,7 +244,6 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //MessageDao.clearChatMessages(childInfo.getStudentId(), "student", recipientId, "teacher");
                 MessageDao.insertChatMessages(messages);
             }
         }).start();

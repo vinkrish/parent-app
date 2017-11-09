@@ -176,4 +176,10 @@ public class AlbumActivity extends AppCompatActivity implements AlbumView {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
+    }
+
 }
