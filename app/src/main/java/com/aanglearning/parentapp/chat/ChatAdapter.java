@@ -38,6 +38,7 @@ class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     private static final int ITEM_TYPE_SENDER = 0;
     private static final int ITEM_TYPE_RECEIVER = 1;
+    private static final int ITEM_TYPE_IMAGE_RECEIVER = 2;
 
     ChatAdapter(Context context, List<Message> messages, long schoolId) {
         this.mContext = context;
@@ -79,9 +80,12 @@ class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         if (viewType == ITEM_TYPE_SENDER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_sender_item, parent, false);
             return new SenderHolder(view);
-        } else {
+        } else if(viewType == ITEM_TYPE_RECEIVER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_receiver_item, parent, false);
             return new ReceiverHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_receiver_image_item, parent, false);
+            return new ReceiverImageHolder(view);
         }
     }
 
@@ -93,6 +97,8 @@ class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             ((ChatAdapter.SenderHolder)holder).bind(messages.get(position));
         } else if (itemType == ITEM_TYPE_RECEIVER) {
             ((ChatAdapter.ReceiverHolder)holder).bind(messages.get(position));
+        } else {
+            ((ChatAdapter.ReceiverImageHolder)holder).bind(messages.get(position));
         }
     }
 
@@ -105,8 +111,10 @@ class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     public int getItemViewType(int position) {
         if (messages.get(position).getSenderRole().equals("student")) {
             return ITEM_TYPE_SENDER;
-        } else {
+        } else if(messages.get(position).getMessageType().equals("text")){
             return ITEM_TYPE_RECEIVER;
+        } else {
+            return ITEM_TYPE_IMAGE_RECEIVER;
         }
     }
 
@@ -118,7 +126,6 @@ class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     class ReceiverHolder extends ChatAdapter.ViewHolder {
         @BindView(R.id.message_text) TextView messageTv;
-        @BindView(R.id.shared_image) ImageView sharedImage;
 
         ReceiverHolder(View view) {
             super(view);
@@ -126,11 +133,20 @@ class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
 
         void bind(final Message message) {
-            if(message.getMessageType().equals("image")) {
-                setSharedImage(message.getImageUrl());
-            } else {
-                messageTv.setText(message.getMessageBody());
-            }
+            messageTv.setText(message.getMessageBody());
+        }
+    }
+
+    class ReceiverImageHolder extends ChatAdapter.ViewHolder {
+        @BindView(R.id.shared_image) ImageView sharedImage;
+
+        ReceiverImageHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+
+        void bind(final Message message) {
+            setSharedImage(message.getImageUrl());
         }
 
         private void setSharedImage(String imagetUrl) {
