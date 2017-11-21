@@ -50,6 +50,7 @@ import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.MessageRecipient;
 import com.aanglearning.parentapp.model.Service;
 import com.aanglearning.parentapp.profile.ProfileActivity;
+import com.aanglearning.parentapp.reportcard.ReportActivity;
 import com.aanglearning.parentapp.sqlite.SqlDbHelper;
 import com.aanglearning.parentapp.timetable.TimetableActivity;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
@@ -355,6 +356,9 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
                                 break;
                             case R.id.event_item:
                                 startActivity(new Intent(DashboardActivity.this, CalendarActivity.class));
+                                break;
+                            case R.id.result_item:
+                                startActivity(new Intent(DashboardActivity.this, ReportActivity.class));
                                 break;
                             case R.id.gallery_item:
                                 startActivity(new Intent(DashboardActivity.this, GalleryActivity.class));

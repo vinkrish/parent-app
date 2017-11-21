@@ -96,6 +96,12 @@
     <string name="dob">Date Of Birth</string>
     <string name="mobile">Mobile</string>
 
+    <string name="select_exam">Exam</string>
+    <string name="subject">Subject</string>
+    <string name="activity">Activity / Rubrics</string>
+    <string name="score">Score</string>
+    <string name="no_score">No Score!</string>
+
     <string name="title_activity_homework">Homework</string>
     <string name="title_activity_attendance">Attendance</string>
     <string name="title_activity_chat">Chat</string>
@@ -105,7 +111,6 @@
     <string name="title_activity_timetable">Timetable</string>
     <string name="title_activity_events">Events</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_result">Result</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
