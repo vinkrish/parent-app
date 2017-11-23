@@ -41,6 +41,7 @@ public class ReportActivity extends AppCompatActivity implements ReportView,
     @BindView(R.id.act_score_view) RecyclerView actScoreView;
     @BindView(R.id.no_act_score) LinearLayout noActScoreLayout;
     @BindView(R.id.subject_name) TextView subjectSelected;
+    @BindView(R.id.score_layout) LinearLayout scoreLayout;
     @BindView(R.id.activity_layout) LinearLayout activityLayout;
 
     private ChildInfo childInfo;
@@ -144,6 +145,7 @@ public class ReportActivity extends AppCompatActivity implements ReportView,
 
     @Override
     public void showExamScore(List<StudentScore> examScores) {
+        scoreLayout.setVisibility(View.VISIBLE);
         if(examScores.size() > 0) {
             noScoreLayout.setVisibility(View.GONE);
             scoreAdapter.setDataSet(examScores);
@@ -173,6 +175,8 @@ public class ReportActivity extends AppCompatActivity implements ReportView,
                     presenter.getExamScore(((Exam) examSpinner.getSelectedItem()).getId(), childInfo.getStudentId());
                     oldSelectedPosition = -1;
                     subjectSelected.setText("");
+
+                    scoreLayout.setVisibility(View.GONE);
                     noActScoreLayout.setVisibility(View.GONE);
                     activityScoreAdapter.setDataSet(new ArrayList<StudentScore>(0));
                     activityLayout.setVisibility(View.GONE);
