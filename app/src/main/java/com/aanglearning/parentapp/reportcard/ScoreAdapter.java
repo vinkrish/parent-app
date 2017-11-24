@@ -15,6 +15,7 @@ import com.aanglearning.parentapp.model.Student;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,6 +70,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ViewHolder> 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.card_view) LinearLayout cardView;
         @BindView(R.id.sch_name) TextView schName;
+        @BindView(R.id.max_score) TextView maxScore;
         @BindView(R.id.score) TextView scoreTv;
 
         ViewHolder(View view) {
@@ -78,6 +80,7 @@ public class ScoreAdapter extends RecyclerView.Adapter<ScoreAdapter.ViewHolder> 
 
         void bind(final StudentScore score) {
             schName.setText(score.getSchName());
+            maxScore.setText(String.format(Locale.ENGLISH, "%d", (int)score.getMaxMark()));
             StringBuilder sbScore = new StringBuilder();
             if (String.valueOf(score.getMark()).equals("0.0")) {
                 if (score.getGrade().equals("")) sbScore.append("- ");

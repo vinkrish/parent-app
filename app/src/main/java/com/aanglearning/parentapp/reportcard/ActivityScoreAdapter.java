@@ -11,6 +11,7 @@ import com.aanglearning.parentapp.R;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,6 +55,7 @@ public class ActivityScoreAdapter extends RecyclerView.Adapter<ActivityScoreAdap
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.sch_name) TextView schName;
+        @BindView(R.id.max_score) TextView maxScore;
         @BindView(R.id.score) TextView scoreTv;
 
         ViewHolder(View view) {
@@ -63,6 +65,7 @@ public class ActivityScoreAdapter extends RecyclerView.Adapter<ActivityScoreAdap
 
         void bind(final StudentScore score) {
             schName.setText(score.getSchName());
+            maxScore.setText(String.format(Locale.ENGLISH, "%d", (int)score.getMaxMark()));
             StringBuilder sbScore = new StringBuilder();
             if (String.valueOf(score.getMark()).equals("0.0")) {
                 if (score.getGrade().equals("")) sbScore.append("- ");

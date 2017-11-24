@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_small"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <View
                         android:layout_width="match_parent"
@@ -90,7 +90,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:text="@string/score"
+                            android:text="@string/max"
+                            android:textColor="@color/default_tv_color"
+                            android:textSize="@dimen/text_small"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="@dimen/spacing_tiny"
+                            android:text="@string/obtained"
                             android:textColor="@color/default_tv_color"
                             android:textSize="@dimen/text_small"
                             android:textStyle="bold" />
@@ -141,20 +151,11 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/subject_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_normal"
-                    android:paddingLeft="@dimen/spacing_small"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textStyle="bold" />
-
                 <LinearLayout
                     android:id="@+id/activity_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_normal"
                     android:orientation="vertical"
                     android:visibility="gone">
 
@@ -184,7 +185,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:text="@string/score"
+                            android:text="@string/max"
+                            android:textColor="@color/default_tv_color"
+                            android:textSize="@dimen/text_small"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:paddingLeft="@dimen/spacing_tiny"
+                            android:text="@string/obtained"
                             android:textColor="@color/default_tv_color"
                             android:textSize="@dimen/text_small"
                             android:textStyle="bold" />

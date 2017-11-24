@@ -39,8 +39,6 @@ public class ReportActivity extends AppCompatActivity implements ReportView,
     @BindView(R.id.score_view) RecyclerView scoreView;
     @BindView(R.id.no_score) LinearLayout noScoreLayout;
     @BindView(R.id.act_score_view) RecyclerView actScoreView;
-    @BindView(R.id.no_act_score) LinearLayout noActScoreLayout;
-    @BindView(R.id.subject_name) TextView subjectSelected;
     @BindView(R.id.score_layout) LinearLayout scoreLayout;
     @BindView(R.id.activity_layout) LinearLayout activityLayout;
 
@@ -99,7 +97,6 @@ public class ReportActivity extends AppCompatActivity implements ReportView,
                     scoreAdapter.selectedItemChanged(oldSelectedPosition, new StudentScore());
                     oldSelectedPosition = position;
                     StudentScore studentScore = scoreAdapter.getDataSet().get(position);
-                    subjectSelected.setText(String.format(Locale.ENGLISH, "%s's Activities", studentScore.getSchName()));
                     scoreAdapter.selectedItemChanged(position, studentScore);
                     presenter.getActivityScore(childInfo.getSectionId(),
                             ((Exam) examSpinner.getSelectedItem()).getId(),
@@ -157,12 +154,11 @@ public class ReportActivity extends AppCompatActivity implements ReportView,
 
     @Override
     public void showActivityScore(List<StudentScore> activityScores) {
-        activityLayout.setVisibility(View.VISIBLE);
         if(activityScores.size() > 0) {
-            noActScoreLayout.setVisibility(View.GONE);
+            activityLayout.setVisibility(View.VISIBLE);
             activityScoreAdapter.setDataSet(activityScores);
         } else {
-            noActScoreLayout.setVisibility(View.VISIBLE);
+            activityLayout.setVisibility(View.GONE);
             activityScoreAdapter.setDataSet(new ArrayList<StudentScore>(0));
         }
     }
@@ -174,10 +170,8 @@ public class ReportActivity extends AppCompatActivity implements ReportView,
                 if(NetworkUtil.isNetworkAvailable(getApplicationContext())) {
                     presenter.getExamScore(((Exam) examSpinner.getSelectedItem()).getId(), childInfo.getStudentId());
                     oldSelectedPosition = -1;
-                    subjectSelected.setText("");
 
                     scoreLayout.setVisibility(View.GONE);
-                    noActScoreLayout.setVisibility(View.GONE);
                     activityScoreAdapter.setDataSet(new ArrayList<StudentScore>(0));
                     activityLayout.setVisibility(View.GONE);
                 }

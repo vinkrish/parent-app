@@ -3,6 +3,7 @@ package com.aanglearning.parentapp.reportcard;
 public class StudentScore {
     private long schId;
     private String schName;
+    private float maxMark;
     private float mark;
     private String grade;
 
@@ -20,6 +21,14 @@ public class StudentScore {
 
     public void setSchName(String schName) {
         this.schName = schName;
+    }
+
+    public float getMaxMark() {
+        return maxMark;
+    }
+
+    public void setMaxMark(float maxMark) {
+        this.maxMark = maxMark;
     }
 
     public float getMark() {

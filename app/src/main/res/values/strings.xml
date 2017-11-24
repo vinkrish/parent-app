@@ -99,7 +99,9 @@
     <string name="select_exam">Exam</string>
     <string name="subject">Subject</string>
     <string name="activity">Activity / Rubrics</string>
+    <string name="max">Max</string>
     <string name="score">Score</string>
+    <string name="obtained">/ Obtained</string>
     <string name="no_score">No Score!</string>
 
     <string name="title_activity_homework">Homework</string>
