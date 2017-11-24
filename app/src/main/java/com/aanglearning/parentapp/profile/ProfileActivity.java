@@ -163,7 +163,6 @@ public class ProfileActivity extends AppCompatActivity implements ProfileView,
         } else {
             Picasso.with(this)
                     .load("https://s3.ap-south-1.amazonaws.com/shikshitha-images/" + student.getSchoolId() + "/" + student.getImage())
-                    .placeholder(R.drawable.ic_account_black)
                     .into(profileImage, new Callback() {
                         @Override
                         public void onSuccess() {
