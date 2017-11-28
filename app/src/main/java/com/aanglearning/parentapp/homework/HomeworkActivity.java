@@ -44,7 +44,6 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.date_tv) TextView dateView;
     @BindView(R.id.change_btn) Button changeDateBtn;
-    @BindView(R.id.penultimate_date) TextView validDateView;
     @BindView(R.id.refreshLayout) SwipeRefreshLayout refreshLayout;
     @BindView(R.id.recyclerview) RecyclerView recyclerView;
     @BindView(R.id.noHomework) LinearLayout noHomework;
@@ -155,8 +154,6 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
     DatePickerDialog.OnDateSetListener ondate = new DatePickerDialog.OnDateSetListener() {
 
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-            SimpleDateFormat displayFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
             Calendar cal = Calendar.getInstance();
@@ -168,25 +165,14 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
             Date tomorrowDate = tomorrowCal.getTime();
 
             if(date.after(tomorrowDate)) {
-                isValidTargetDate(true, "");
+                showSnackbar(getResources().getText(R.string.future_date).toString());
             } else {
                 dateView.setText(DateUtil.getDisplayFormattedDate(dateFormat.format(date)));
-                isValidTargetDate(false, dateFormat.format(date));
+                homeworkDate = dateFormat.format(date);
+                getHomework();
             }
         }
     };
-
-    private void isValidTargetDate(boolean visibile, String date){
-        if(visibile){
-            validDateView.setVisibility(View.VISIBLE);
-            validDateView.setText(getResources().getText(R.string.future_date));
-        } else {
-            if (validDateView != null && validDateView.getVisibility() == View.VISIBLE) {
-                validDateView.setVisibility(View.GONE);
-            }
-            getHomework();
-        }
-    }
 
     @Override
     public void showHomework(List<Homework> homeworkList) {

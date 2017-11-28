@@ -7,8 +7,8 @@ android {
         applicationId "com.aanglearning.parentapp"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 33
-        versionName "3.3"
+        versionCode 35
+        versionName "3.5"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -49,11 +49,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
-
-
-
-
-
-
 
 apply plugin: 'com.google.gms.google-services'

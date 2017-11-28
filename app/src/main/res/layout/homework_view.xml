@@ -15,6 +15,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/default_tv_color"
             android:textSize="@dimen/text_xsmall"
             android:textStyle="bold" />
 
@@ -22,8 +23,8 @@
             android:id="@+id/arrow_expand_imageview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/selector_arrow_down"
-            android:contentDescription="@string/app_name"/>
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/selector_arrow_down" />
 
     </LinearLayout>
 
