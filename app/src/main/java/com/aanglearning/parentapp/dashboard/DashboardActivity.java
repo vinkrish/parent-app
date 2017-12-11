@@ -167,6 +167,8 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
             if(!SharedPreferenceUtil.isMessageRecipientsSaved(getApplicationContext())) {
                 presenter.getMessageRecipients(childInfo.getStudentId());
             } else loadGroups();
+        } else {
+            loadOfflineData();
         }
     }
 

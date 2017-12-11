@@ -156,13 +156,4 @@ public class GroupDao {
         return group;
     }
 
-    public static int clear(long classId, long sectionId) {
-        SQLiteDatabase sqliteDb = AppGlobal.getSqlDbHelper().getWritableDatabase();
-        try {
-            sqliteDb.execSQL("delete from groups where SectionId = " + sectionId + " or ClassId = " + classId + " or IsSchool = 'true'");
-        } catch(SQLException e) {
-            return 0;
-        }
-        return 1;
-    }
 }
