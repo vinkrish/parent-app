@@ -1,6 +1,7 @@
 package com.aanglearning.parentapp.gallery;
 
 import com.aanglearning.parentapp.model.Album;
+import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.DeletedAlbum;
 
 import java.util.List;
@@ -20,11 +21,11 @@ interface GalleryInteractor {
         void onDeletedAlbumsReceived(List<DeletedAlbum> deletedAlbums);
     }
 
-    void getAlbumsAboveId(long schoolId, long id, GalleryInteractor.OnFinishedListener listener);
+    void getAlbumsAboveId(ChildInfo childInfo, long id, GalleryInteractor.OnFinishedListener listener);
 
-    void getAlbums(long schoolId, GalleryInteractor.OnFinishedListener listener);
+    void getAlbums(ChildInfo childInfo, GalleryInteractor.OnFinishedListener listener);
 
-    void getRecentDeletedAlbums(long schoolId, long id, GalleryInteractor.OnFinishedListener listener);
+    void getRecentDeletedAlbums(ChildInfo childInfo, long id, GalleryInteractor.OnFinishedListener listener);
 
-    void getDeletedAlbums(long schoolId, GalleryInteractor.OnFinishedListener listener);
+    void getDeletedAlbums(ChildInfo childInfo, GalleryInteractor.OnFinishedListener listener);
 }

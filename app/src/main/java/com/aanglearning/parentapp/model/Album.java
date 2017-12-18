@@ -11,6 +11,8 @@ public class Album implements Serializable {
     private String creatorRole;
     private long createdAt;
     private long schoolId;
+    private long classId;
+    private long sectionId;
 
     public long getId() {
         return id;
@@ -76,4 +78,19 @@ public class Album implements Serializable {
         this.schoolId = schoolId;
     }
 
+    public long getClassId() {
+        return classId;
+    }
+
+    public void setClassId(long classId) {
+        this.classId = classId;
+    }
+
+    public long getSectionId() {
+        return sectionId;
+    }
+
+    public void setSectionId(long sectionId) {
+        this.sectionId = sectionId;
+    }
 }

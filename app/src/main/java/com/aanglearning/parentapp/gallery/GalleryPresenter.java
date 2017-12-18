@@ -1,6 +1,7 @@
 package com.aanglearning.parentapp.gallery;
 
 import com.aanglearning.parentapp.model.Album;
+import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.DeletedAlbum;
 
 /**
@@ -8,13 +9,13 @@ import com.aanglearning.parentapp.model.DeletedAlbum;
  */
 
 interface GalleryPresenter {
-    void getAlbumsAboveId(long schoolId, long id);
+    void getAlbumsAboveId(ChildInfo childInfo, long id);
 
-    void getAlbums(long schoolId);
+    void getAlbums(ChildInfo childInfo);
 
-    void getRecentDeletedAlbums(long schoolId, long id);
+    void getRecentDeletedAlbums(ChildInfo childInfo, long id);
 
-    void getDeletedAlbums(long schoolId);
+    void getDeletedAlbums(ChildInfo childInfo);
 
     void onDestroy();
 }

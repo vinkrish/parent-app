@@ -5,6 +5,7 @@ import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.api.ApiClient;
 import com.aanglearning.parentapp.api.GalleryApi;
 import com.aanglearning.parentapp.model.Album;
+import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.DeletedAlbum;
 
 import java.util.List;
@@ -20,10 +21,10 @@ import retrofit2.Response;
 class GalleryInteractorImpl implements GalleryInteractor {
 
     @Override
-    public void getAlbumsAboveId(long schoolId, long id, final OnFinishedListener listener) {
+    public void getAlbumsAboveId(ChildInfo childInfo, long id, final OnFinishedListener listener) {
         GalleryApi api = ApiClient.getAuthorizedClient().create(GalleryApi.class);
 
-        Call<List<Album>> queue = api.getAlbumAboveId(schoolId, id);
+        Call<List<Album>> queue = api.getAlbumAboveId(childInfo.getSchoolId(), childInfo.getClassId(), childInfo.getSectionId(), id);
         queue.enqueue(new Callback<List<Album>>() {
             @Override
             public void onResponse(Call<List<Album>> call, Response<List<Album>> response) {
@@ -42,10 +43,10 @@ class GalleryInteractorImpl implements GalleryInteractor {
     }
 
     @Override
-    public void getAlbums(long schoolId, final OnFinishedListener listener) {
+    public void getAlbums(ChildInfo childInfo, final OnFinishedListener listener) {
         GalleryApi api = ApiClient.getAuthorizedClient().create(GalleryApi.class);
 
-        Call<List<Album>> queue = api.getAlbums(schoolId);
+        Call<List<Album>> queue = api.getAlbums(childInfo.getSchoolId(), childInfo.getClassId(), childInfo.getSectionId());
         queue.enqueue(new Callback<List<Album>>() {
             @Override
             public void onResponse(Call<List<Album>> call, Response<List<Album>> response) {
@@ -64,10 +65,10 @@ class GalleryInteractorImpl implements GalleryInteractor {
     }
 
     @Override
-    public void getRecentDeletedAlbums(long schoolId, long id, final OnFinishedListener listener) {
+    public void getRecentDeletedAlbums(ChildInfo childInfo, long id, final OnFinishedListener listener) {
         GalleryApi api = ApiClient.getAuthorizedClient().create(GalleryApi.class);
 
-        Call<List<DeletedAlbum>> queue = api.getDeletedAlbumsAboveId(schoolId, id);
+        Call<List<DeletedAlbum>> queue = api.getDeletedAlbumsAboveId(childInfo.getSchoolId(), childInfo.getClassId(), childInfo.getSectionId(), id);
         queue.enqueue(new Callback<List<DeletedAlbum>>() {
             @Override
             public void onResponse(Call<List<DeletedAlbum>> call, Response<List<DeletedAlbum>> response) {
@@ -86,10 +87,10 @@ class GalleryInteractorImpl implements GalleryInteractor {
     }
 
     @Override
-    public void getDeletedAlbums(long schoolId, final OnFinishedListener listener) {
+    public void getDeletedAlbums(ChildInfo childInfo, final OnFinishedListener listener) {
         GalleryApi api = ApiClient.getAuthorizedClient().create(GalleryApi.class);
 
-        Call<List<DeletedAlbum>> queue = api.getDeletedAlbums(schoolId);
+        Call<List<DeletedAlbum>> queue = api.getDeletedAlbums(childInfo.getSchoolId(), childInfo.getClassId(), childInfo.getSectionId());
         queue.enqueue(new Callback<List<DeletedAlbum>>() {
             @Override
             public void onResponse(Call<List<DeletedAlbum>> call, Response<List<DeletedAlbum>> response) {

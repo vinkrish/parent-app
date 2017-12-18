@@ -21,19 +21,27 @@ public interface GalleryApi {
     @GET("album/{albumId}")
     Call<Album> getAlbum(@Path("albumId") long albumId);
 
-    @GET("album/{id}/school/{schoolId}")
+    @GET("album/student/{schoolId}/{classId}/{sectionId}/{id}")
     Call<List<Album>> getAlbumAboveId(@Path("schoolId") long schoolId,
+                                      @Path("classId") long classId,
+                                      @Path("sectionId") long sectionId,
                                       @Path("id") long id);
 
-    @GET("album/school/{schoolId}")
-    Call<List<Album>> getAlbums(@Path("schoolId") long schoolId);
+    @GET("album/student/{schoolId}/{classId}/{sectionId}")
+    Call<List<Album>> getAlbums(@Path("schoolId") long schoolId,
+                                @Path("classId") long classId,
+                                @Path("sectionId") long sectionId);
 
-    @GET("deletedalbum/{id}/school/{schoolId}")
+    @GET("deletedalbum/student/{schoolId}/{classId}/{sectionId}/{id}")
     Call<List<DeletedAlbum>> getDeletedAlbumsAboveId(@Path("schoolId") long schoolId,
+                                                     @Path("classId") long classId,
+                                                     @Path("sectionId") long sectionId,
                                                      @Path("id") long id);
 
-    @GET("deletedalbum/school/{schoolId}")
-    Call<List<DeletedAlbum>> getDeletedAlbums(@Path("schoolId") long schoolId);
+    @GET("deletedalbum/student/{schoolId}/{classId}/{sectionId}")
+    Call<List<DeletedAlbum>> getDeletedAlbums(@Path("schoolId") long schoolId,
+                                              @Path("classId") long classId,
+                                              @Path("sectionId") long sectionId);
 
     @GET("ai/{id}/album/{albumId}")
     Call<ArrayList<AlbumImage>> getAlbumImagesAboveId(@Path("albumId") long albumId,
