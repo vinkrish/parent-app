@@ -106,7 +106,7 @@ public class GalleryActivity extends AppCompatActivity implements GalleryView,
     }
 
     private void loadOfflineData() {
-        List<Album> albums = AlbumDao.getAlbums(childInfo.getSchoolId());
+        List<Album> albums = AlbumDao.getAlbums();
         if(albums.size() == 0) {
             noGroups.setVisibility(View.VISIBLE);
         } else {

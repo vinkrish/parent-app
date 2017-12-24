@@ -94,6 +94,7 @@ public class AlbumActivity extends AppCompatActivity implements AlbumView {
                 Bundle args = new Bundle();
                 args.putSerializable("album", album);
                 args.putInt("position", position);
+                args.putLong("schoolId", childInfo.getSchoolId());
                 intent.putExtras(args);
                 startActivity(intent);
             }
