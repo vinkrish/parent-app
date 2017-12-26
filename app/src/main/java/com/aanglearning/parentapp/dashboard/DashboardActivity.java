@@ -53,6 +53,7 @@ import com.aanglearning.parentapp.profile.ProfileActivity;
 import com.aanglearning.parentapp.reportcard.ReportActivity;
 import com.aanglearning.parentapp.sqlite.SqlDbHelper;
 import com.aanglearning.parentapp.timetable.TimetableActivity;
+import com.aanglearning.parentapp.util.Conversion;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
 import com.aanglearning.parentapp.util.NetworkUtil;
 import com.aanglearning.parentapp.util.PaddedItemDecoration;
@@ -137,7 +138,7 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setNestedScrollingEnabled(false);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new PaddedItemDecoration(this));
+        recyclerView.addItemDecoration(new PaddedItemDecoration(this, Conversion.dpToPx(68, getApplicationContext())));
 
         adapter = new GroupAdapter(new ArrayList<Groups>(0), mItemListener);
         recyclerView.setAdapter(adapter);
