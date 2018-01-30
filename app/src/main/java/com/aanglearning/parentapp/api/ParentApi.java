@@ -10,6 +10,7 @@ import com.aanglearning.parentapp.model.Groups;
 import com.aanglearning.parentapp.model.Homework;
 import com.aanglearning.parentapp.model.Message;
 import com.aanglearning.parentapp.model.MessageRecipient;
+import com.aanglearning.parentapp.model.Service;
 import com.aanglearning.parentapp.model.Student;
 import com.aanglearning.parentapp.model.Timetable;
 
@@ -40,10 +41,6 @@ public interface ParentApi {
 
     @GET("app/attendance/student/{studentId}")
     Call<List<Attendance>> getStudentAbsentDays(@Path("studentId") long studentId);
-
-    @GET("app/attendance/section/{sectionId}/currentDate/{attendanceDate}")
-    Call<List<Attendance>> getAttendance(@Path("sectionId") long sectionId,
-                                          @Path("attendanceDate") String attendanceDate);
 
     //Timetable API
 
@@ -132,5 +129,10 @@ public interface ParentApi {
     @GET("event/school/{schoolId}/student/{classId}")
     Call<List<Evnt>> getEvents(@Path("schoolId") long schoolId,
                                @Path("classId") long classId);
+
+    //Speak Service API
+
+    @GET("service/speak/school/{schoolId}")
+    Call<Service> getSpeakService(@Path("schoolId") long schoolId);
 
 }

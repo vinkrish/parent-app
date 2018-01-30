@@ -1,19 +1,38 @@
 package com.aanglearning.parentapp.messagegroup;
 
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.aanglearning.parentapp.App;
 import com.aanglearning.parentapp.R;
+import com.aanglearning.parentapp.api.ApiClient;
+import com.aanglearning.parentapp.api.ParentApi;
+import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Message;
+import com.aanglearning.parentapp.model.Service;
 import com.aanglearning.parentapp.util.SharedPreferenceUtil;
 import com.aanglearning.parentapp.util.YouTubeHelper;
 import com.aanglearning.parentapp.util.YoutubeDeveloperKey;
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.polly.AmazonPollyPresigningClient;
+import com.amazonaws.services.polly.model.DescribeVoicesRequest;
+import com.amazonaws.services.polly.model.DescribeVoicesResult;
+import com.amazonaws.services.polly.model.OutputFormat;
+import com.amazonaws.services.polly.model.SynthesizeSpeechPresignRequest;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -23,9 +42,15 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MessageViewActivity extends AppCompatActivity
         implements YouTubePlayer.OnInitializedListener{
@@ -33,8 +58,17 @@ public class MessageViewActivity extends AppCompatActivity
     @BindView(R.id.shared_image) PhotoView sharedImage;
     @BindView(R.id.message) TextView messageTV;
 
+    private static final String COGNITO_POOL_ID = "us-west-2:6e697a2f-1eed-457e-ad34-5df567b1f0be";
+    private static final Regions MY_REGION = Regions.US_WEST_2;
+    CognitoCachingCredentialsProvider credentialsProvider;
+
+    private Menu menu;
+    private ChildInfo childInfo;
     private Message message;
     private String videoId;
+
+    private AmazonPollyPresigningClient client;
+    MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +78,16 @@ public class MessageViewActivity extends AppCompatActivity
         init();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.speak_overflow, menu);
+        this.menu = menu;
+        return true;
+    }
+
     private void init() {
+        childInfo = SharedPreferenceUtil.getProfile(getApplicationContext());
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             message = (Message) extras.getSerializable("message");
@@ -90,6 +133,107 @@ public class MessageViewActivity extends AppCompatActivity
         if (file.exists()) {
             sharedImage.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
         }
+
+        checkSpeakService();
+
+        initPollyClient();
+
+        setupNewMediaPlayer();
+    }
+
+    void initPollyClient() {
+        // Initialize the Amazon Cognito credentials provider.
+        credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                COGNITO_POOL_ID,
+                MY_REGION
+        );
+
+        // Create a client that supports generation of presigned URLs.
+        client = new AmazonPollyPresigningClient(credentialsProvider);
+    }
+
+    public void checkSpeakService() {
+        ParentApi api = ApiClient.getAuthorizedClient().create(ParentApi.class);
+
+        Call<Service> queue = api.getSpeakService(childInfo.getSchoolId());
+        queue.enqueue(new Callback<Service>() {
+            @Override
+            public void onResponse(Call<Service> call, Response<Service> response) {
+                if(response.isSuccessful() && response.body().isSpeak()) {
+                    if(!message.getMessageBody().equals("")) {
+                        menu.findItem(R.id.action_speak).setVisible(true);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Service> call, Throwable t) {}
+        });
+    }
+
+    public void readMessage(MenuItem item) {
+        menu.findItem(R.id.action_speak).setVisible(false);
+        new setupBackground().execute(message.getMessageBody());
+    }
+
+    private class setupBackground extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... params) {
+            // Create speech synthesis request.
+            SynthesizeSpeechPresignRequest synthesizeSpeechPresignRequest =
+                    new SynthesizeSpeechPresignRequest()
+                            .withText(params[0])
+                            .withVoiceId("Aditi")
+                            .withOutputFormat(OutputFormat.Mp3);
+
+            // Get the presigned URL for synthesized speech audio stream.
+            URL presignedSynthesizeSpeechUrl =
+                    client.getPresignedSynthesizeSpeechUrl(synthesizeSpeechPresignRequest);
+
+            // Create a media player to play the synthesized audio stream.
+            if (mediaPlayer.isPlaying()) {
+                setupNewMediaPlayer();
+            }
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+            try {
+                mediaPlayer.setDataSource(presignedSynthesizeSpeechUrl.toString());
+            } catch (IOException e) {
+                Log.e("TAG", "Unable to set data source for the media player! " + e.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mediaPlayer.prepareAsync();
+        }
+    }
+
+    void setupNewMediaPlayer() {
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+                setupNewMediaPlayer();
+            }
+        });
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+                //menu.findItem(R.id.action_speak).setVisible(true);
+            }
+        });
+        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                menu.findItem(R.id.action_speak).setVisible(false);
+                return false;
+            }
+        });
     }
 
     @Override

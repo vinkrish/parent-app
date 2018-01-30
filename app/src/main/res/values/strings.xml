@@ -60,6 +60,7 @@
     <string name="nothing_shared">Nothing Shared!</string>
     <string name="no_chats">No Chats!</string>
     <string name="chat">Chat</string>
+    <string name="speak">Speak</string>
     <string name="type_your_message">Enter msg</string>
     <string name="msg_if_any">Message if any..</string>
     <string name="upload_image">Upload Image</string>
