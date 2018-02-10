@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aanglearning.parentapp.App;
 import com.aanglearning.parentapp.R;
@@ -69,6 +70,8 @@ public class MessageViewActivity extends AppCompatActivity
 
     private AmazonPollyPresigningClient client;
     MediaPlayer mediaPlayer;
+
+    private Toast myToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,23 +178,22 @@ public class MessageViewActivity extends AppCompatActivity
     public void readMessage(MenuItem item) {
         menu.findItem(R.id.action_speak).setVisible(false);
         new setupBackground().execute(message.getMessageBody());
+        showToast("Reading the message...");
     }
 
     private class setupBackground extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... params) {
-            // Create speech synthesis request.
+
             SynthesizeSpeechPresignRequest synthesizeSpeechPresignRequest =
                     new SynthesizeSpeechPresignRequest()
                             .withText(params[0])
                             .withVoiceId("Aditi")
                             .withOutputFormat(OutputFormat.Mp3);
 
-            // Get the presigned URL for synthesized speech audio stream.
             URL presignedSynthesizeSpeechUrl =
                     client.getPresignedSynthesizeSpeechUrl(synthesizeSpeechPresignRequest);
 
-            // Create a media player to play the synthesized audio stream.
             if (mediaPlayer.isPlaying()) {
                 setupNewMediaPlayer();
             }
@@ -236,6 +238,14 @@ public class MessageViewActivity extends AppCompatActivity
         });
     }
 
+    private void showToast(String msg){
+        if(myToast !=null){
+            myToast.cancel();
+        }
+        myToast = Toast.makeText(this,msg,Toast.LENGTH_LONG);
+        myToast.show();
+    }
+
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
         if (!wasRestored && videoId != null) {
@@ -244,7 +254,11 @@ public class MessageViewActivity extends AppCompatActivity
     }
 
     @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {}
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_open_scale,R.anim.activity_close_translate);
     }
 }

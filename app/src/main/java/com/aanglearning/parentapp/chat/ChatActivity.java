@@ -116,6 +116,12 @@ public class ChatActivity extends AppCompatActivity implements ChatView {
         syncRecentData();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_open_scale,R.anim.activity_close_translate);
+    }
+
     private void syncRecentData() {
         if(NetworkUtil.isNetworkAvailable(this)) {
             if(adapter.getItemCount() == 0) {
