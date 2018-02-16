@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -59,7 +60,16 @@ public class ImageSlideActivity extends AppCompatActivity {
         imageFragmentPagerAdapter = new ImageFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(imageFragmentPagerAdapter);
         viewPager.setCurrentItem(startPosition);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                supportFinishAfterTransition();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     class ImageFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -97,7 +107,6 @@ public class ImageSlideActivity extends AppCompatActivity {
             if (file.exists()) {
                 imageView.setImageBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()));
             }
-
             return swipeView;
         }
 

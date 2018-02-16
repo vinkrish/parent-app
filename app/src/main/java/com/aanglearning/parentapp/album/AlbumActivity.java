@@ -1,13 +1,16 @@
 package com.aanglearning.parentapp.album;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -96,7 +99,13 @@ public class AlbumActivity extends AppCompatActivity implements AlbumView {
                 args.putInt("position", position);
                 args.putLong("schoolId", childInfo.getSchoolId());
                 intent.putExtras(args);
-                startActivity(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                    ActivityOptionsCompat options = ActivityOptionsCompat.
+                            makeSceneTransitionAnimation(AlbumActivity.this, view.findViewById(R.id.album_img), "transitImage");
+                    startActivity(intent, options.toBundle());
+                } else{
+                    startActivity(intent);
+                }
             }
 
             @Override
@@ -175,6 +184,17 @@ public class AlbumActivity extends AppCompatActivity implements AlbumView {
         } else {
             presenter.getRecentDeletedAlbumImages(album.getId(), deletedAlbum.getId());
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.activity_open_scale,R.anim.activity_close_translate);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

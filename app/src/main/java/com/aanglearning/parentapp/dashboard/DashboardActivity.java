@@ -380,6 +380,7 @@ public class DashboardActivity extends AppCompatActivity implements GroupView {
                             default:
                                 break;
                         }
+                        overridePendingTransition(R.anim.activity_open_translate,R.anim.activity_close_scale);
                         menuItem.setChecked(false);
                         drawerLayout.closeDrawers();
                         return false;
