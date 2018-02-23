@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aanglearning.parentapp.BaseActivity;
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.dao.ChildInfoDao;
 import com.aanglearning.parentapp.dao.GroupDao;
@@ -40,7 +41,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ProfileActivity extends AppCompatActivity implements ProfileView,
+public class ProfileActivity extends BaseActivity implements ProfileView,
         ActivityCompat.OnRequestPermissionsResultCallback {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
@@ -73,7 +74,7 @@ public class ProfileActivity extends AppCompatActivity implements ProfileView,
     private void init() {
         setSupportActionBar(toolbar);
         //getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         childInfo = SharedPreferenceUtil.getProfile(this);
 
@@ -95,6 +96,8 @@ public class ProfileActivity extends AppCompatActivity implements ProfileView,
         if(childInfo.getSectionName().equals("none")) {
             sectionLayout.setVisibility(View.GONE);
         }
+
+        setNavigationItem(8);
     }
 
     @Override

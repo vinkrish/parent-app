@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.aanglearning.parentapp.BaseActivity;
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.util.DividerItemDecoration;
@@ -31,7 +32,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ReportActivity extends AppCompatActivity implements ReportView,
+public class ReportActivity extends BaseActivity implements ReportView,
         AdapterView.OnItemSelectedListener {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
@@ -59,15 +60,17 @@ public class ReportActivity extends AppCompatActivity implements ReportView,
 
     private void init() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         childInfo = SharedPreferenceUtil.getProfile(this);
 
-        getSupportActionBar().setTitle(childInfo.getName()+ " - Result");
+        //getSupportActionBar().setTitle(childInfo.getName()+ " - Result");
 
         presenter = new ReportPresenterImpl(this, new ReportInteractorImpl());
 
         setupRecyclerView();
+
+        setNavigationItem(5);
 
         if(NetworkUtil.isNetworkAvailable(getApplicationContext())) {
             presenter.getExams(childInfo.getClassId());
@@ -185,17 +188,6 @@ public class ReportActivity extends AppCompatActivity implements ReportView,
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                overridePendingTransition(R.anim.activity_open_scale,R.anim.activity_close_translate);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

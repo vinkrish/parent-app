@@ -24,6 +24,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.aanglearning.parentapp.BaseActivity;
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.dao.AttendanceDao;
 import com.aanglearning.parentapp.model.Attendance;
@@ -41,7 +42,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AbsentViewActivity extends AppCompatActivity implements AttendanceView {
+public class AbsentViewActivity extends BaseActivity implements AttendanceView {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
@@ -71,11 +72,11 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
 
     private void init() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         childInfo = SharedPreferenceUtil.getProfile(this);
 
-        getSupportActionBar().setTitle(childInfo.getName()+ " - Attendance");
+        //getSupportActionBar().setTitle(childInfo.getName()+ " - Attendance");
 
         presenter = new AttendancePresenterImpl(this, new AttendanceInteractorImpl());
 
@@ -92,6 +93,8 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
 
         sessionAttendanceAdapter = new SessionAttendanceAdapter(new LinkedHashMap<String, List<Attendance>>(0));
         sessionAttendanceView.setAdapter(sessionAttendanceAdapter);
+
+        setNavigationItem(1);
 
         if(NetworkUtil.isNetworkAvailable(this)) {
             presenter.getStudentAbsentDays(childInfo.getStudentId());
@@ -543,17 +546,6 @@ public class AbsentViewActivity extends AppCompatActivity implements AttendanceV
                 }
             }
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                overridePendingTransition(R.anim.activity_open_scale,R.anim.activity_close_translate);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

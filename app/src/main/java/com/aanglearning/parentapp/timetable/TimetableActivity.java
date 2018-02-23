@@ -22,6 +22,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.aanglearning.parentapp.BaseActivity;
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.dao.TimetableDao;
 import com.aanglearning.parentapp.model.ChildInfo;
@@ -37,7 +38,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TimetableActivity extends AppCompatActivity implements TimetableView {
+public class TimetableActivity extends BaseActivity implements TimetableView {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
@@ -58,17 +59,19 @@ public class TimetableActivity extends AppCompatActivity implements TimetableVie
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         childInfo = SharedPreferenceUtil.getProfile(this);
 
         if(childInfo.getSectionName().equals("none")) {
-            getSupportActionBar().setTitle(childInfo.getName() + " [ " + childInfo.getClassName() + " ]");
+            getSupportActionBar().setTitle("[ " + childInfo.getClassName() + " ]");
         } else {
-            getSupportActionBar().setTitle(childInfo.getName() + " [ " + childInfo.getClassName() + " - " + childInfo.getSectionName() + " ]");
+            getSupportActionBar().setTitle("[ " + childInfo.getClassName() + " - " + childInfo.getSectionName() + " ]");
         }
 
         presenter = new TimetablePresenterImpl(this, new TimetableInteractorImpl());
+
+        setNavigationItem(3);
 
         if(NetworkUtil.isNetworkAvailable(this)) {
             presenter.getTimetable(childInfo.getSectionId());
@@ -520,17 +523,6 @@ public class TimetableActivity extends AppCompatActivity implements TimetableVie
                 }
             }
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                overridePendingTransition(R.anim.activity_open_scale,R.anim.activity_close_translate);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

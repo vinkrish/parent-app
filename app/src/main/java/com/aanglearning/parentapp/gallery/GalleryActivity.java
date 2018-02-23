@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.aanglearning.parentapp.BaseActivity;
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.album.AlbumActivity;
 import com.aanglearning.parentapp.dao.AlbumDao;
@@ -46,7 +47,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GalleryActivity extends AppCompatActivity implements GalleryView,
+public class GalleryActivity extends BaseActivity implements GalleryView,
         ActivityCompat.OnRequestPermissionsResultCallback{
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
@@ -70,7 +71,7 @@ public class GalleryActivity extends AppCompatActivity implements GalleryView,
 
     private void init() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         childInfo = SharedPreferenceUtil.getProfile(this);
 
@@ -79,6 +80,8 @@ public class GalleryActivity extends AppCompatActivity implements GalleryView,
         setupRecyclerView();
 
         loadOfflineData();
+
+        setNavigationItem(6);
 
         if (PermissionUtil.isStoragePermissionGranted(this, WRITE_STORAGE_PERMISSION)) {
             syncGallery();
@@ -206,17 +209,6 @@ public class GalleryActivity extends AppCompatActivity implements GalleryView,
         } else {
             presenter.getRecentDeletedAlbums(childInfo, deletedAlbum.getId());
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                overridePendingTransition(R.anim.activity_open_scale,R.anim.activity_close_translate);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

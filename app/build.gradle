@@ -7,8 +7,8 @@ android {
         applicationId "com.aanglearning.parentapp"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 44
-        versionName "4.4"
+        versionCode 45
+        versionName "4.5"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -49,7 +49,7 @@ dependencies {
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
     compile 'com.amazonaws:aws-android-sdk-s3:2.6.14'
     compile 'com.amazonaws:aws-android-sdk-cognito:2.6.14'
-    compile'com.amazonaws:aws-android-sdk-polly:2.6.14'
+    compile 'com.amazonaws:aws-android-sdk-polly:2.6.14'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }

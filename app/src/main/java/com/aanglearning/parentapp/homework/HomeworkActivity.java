@@ -17,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.aanglearning.parentapp.BaseActivity;
 import com.aanglearning.parentapp.R;
 import com.aanglearning.parentapp.dao.HomeworkDao;
 import com.aanglearning.parentapp.model.ChildInfo;
@@ -40,7 +41,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeworkActivity extends AppCompatActivity implements HomeworkView {
+public class HomeworkActivity extends BaseActivity implements HomeworkView {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.date_tv) TextView dateView;
@@ -64,7 +65,7 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
 
     private void init() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         childInfo = SharedPreferenceUtil.getProfile(this);
 
@@ -82,6 +83,8 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
         });
 
         setDefaultDate();
+
+        setNavigationItem(2);
 
         if(NetworkUtil.isNetworkAvailable(this)) {
             getHomework();
@@ -211,17 +214,6 @@ public class HomeworkActivity extends AppCompatActivity implements HomeworkView 
     public void showError(String message) {
         showSnackbar(message);
         showOfflineData();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                overridePendingTransition(R.anim.activity_open_scale,R.anim.activity_close_translate);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
