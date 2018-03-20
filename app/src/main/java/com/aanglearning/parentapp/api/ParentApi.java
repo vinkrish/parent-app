@@ -135,4 +135,9 @@ public interface ParentApi {
     @GET("service/speak/school/{schoolId}")
     Call<Service> getSpeakService(@Path("schoolId") long schoolId);
 
+    //Service API
+
+    @GET("service/school/{id}")
+    Call<Service> getService(@Path("id") long id);
+
 }

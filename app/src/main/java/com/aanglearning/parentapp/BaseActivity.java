@@ -37,6 +37,7 @@ import com.aanglearning.parentapp.model.ChildInfo;
 import com.aanglearning.parentapp.model.Service;
 import com.aanglearning.parentapp.profile.ProfileActivity;
 import com.aanglearning.parentapp.reportcard.ReportActivity;
+import com.aanglearning.parentapp.settings.SettingsActivity;
 import com.aanglearning.parentapp.sqlite.SqlDbHelper;
 import com.aanglearning.parentapp.timetable.TimetableActivity;
 import com.aanglearning.parentapp.util.PermissionUtil;
@@ -156,6 +157,10 @@ public class BaseActivity extends AppCompatActivity {
                                 startActivity(new Intent(BaseActivity.this, ProfileActivity.class));
                                 finish();
                                 break;
+                            case R.id.settings_item:
+                                drawerLayout.closeDrawers();
+                                startActivity(new Intent(BaseActivity.this, SettingsActivity.class));
+                                break;
                             case R.id.logout_item:
                                 logout();
                                 break;
@@ -246,11 +251,12 @@ public class BaseActivity extends AppCompatActivity {
     private void hideDrawerItem() {
         Menu menu = navigationView.getMenu();
         Service service = ServiceDao.getServices(schoolId);
-        if(!service.isAttendance()) menu.findItem(R.id.attendance_item).setVisible(false);
-        if(!service.isHomework()) menu.findItem(R.id.homework_item).setVisible(false);
-        if(!service.isReport())menu.findItem(R.id.result_item).setVisible(false);
-        if(!service.isChat()) menu.findItem(R.id.chat_item).setVisible(false);
+        if (!service.isAttendance()) menu.findItem(R.id.attendance_item).setVisible(false);
+        if (!service.isHomework()) menu.findItem(R.id.homework_item).setVisible(false);
         if (!service.isTimetable()) menu.findItem(R.id.timetable_item).setVisible(false);
+        if (!service.isReport())menu.findItem(R.id.result_item).setVisible(false);
+        if (!service.isGallery())menu.findItem(R.id.gallery_item).setVisible(false);
+        if (!service.isChat()) menu.findItem(R.id.chat_item).setVisible(false);
     }
 
     @Override

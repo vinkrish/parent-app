@@ -35,103 +35,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         AppGlobal.setSqlDbHelper(getApplicationContext());
 
         if (remoteMessage.getData().size() > 0 &&
+                SharedPreferenceUtil.isNotifiable(getApplicationContext()) &&
                 !SharedPreferenceUtil.getUser(getApplicationContext()).getAuthToken().equals("")) {
              if (remoteMessage.getData().get("type").equals("group_message")) {
-                String studentName = StudentDao.getStudentName(Long.valueOf(remoteMessage.getData().get("group_id")));
-                ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
-                for (ChildInfo childInfo : childInfos) {
-                    if(childInfo.getName().equals(studentName)) {
-                        SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
-                        break;
-                    }
-                }
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getApplicationContext())
-                                .setSmallIcon(R.drawable.ic_stat_notify)
-                                .setContentTitle(remoteMessage.getData().get("group_name"))
-                                .setContentText("You have new message in this group!")
-                                .setDefaults(Notification.DEFAULT_SOUND)
-                                .setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getData().get("message")));
-
-                mBuilder.setAutoCancel(true);
-
-                Intent resultIntent = new Intent(getApplicationContext(), DashboardActivity.class);
-                resultIntent.putExtra("group_id", Long.valueOf(remoteMessage.getData().get("group_id")));
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-                //stackBuilder.addParentStack(DashboardActivity.class);
-                stackBuilder.addNextIntent(resultIntent);
-                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(789, PendingIntent.FLAG_UPDATE_CURRENT);
-                mBuilder.setContentIntent(resultPendingIntent);
-                NotificationManager mNotificationManager =
-                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotificationManager.notify(0, mBuilder.build());
-            } else if(remoteMessage.getData().get("type").equals("homework")) {
-                 String studentName = "";
-                 ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
-                 for (ChildInfo childInfo : childInfos) {
-                     if(childInfo.getSectionId() == Long.valueOf(remoteMessage.getData().get("section_id"))) {
-                         studentName = childInfo.getName();
-                         SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
-                         break;
-                     }
-                 }
-                 NotificationCompat.Builder mBuilder =
-                         new NotificationCompat.Builder(getApplicationContext())
-                                 .setSmallIcon(R.drawable.ic_stat_notify)
-                                 .setContentTitle(studentName)
-                                 .setContentText("Homework for " + remoteMessage.getData().get("date") + ", please check.")
-                                 .setDefaults(Notification.DEFAULT_SOUND)
-                                 .setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getData().get("message")));
-
-                 mBuilder.setAutoCancel(true);
-
-                 Intent resultIntent = new Intent(getApplicationContext(), HomeworkActivity.class);
-                 //resultIntent.putExtra("group_id", Long.valueOf(remoteMessage.getData().get("group_id")));
-                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-                 //stackBuilder.addParentStack(DashboardActivity.class);
-                 stackBuilder.addNextIntent(resultIntent);
-                 PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(666, PendingIntent.FLAG_UPDATE_CURRENT);
-                 mBuilder.setContentIntent(resultPendingIntent);
-                 NotificationManager mNotificationManager =
-                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                 mNotificationManager.notify(0, mBuilder.build());
+                messageNotification(remoteMessage);
+             } else if(remoteMessage.getData().get("type").equals("homework")) {
+                 homeworkNotification(remoteMessage);
              } else if(remoteMessage.getData().get("type").equals("attendance")) {
-                 String studentName = "";
-                 ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
-                 for (ChildInfo childInfo : childInfos) {
-                     if(childInfo.getStudentId() == Long.valueOf(remoteMessage.getData().get("student_id"))) {
-                         studentName = childInfo.getName();
-                         SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
-                         break;
-                     }
-                 }
-                 String notificationMessage = "";
-                 if(remoteMessage.getData().get("attendance_type").equals("Daily")) {
-                     notificationMessage = "Absent on " + remoteMessage.getData().get("date") ;
-                 } else if (remoteMessage.getData().get("attendance_type").equals("Session")) {
-                     notificationMessage = "Absent during " + remoteMessage.getData().get("session") + " session on " + remoteMessage.getData().get("date") ;
-                 } else {
-                     notificationMessage = "Absent during " + remoteMessage.getData().get("session") + " period on " + remoteMessage.getData().get("date") ;
-                 }
-                 NotificationCompat.Builder mBuilder =
-                         new NotificationCompat.Builder(getApplicationContext())
-                                 .setSmallIcon(R.drawable.ic_stat_notify)
-                                 .setContentTitle(studentName)
-                                 .setContentText(notificationMessage)
-                                 .setDefaults(Notification.DEFAULT_SOUND)
-                                 .setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getData().get("message")));
-
-                 mBuilder.setAutoCancel(true);
-
-                 Intent resultIntent = new Intent(getApplicationContext(), AbsentViewActivity.class);
-                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-                 //stackBuilder.addParentStack(DashboardActivity.class);
-                 stackBuilder.addNextIntent(resultIntent);
-                 PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(666, PendingIntent.FLAG_UPDATE_CURRENT);
-                 mBuilder.setContentIntent(resultPendingIntent);
-                 NotificationManager mNotificationManager =
-                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                 mNotificationManager.notify(0, mBuilder.build());
+                 attendanceNotification(remoteMessage);
              } else if(App.isActivityVisible() && ChatActivity.isActivityVisible()) {
                  ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
                  for (ChildInfo childInfo : childInfos) {
@@ -143,36 +54,142 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                  EventBus.getDefault().post(new MessageEvent(remoteMessage.getData().get("message"),
                          Long.valueOf(remoteMessage.getData().get("sender_id"))));
              } else {
-                ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
-                for (ChildInfo childInfo : childInfos) {
-                    if(childInfo.getName().equals(remoteMessage.getData().get("recipient_name"))) {
-                        SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
-                        break;
-                    }
-                }
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(getApplicationContext())
-                                .setSmallIcon(R.drawable.ic_stat_notify)
-                                .setContentTitle(remoteMessage.getData().get("sender_name"))
-                                .setContentText(remoteMessage.getData().get("message"))
-                                .setDefaults(Notification.DEFAULT_SOUND)
-                                .setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getData().get("message")));
-
-                mBuilder.setAutoCancel(true);
-
-                Intent resultIntent = new Intent(getApplicationContext(), ChatActivity.class);
-                resultIntent.putExtra("recipientId", Long.valueOf(remoteMessage.getData().get("sender_id")));
-                resultIntent.putExtra("recipientName", remoteMessage.getData().get("sender_name"));
-                resultIntent.putExtra("recipientRole", remoteMessage.getData().get("sender_role"));
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-                stackBuilder.addParentStack(ChatsActivity.class);
-                stackBuilder.addNextIntent(resultIntent);
-                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(123, PendingIntent.FLAG_UPDATE_CURRENT);
-                mBuilder.setContentIntent(resultPendingIntent);
-                NotificationManager mNotificationManager =
-                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotificationManager.notify(0, mBuilder.build());
+                chatNotification(remoteMessage);
             }
         }
+    }
+
+    private void messageNotification(RemoteMessage remoteMessage) {
+        String studentName = StudentDao.getStudentName(Long.valueOf(remoteMessage.getData().get("group_id")));
+        ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
+        for (ChildInfo childInfo : childInfos) {
+            if(childInfo.getName().equals(studentName)) {
+                SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
+                break;
+            }
+        }
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.ic_stat_notify)
+                        .setContentTitle(remoteMessage.getData().get("group_name"))
+                        .setContentText("You have new message in this group!")
+                        .setDefaults(Notification.DEFAULT_SOUND)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getData().get("message")));
+
+        mBuilder.setAutoCancel(true);
+
+        Intent resultIntent = new Intent(getApplicationContext(), DashboardActivity.class);
+        resultIntent.putExtra("group_id", Long.valueOf(remoteMessage.getData().get("group_id")));
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+        //stackBuilder.addParentStack(DashboardActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(789, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(0, mBuilder.build());
+    }
+
+    private void attendanceNotification(RemoteMessage remoteMessage) {
+        String studentName = "";
+        ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
+        for (ChildInfo childInfo : childInfos) {
+            if(childInfo.getStudentId() == Long.valueOf(remoteMessage.getData().get("student_id"))) {
+                studentName = childInfo.getName();
+                SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
+                break;
+            }
+        }
+        String notificationMessage = "";
+        if(remoteMessage.getData().get("attendance_type").equals("Daily")) {
+            notificationMessage = "Absent on " + remoteMessage.getData().get("date") ;
+        } else if (remoteMessage.getData().get("attendance_type").equals("Session")) {
+            notificationMessage = "Absent during " + remoteMessage.getData().get("session") + " session on " + remoteMessage.getData().get("date") ;
+        } else {
+            notificationMessage = "Absent during " + remoteMessage.getData().get("session") + " period on " + remoteMessage.getData().get("date") ;
+        }
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.ic_stat_notify)
+                        .setContentTitle(studentName)
+                        .setContentText(notificationMessage)
+                        .setDefaults(Notification.DEFAULT_SOUND)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getData().get("message")));
+
+        mBuilder.setAutoCancel(true);
+
+        Intent resultIntent = new Intent(getApplicationContext(), AbsentViewActivity.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+        //stackBuilder.addParentStack(DashboardActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(666, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(0, mBuilder.build());
+    }
+
+    private void homeworkNotification(RemoteMessage remoteMessage) {
+        String studentName = "";
+        ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
+        for (ChildInfo childInfo : childInfos) {
+            if(childInfo.getSectionId() == Long.valueOf(remoteMessage.getData().get("section_id"))) {
+                studentName = childInfo.getName();
+                SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
+                break;
+            }
+        }
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.ic_stat_notify)
+                        .setContentTitle(studentName)
+                        .setContentText("Homework for " + remoteMessage.getData().get("date") + ", please check.")
+                        .setDefaults(Notification.DEFAULT_SOUND)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getData().get("message")));
+
+        mBuilder.setAutoCancel(true);
+
+        Intent resultIntent = new Intent(getApplicationContext(), HomeworkActivity.class);
+        //resultIntent.putExtra("group_id", Long.valueOf(remoteMessage.getData().get("group_id")));
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+        //stackBuilder.addParentStack(DashboardActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(666, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(0, mBuilder.build());
+    }
+
+    private void chatNotification(RemoteMessage remoteMessage) {
+        ArrayList<ChildInfo> childInfos = ChildInfoDao.getChildInfos();
+        for (ChildInfo childInfo : childInfos) {
+            if(childInfo.getName().equals(remoteMessage.getData().get("recipient_name"))) {
+                SharedPreferenceUtil.saveProfile(getApplicationContext(), childInfo);
+                break;
+            }
+        }
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.drawable.ic_stat_notify)
+                        .setContentTitle(remoteMessage.getData().get("sender_name"))
+                        .setContentText(remoteMessage.getData().get("message"))
+                        .setDefaults(Notification.DEFAULT_SOUND)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(remoteMessage.getData().get("message")));
+
+        mBuilder.setAutoCancel(true);
+
+        Intent resultIntent = new Intent(getApplicationContext(), ChatActivity.class);
+        resultIntent.putExtra("recipientId", Long.valueOf(remoteMessage.getData().get("sender_id")));
+        resultIntent.putExtra("recipientName", remoteMessage.getData().get("sender_name"));
+        resultIntent.putExtra("recipientRole", remoteMessage.getData().get("sender_role"));
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+        stackBuilder.addParentStack(ChatsActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(123, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(0, mBuilder.build());
     }
 }

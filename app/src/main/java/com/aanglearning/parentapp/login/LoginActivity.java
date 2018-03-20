@@ -44,8 +44,6 @@ public class LoginActivity extends AppCompatActivity implements LoginView {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        AppGlobal.setSqlDbHelper(getApplicationContext());
-
         mobile.addTextChangedListener(new EditTextWatcher(mobileLayout));
         password.addTextChangedListener(new EditTextWatcher(passwordLayout));
         presenter = new LoginPresenterImpl(this);
