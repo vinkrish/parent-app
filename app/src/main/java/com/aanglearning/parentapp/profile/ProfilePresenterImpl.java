@@ -17,10 +17,8 @@ class ProfilePresenterImpl implements ProfilePresenter, ProfileInteractor.OnFini
 
     @Override
     public void getStudent(long studentId) {
-        if (mView != null) {
-            mView.showProgress();
-            mInteractor.getStudent(studentId, this);
-        }
+        mView.showProgress();
+        mInteractor.getStudent(studentId, this);
     }
 
     @Override

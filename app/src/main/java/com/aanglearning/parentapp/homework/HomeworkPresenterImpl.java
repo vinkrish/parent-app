@@ -20,10 +20,8 @@ class HomeworkPresenterImpl implements HomeworkPresenter, HomeworkInteractor.OnF
 
     @Override
     public void getHomeworks(long sectionId, String lastDate) {
-        if(mView != null) {
-            mView.showProgress();
-            mInteractor.getHomeworks(sectionId, lastDate, this);
-        }
+        mView.showProgress();
+        mInteractor.getHomeworks(sectionId, lastDate, this);
     }
 
     @Override
@@ -33,7 +31,7 @@ class HomeworkPresenterImpl implements HomeworkPresenter, HomeworkInteractor.OnF
 
     @Override
     public void onError(String message) {
-        if(mView != null) {
+        if (mView != null) {
             mView.hideProgess();
             mView.showError(message);
         }
@@ -41,7 +39,7 @@ class HomeworkPresenterImpl implements HomeworkPresenter, HomeworkInteractor.OnF
 
     @Override
     public void onHomeworkReceived(List<Homework> homeworks) {
-        if(mView != null) {
+        if (mView != null) {
             mView.showHomework(homeworks);
             mView.hideProgess();
         }

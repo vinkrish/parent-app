@@ -22,31 +22,23 @@ class MessagePresenterImpl implements MessagePresenter, MessageInteractor.OnFini
 
     @Override
     public void getRecentMessages(long groupId, long messageId) {
-        if(mView != null) {
-            mInteractor.getRecentMessages(groupId, messageId, this);
-        }
+        mInteractor.getRecentMessages(groupId, messageId, this);
     }
 
     @Override
     public void getMessages(long groupId) {
-        if(mView != null) {
-            mView.showProgress();
-            mInteractor.getMessages(groupId, this);
-        }
+        mView.showProgress();
+        mInteractor.getMessages(groupId, this);
     }
 
     @Override
     public void getRecentDeletedMessages(long groupId, long id) {
-        if(mView != null) {
-            mInteractor.getRecentDeletedMessages(groupId, id, this);
-        }
+        mInteractor.getRecentDeletedMessages(groupId, id, this);
     }
 
     @Override
     public void getDeletedMessages(long groupId) {
-        if(mView != null) {
-            mInteractor.getDeletedMessages(groupId, this);
-        }
+        mInteractor.getDeletedMessages(groupId, this);
     }
 
     @Override
@@ -64,7 +56,7 @@ class MessagePresenterImpl implements MessagePresenter, MessageInteractor.OnFini
 
     @Override
     public void onRecentMessagesReceived(List<Message> messages) {
-        if(mView != null) {
+        if (mView != null) {
             mView.showRecentMessages(messages);
             mView.hideProgress();
         }
@@ -72,7 +64,7 @@ class MessagePresenterImpl implements MessagePresenter, MessageInteractor.OnFini
 
     @Override
     public void onMessageReceived(List<Message> messages) {
-        if(mView != null) {
+        if (mView != null) {
             mView.showMessages(messages);
             mView.hideProgress();
         }
@@ -80,7 +72,7 @@ class MessagePresenterImpl implements MessagePresenter, MessageInteractor.OnFini
 
     @Override
     public void onDeletedMessagesReceived(List<DeletedMessage> messages) {
-        if(mView != null) {
+        if (mView != null) {
             DeletedMessageDao.insertDeletedMessages(messages);
         }
     }

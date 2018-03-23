@@ -22,31 +22,23 @@ class GalleryPresenterImpl implements GalleryPresenter, GalleryInteractor.OnFini
 
     @Override
     public void getAlbumsAboveId(ChildInfo childInfo, long id) {
-        if (mView != null) {
-            mInteractor.getAlbumsAboveId(childInfo, id, this);
-        }
+        mInteractor.getAlbumsAboveId(childInfo, id, this);
     }
 
     @Override
     public void getAlbums(ChildInfo childInfo) {
-        if (mView != null) {
-            mView.showProgress();
-            mInteractor.getAlbums(childInfo, this);
-        }
+        mView.showProgress();
+        mInteractor.getAlbums(childInfo, this);
     }
 
     @Override
     public void getRecentDeletedAlbums(ChildInfo childInfo, long id) {
-        if (mView != null) {
-            mInteractor.getRecentDeletedAlbums(childInfo, id, this);
-        }
+        mInteractor.getRecentDeletedAlbums(childInfo, id, this);
     }
 
     @Override
     public void getDeletedAlbums(ChildInfo childInfo) {
-        if (mView != null) {
-            mInteractor.getDeletedAlbums(childInfo, this);
-        }
+        mInteractor.getDeletedAlbums(childInfo, this);
     }
 
     @Override

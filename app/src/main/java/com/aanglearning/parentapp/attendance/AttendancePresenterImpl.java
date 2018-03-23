@@ -21,10 +21,8 @@ class AttendancePresenterImpl implements AttendancePresenter,
 
     @Override
     public void getStudentAbsentDays(long studentId) {
-        if(mView != null) {
-            mView.showProgress();
-            mInteractor.getStudentAbsentDays(studentId, this);
-        }
+        mView.showProgress();
+        mInteractor.getStudentAbsentDays(studentId, this);
     }
 
     @Override
@@ -34,7 +32,7 @@ class AttendancePresenterImpl implements AttendancePresenter,
 
     @Override
     public void onError(String message) {
-        if(mView != null) {
+        if (mView != null) {
             mView.hideProgess();
             mView.showError(message);
         }
@@ -42,7 +40,7 @@ class AttendancePresenterImpl implements AttendancePresenter,
 
     @Override
     public void onAttendanceReceived(List<Attendance> attendanceList) {
-        if(mView != null) {
+        if (mView != null) {
             mView.showAttendance(attendanceList);
             mView.hideProgess();
         }

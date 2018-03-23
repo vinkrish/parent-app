@@ -17,26 +17,20 @@ public class ReportPresenterImpl implements ReportPresenter, ReportInteractor.On
 
     @Override
     public void getExams(long classId) {
-        if (mView != null) {
-            mView.showProgress();
-            mInteractor.getExams(classId, this);
-        }
+        mView.showProgress();
+        mInteractor.getExams(classId, this);
     }
 
     @Override
     public void getExamScore(long examId, long studentId) {
-        if (mView != null) {
-            mView.showProgress();
-            mInteractor.getExamScore(examId, studentId, this);
-        }
+        mView.showProgress();
+        mInteractor.getExamScore(examId, studentId, this);
     }
 
     @Override
     public void getActivityScore(long sectionId, long examId, long subjectId, long studentId) {
-        if (mView != null) {
-            mView.showProgress();
-            mInteractor.getActivityScore(sectionId, examId, subjectId, studentId, this);
-        }
+        mView.showProgress();
+        mInteractor.getActivityScore(sectionId, examId, subjectId, studentId, this);
     }
 
     @Override
